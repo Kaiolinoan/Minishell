@@ -3,18 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kemontei <kemontei@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/09 17:22:08 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:10:15 by kemontei         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 int main()
 {
-    char*	input;
-
-    input = readline("Minishell");
+	printf("AAAA\n");
 }
