@@ -11,7 +11,7 @@ LIBFTDIR	= Libft/
 
 # ================================= FILES =================================== #
 
-SRC_FILES	= main.c
+SRC_FILES	= main.c exc_env_functions.c
 SRC			= $(addprefix $(SRCDIR), $(SRC_FILES))
 
 # ================================ OBJECTS =================================== #
