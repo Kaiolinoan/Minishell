@@ -8,6 +8,13 @@
 
 
 // ENV STRUCTS
+
+typedef enum s_keyvalue
+{
+    KEY,
+    VALUE,
+}   t_keyvalue;
+
 typedef struct s_envlist t_envlist;
 
 struct s_envlist
@@ -25,6 +32,7 @@ struct s_map
     void (*put)(t_map *t, char * k,char * v);
     char *(*get)(t_map *t, char *k);
     void (*remove)(t_map *t, char * k);
+    void (*destroy)(t_map *t);
 };
 
 typedef struct s_extra t_extra;
@@ -34,13 +42,20 @@ struct s_extra
     void (*put)(t_extra *t, char * k,char * v);
     char *(*get)(t_extra *t, char *k);
     void (*remove)(t_extra *t, char * k);
+    void (*destroy)(t_extra *t);
     t_envlist *head;
     t_envlist *tail;
     int size;
 };
 
 
-//Lists
-
+//enviroment functions
+t_envlist *find(t_extra *t, char * key);
+char *__get(t_extra *t, char *k);
+void __remove(t_extra  *t, char *k);
+void __put(t_extra *t, char *k, char *v);
+void __destroy(t_extra *t);
+t_map *new_map(void);
+t_envlist *new_node(char *k, char *v);
 
 #endif

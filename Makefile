@@ -11,7 +11,7 @@ LIBFTDIR	= Libft/
 
 # ================================= FILES =================================== #
 
-SRC_FILES	= main.c exc_env_functions.c
+SRC_FILES	= main.c exc_env_functions.c exc_env_list.c
 SRC			= $(addprefix $(SRCDIR), $(SRC_FILES))
 
 # ================================ OBJECTS =================================== #
@@ -81,5 +81,10 @@ fclean: clean
 
 re: fclean all
 
+r:
+	make re && clear && ./$(NAME)
+
+v:
+	make re && clear && valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes ./$(NAME)
 # ------------------------------- Phony Targets ----------------------------- #
 .PHONY: all clean fclean re
