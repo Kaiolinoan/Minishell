@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/27 17:09:26 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/28 14:22:05 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,8 @@ void	create_env(t_map *env, char **enviroment)
 	while (enviroment[i])
 	{
 		args = ft_split_env(enviroment[i]);
+		if (!args)
+			break ;
 		if (args[0] && args[1])
 			env->put(env, args[0], args[1]);
 		else
@@ -59,13 +61,3 @@ void	create_env(t_map *env, char **enviroment)
 	}
 }
 
-int	main(int argc, char **argv, char **enviroment)
-{
-	t_map	*env;
-
-	(void)argc;
-	(void)argv;
-	env = new_map();
-	create_env(env, enviroment);
-	env->destroy(env);
-}

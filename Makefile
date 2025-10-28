@@ -11,7 +11,8 @@ LIBFTDIR	= Libft/
 
 # ================================= FILES =================================== #
 
-SRC_FILES	= main.c exc_env_functions.c exc_env_list.c exc_env_create.c
+SRC_FILES	= main.c exc_env_functions.c exc_env_list.c exc_env_create.c \
+			  exc_env_path.c utils.c
 SRC			= $(addprefix $(SRCDIR), $(SRC_FILES))
 
 # ================================ OBJECTS =================================== #
@@ -24,11 +25,12 @@ LIBFT		= $(LIBFTDIR)libft.a
 
 # =============================== COMPILER ================================== #
 
-CC			= cc
-CFLAGS		= -Wall -Wextra -Werror -g3
-INCLUDES	= -I$(INCDIR)
-RM			= rm -f
-MAKE		= make
+CC				= cc
+CFLAGS			= -Wall -Wextra -Werror -g3
+INCLUDES		= -I$(INCDIR)
+RM				= rm -f
+MAKE			= make
+READLINE_LIBS	= -lreadline -lncurses
 
 # ================================= COLORS =================================== #
 
@@ -51,7 +53,7 @@ all: $(NAME)
 # --------------------------------- Targets ---------------------------------- #
 $(NAME): $(OBJS) $(LIBFT)
 	@echo "$(YELLOW)Linking $(NAME)...$(DEF_COLOR)"
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(READLINE_LIBS) -o $(NAME)
 	@echo "$(GREEN)✓ $(NAME) created successfully!$(DEF_COLOR)"
 
 # ----------------------------- Object Files -------------------------------- #
@@ -85,6 +87,6 @@ r:
 	make re && clear && ./$(NAME)
 
 v:
-	make re && clear && valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes ./$(NAME)
+	make re && clear && valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
 # ------------------------------- Phony Targets ----------------------------- #
 .PHONY: all clean fclean re

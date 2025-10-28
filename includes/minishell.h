@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/27 17:10:24 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/28 16:29:04 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,10 @@
 # include "../Libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+#include <sys/wait.h>
 # include <stdio.h>
 
 // ENV STRUCTS
-
-typedef enum s_keyvalue
-{
-	KEY,
-	VALUE,
-}							t_keyvalue;
-
 typedef struct s_envlist	t_envlist;
 
 struct						s_envlist
@@ -65,8 +59,20 @@ char						*__get(t_extra *t, char *k);
 void						__remove(t_extra *t, char *k);
 void						__put(t_extra *t, char *k, char *v);
 void						__destroy(t_extra *t);
+
+// env list
 t_map						*new_map(void);
 t_envlist					*new_node(char *k, char *v);
+
+// env create
 void						create_env(t_map *env, char **enviroment);
+
+//env path
+char						*get_path(t_map *env, char *str);
+
+// utils
+void						clear_matriz(char **matriz);
+
+
 
 #endif
