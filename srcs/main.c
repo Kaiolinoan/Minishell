@@ -6,27 +6,48 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/30 18:42:58 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/30 23:25:33 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
+	
 void built_in_echo(t_command *commands)
 {
-    // bool new_line;
-    printf("bultinnnn\n");
-    
-    for (size_t j = 0; commands->command[j]; j++)
-    {
-        printf("[%zu] = %s\n", j,commands->command[j]);
-    }
+    bool valid_flag = false;
+	bool first_flag = true;
+
     size_t i  = 1;
+    size_t j;
     while (commands->command[i])
     {
-        
-        printf("%s\n", commands->command[i++]);
+        j = 0;
+        if (commands->command[i][0] == '-' && first_flag)
+        {
+            j++;
+            while (commands->command[i][j] == 'n')
+                j++;
+            if (commands->command[i][j] == '\0')
+            {
+                valid_flag = true;
+				first_flag = false;
+                i++;
+                continue ;
+            }
+            else
+                valid_flag = false;
+        }
+		first_flag = false;
+		while (commands->command[i][j])
+			printf("%c", commands->command[i][j++]);
+		if (commands->command[i + 1])
+			printf(" ");
+        i++;
     }
+	if (!valid_flag)
+		printf("\n");
+	//  echo -nnnnn9 alo  ARRUMAR ISSO AQUI!!!
+	//  echo -k alo       ARRUMAR ISSO AQUI!!!
 }
 
 bool is_built_in(char *str, t_map *env, t_command *commands)
