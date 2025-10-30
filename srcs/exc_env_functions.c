@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/27 17:08:20 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/29 17:04:11 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,16 @@ void	__destroy(t_extra *t)
 		t->head = tmp;
 	}
 	free(t);
+}
+
+void	__print(t_extra *t)
+{
+	t_envlist *temp;
+
+	temp = t->head;
+	while (temp)
+	{
+		printf("%s=%s\n", temp->key, temp->value);
+		temp = temp->next;
+	}
 }

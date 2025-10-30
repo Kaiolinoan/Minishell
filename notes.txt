@@ -1,0 +1,5 @@
+arrumar erro com env -i
+
+export sozinho 
+export com argumento
+export +=

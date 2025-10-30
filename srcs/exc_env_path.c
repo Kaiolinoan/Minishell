@@ -15,15 +15,19 @@
 static char  *get_full_path(char *old_path, char *str)
 {
     char *new_path; 
+    char **command;
 
     new_path = ft_strjoin(old_path, "/");
     if (!new_path)
         return (NULL);
-    new_path = gnl_strjoin(new_path, str);
+    command = ft_split(str, ' ');
+    if (!command || !*command)
+        return (free(new_path), clear_matriz(command), NULL);
+    new_path = gnl_strjoin(new_path, command[0]);
     if (!new_path)
-        return (free(new_path), NULL);
-    //verificar se lida com o argumento
-    return (new_path);
+        return (free(new_path), clear_matriz(command), NULL);
+    // printf("%s\n",new_path);
+    return (clear_matriz(command), new_path);
 }
 
 char    *get_path(t_map *env, char *str)

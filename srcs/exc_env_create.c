@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/28 14:22:05 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/29 16:37:53 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,15 @@ static char	**ft_split_env(char *env)
 	return (free(temp), args);
 }
 
-void	create_env(t_map *env, char **enviroment)
+void	create_env(t_map *env, char **environment)
 {
 	size_t	i;
 	char	**args;
 
 	i = 0;
-	while (enviroment[i])
+	while (environment[i])
 	{
-		args = ft_split_env(enviroment[i]);
+		args = ft_split_env(environment[i]);
 		if (!args)
 			break ;
 		if (args[0] && args[1])
