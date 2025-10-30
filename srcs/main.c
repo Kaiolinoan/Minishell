@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/30 17:21:08 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/10/30 18:42:58 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,12 @@ void built_in_echo(t_command *commands)
     }
     size_t i  = 1;
     while (commands->command[i])
+    {
+        
         printf("%s\n", commands->command[i++]);
+    }
 }
 
-void built_in_pwd(t_map *env)
-{
-    printf("%s\n", env->get(env, "PWD"));
-}
 bool is_built_in(char *str, t_map *env, t_command *commands)
 {
     if (!ft_strncmp(str, "env", 3) && ft_strlen(str) == ft_strlen("env"))
@@ -39,7 +38,7 @@ bool is_built_in(char *str, t_map *env, t_command *commands)
     }
     if (!ft_strncmp(str, "pwd", 3) && ft_strlen(str) == ft_strlen("pwd"))
     {
-        built_in_pwd(env);
+        printf("%s\n", env->get(env, "PWD"));
         return (true);
     }
     if (!ft_strncmp(str, "echo", 4))
@@ -84,7 +83,7 @@ int	main(int argc, char **argv, char **environment)
 {
 	t_map	*env;
     char    *str;
-    // t_command *commands;
+    t_command *commands;
 
 	(void)argc;
 	(void)argv;
@@ -102,11 +101,10 @@ int	main(int argc, char **argv, char **environment)
         }
         if (str && *str)
         {
-            printf("%s\n",str);
-            // commands = new_command(ft_split(str, ' '));
+            commands = new_command(ft_split(str, ' '));
             add_history(str);
-            // if (!is_built_in(str, env, commands))
-            //     process_input(str, env, environment);
+            if (!is_built_in(str, env, commands))
+                process_input(str, env, environment);
         }
         free(str);
     }
