@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 15:16:36 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/29 19:15:54 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:12:30 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_map	*new_map(void)
 	return ((t_map *)map);
 }
 
-t_envlist	*new_node(char *k, char *v)
+t_envlist	*new_node(char *k, char *v, bool exported)
 {
 	t_envlist	*node;
 
@@ -39,6 +39,7 @@ t_envlist	*new_node(char *k, char *v)
 		return (NULL);
 	node->key = k;
 	node->value = v;
+	node->exported = exported;
 	node->next = NULL;
 	node->prev = NULL;
 	return (node);

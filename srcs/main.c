@@ -6,49 +6,42 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/30 23:25:33 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:33:16 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-	
-void built_in_echo(t_command *commands)
-{
-    bool valid_flag = false;
-	bool first_flag = true;
 
-    size_t i  = 1;
-    size_t j;
-    while (commands->command[i])
-    {
-        j = 0;
-        if (commands->command[i][0] == '-' && first_flag)
-        {
-            j++;
-            while (commands->command[i][j] == 'n')
-                j++;
-            if (commands->command[i][j] == '\0')
-            {
-                valid_flag = true;
-				first_flag = false;
-                i++;
-                continue ;
-            }
-            else
-                valid_flag = false;
-        }
-		first_flag = false;
-		while (commands->command[i][j])
-			printf("%c", commands->command[i][j++]);
-		if (commands->command[i + 1])
-			printf(" ");
-        i++;
-    }
-	if (!valid_flag)
-		printf("\n");
-	//  echo -nnnnn9 alo  ARRUMAR ISSO AQUI!!!
-	//  echo -k alo       ARRUMAR ISSO AQUI!!!
+void built_in_unset(t_command *commands, t_map *env)
+{
+    env->remove(env, commands->command[1]);
 }
+
+void built_in_pwd(t_map *env)
+{
+    char *buffer;
+
+    buffer = getcwd(NULL, 0);   
+    if (buffer)
+    {
+        printf("%s\n", buffer);
+        free(buffer);
+    }
+    else
+    {
+        char *env_pwd;
+
+        env_pwd = env->get(env, "PWD");
+        if (env_pwd)
+            printf("%s\n", env_pwd);
+        else
+        {
+            ft_putstr_fd("pwd: error retrieving current directory: getcwd: cannot access parent directories:", 2);
+            printf("%s\n", strerror(errno));
+        }
+    }
+}
+	
 
 bool is_built_in(char *str, t_map *env, t_command *commands)
 {
@@ -59,12 +52,17 @@ bool is_built_in(char *str, t_map *env, t_command *commands)
     }
     if (!ft_strncmp(str, "pwd", 3) && ft_strlen(str) == ft_strlen("pwd"))
     {
-        printf("%s\n", env->get(env, "PWD"));
+        built_in_pwd(env);
         return (true);
     }
     if (!ft_strncmp(str, "echo", 4))
     {
         built_in_echo(commands);
+        return (true);
+    }
+    if (!ft_strncmp(str, "unset", 5))
+    {
+        built_in_unset(commands, env);
         return (true);
     }
 
@@ -92,7 +90,7 @@ void process_input(char *str, t_map *env, char **environment)
             clear_matriz(input);
             return ;
         }
-        execve(path, input, environment); //lidar com os argumentos dos comandos
+        execve(path, input, environment);
         clear_matriz(input);
         free(path);
         printf("falha ao executar execve\n");
@@ -102,8 +100,8 @@ void process_input(char *str, t_map *env, char **environment)
 
 int	main(int argc, char **argv, char **environment)
 {
-	t_map	*env;
     char    *str;
+	t_map	*env;
     t_command *commands;
 
 	(void)argc;
@@ -131,3 +129,4 @@ int	main(int argc, char **argv, char **environment)
     }
 	env->destroy(env);
 }
+//criar uma funcao no map para transformar em char**

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/29 17:04:11 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:12:45 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	__remove(t_extra *t, char *k)
 	t->size--;
 }
 
-void	__put(t_extra *t, char *k, char *v)
+void	__put(t_extra *t, char *k, char *v, bool exported)
 {
 	t_envlist	*f;
 	t_envlist	*node;
@@ -78,7 +78,7 @@ void	__put(t_extra *t, char *k, char *v)
 		f->value = v;
 		return (free(k));
 	}
-	node = new_node(k, v);
+	node = new_node(k, v, exported);
 	if (!node)
 		return (free(k), free(v));
 	if (t->head == NULL)

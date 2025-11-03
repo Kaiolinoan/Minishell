@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/29 16:37:53 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:13:03 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	create_env(t_map *env, char **environment)
 		if (!args)
 			break ;
 		if (args[0] && args[1])
-			env->put(env, args[0], args[1]);
+			env->put(env, args[0], args[1], true);
 		else
 		{
 			if (args[0])

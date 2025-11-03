@@ -22,7 +22,6 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-# include <stdbool.h>
 
 size_t				ft_strlen(const char *s);
 char				*ft_strdup(const char *s1);

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/10/30 21:58:01 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/03 17:16:10 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,11 @@
 # include "../Libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
-#include <sys/wait.h>
+# include <sys/wait.h>
 # include <stdio.h>
+# include <errno.h>
+# include <stdbool.h>
+
 
 // ENV STRUCTS
 typedef struct s_envlist	t_envlist;
@@ -26,6 +29,7 @@ struct						s_envlist
 {
 	char					*key;
 	char					*value;
+	bool					exported;
 	t_envlist				*next;
 	t_envlist				*prev;
 };
@@ -34,7 +38,7 @@ typedef struct s_map		t_map;
 
 struct						s_map
 {
-	void					(*put)(t_map *t, char *k, char *v);
+	void					(*put)(t_map *t, char *k, char *v, bool exported);
 	char					*(*get)(t_map *t, char *k);
 	void					(*remove)(t_map *t, char *k);
 	void					(*destroy)(t_map *t);
@@ -45,7 +49,7 @@ typedef struct s_extra		t_extra;
 
 struct						s_extra
 {
-	void					(*put)(t_extra *t, char *k, char *v);
+	void					(*put)(t_extra *t, char *k, char *v, bool exported);
 	char					*(*get)(t_extra *t, char *k);
 	void					(*remove)(t_extra *t, char *k);
 	void					(*destroy)(t_extra *t);
@@ -76,14 +80,14 @@ typedef struct s_commands
 t_envlist					*find(t_extra *t, char *key);
 char						*__get(t_extra *t, char *k);
 void						__remove(t_extra *t, char *k);
-void						__put(t_extra *t, char *k, char *v);
+void						__put(t_extra *t, char *k, char *v, bool exported);
 void						__destroy(t_extra *t);
 void						__print(t_extra *t);
 
 
 // env list
 t_map						*new_map(void);
-t_envlist					*new_node(char *k, char *v);
+t_envlist					*new_node(char *k, char *v, bool exported);
 t_command					*new_command(char **command);
 t_redirect					*new_redirect(char *filename, char type);
 
@@ -93,6 +97,10 @@ void						create_env(t_map *env, char **enviroment);
 
 //env path
 char						*get_path(t_map *env, char *str);
+
+//built-ins
+void						built_in_echo(t_command *commands);
+
 
 // utils
 void						clear_matriz(char **matriz);
