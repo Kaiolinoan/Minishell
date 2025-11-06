@@ -76,3 +76,14 @@ void	sort_str(char **matriz)
 		i++;
 	}
 }
+
+bool	space_only(char *str)
+{
+	while (*str)
+	{
+		if (*str != ' ')
+			return (false);
+		str++;
+	}
+	return (true);
+}

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/06 16:46:48 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:18:52 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,6 @@ int built_in_cd(char *path, t_map *env)
         return (printf("cd: %s: No such file or directory\n", path));
     if (!access(path, X_OK))
         return (printf("cd: %s: Permission denied\n", path));
-
-    if (commands->command[0] && commands->command[1])
-    {
-        process_cd(commands->command[1], env);
-    }
+    process_cd(path, env);
     return (0);
 }

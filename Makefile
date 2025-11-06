@@ -11,10 +11,12 @@ LIBFTDIR	= Libft/
 BUILTIN_DIR	= built-in/
 UTILS_DIR	= utils/
 EXC_DIR		= execution/
+PARSE_DIR	= parsing/
 
 # ================================= FILES =================================== #
 
 SRC_UTILS	= utils.c
+SRC_PARSE	= parse_input.c
 SRC_FILES	= main.c 
 SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c
 SRC_EXC		= exc_env_functions.c exc_env_list.c exc_env_create.c \
@@ -23,7 +25,8 @@ SRC_EXC		= exc_env_functions.c exc_env_list.c exc_env_create.c \
 SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
       $(addprefix $(SRCDIR)$(BUILTIN_DIR), $(SRC_BUILTIN)) \
       $(addprefix $(SRCDIR)$(EXC_DIR), $(SRC_EXC)) \
-      $(addprefix $(SRCDIR)$(UTILS_DIR), $(SRC_UTILS)) 
+      $(addprefix $(SRCDIR)$(UTILS_DIR), $(SRC_UTILS)) \
+      $(addprefix $(SRCDIR)$(PARSE_DIR), $(SRC_PARSE)) 
 
 # ================================ OBJECTS =================================== #
 

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/06 13:54:57 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:17:06 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,11 +123,15 @@ void						built_in_echo(t_command *commands);
 void    					built_in_export(t_command *commands, t_map *env);
 int							built_in_cd(char *path, t_map *env);
 
+// parse input
+char						*parse_input(char *str);
 
 // utils
+bool						space_only(char *str);
 void						clear_matriz(char **matriz);
 size_t						list_len(t_extra *env);
 int							ft_strcmp(char *s1, char *s2);
 void						sort_str(char **matriz);
+
 
 #endif
