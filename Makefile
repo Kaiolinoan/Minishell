@@ -8,16 +8,26 @@ SRCDIR		= srcs/
 OBJDIR		= objs/
 INCDIR		= includes/
 LIBFTDIR	= Libft/
+BUILTIN_DIR	= built-in/
+UTILS_DIR	= utils/
+EXC_DIR		= execution/
 
 # ================================= FILES =================================== #
 
-SRC_FILES	= main.c exc_env_functions.c exc_env_list.c exc_env_create.c \
-			  exc_env_path.c exc_ft_echo.c utils.c
-SRC			= $(addprefix $(SRCDIR), $(SRC_FILES))
+SRC_UTILS	= utils.c
+SRC_FILES	= main.c 
+SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c
+SRC_EXC		= exc_env_functions.c exc_env_list.c exc_env_create.c \
+			  exc_env_path.c
+
+SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
+      $(addprefix $(SRCDIR)$(BUILTIN_DIR), $(SRC_BUILTIN)) \
+      $(addprefix $(SRCDIR)$(EXC_DIR), $(SRC_EXC)) \
+      $(addprefix $(SRCDIR)$(UTILS_DIR), $(SRC_UTILS)) 
 
 # ================================ OBJECTS =================================== #
 
-OBJS		= $(addprefix $(OBJDIR), $(SRC_FILES:.c=.o))
+OBJS = $(addprefix $(OBJDIR), $(SRC:$(SRCDIR)%.c=%.o))
 
 # ================================ LIBRARY =================================== #
 
@@ -58,7 +68,7 @@ $(NAME): $(OBJS) $(LIBFT)
 
 # ----------------------------- Object Files -------------------------------- #
 $(OBJDIR)%.o: $(SRCDIR)%.c
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(dir $@)
 	@echo "$(CYAN)Compiling $<...$(DEF_COLOR)"
 	@$(CC) $(CFLAGS) $(INCLUDES) -I$(LIBFTDIR) -c $< -o $@
 

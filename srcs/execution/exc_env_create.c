@@ -6,13 +6,13 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/03 17:13:03 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/05 15:12:33 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	**ft_split_env(char *env)
+char	**ft_split_env(char *env)
 {
 	static char	*args[2];
 	char		*start;
@@ -60,4 +60,3 @@ void	create_env(t_map *env, char **environment)
 		i++;
 	}
 }
-
