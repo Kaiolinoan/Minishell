@@ -1,9 +1,3 @@
-criar uma funcao no map para transformar em char**
-
-export sozinho 
-export com argumento
 export +=
-
-parsing:
 
 varificar se tem variavel, se tiver colocar na lista de variaveis, mas se tiver variavel com comando nao pode colocar na lista(ou coloca e depois apaga)

@@ -12,11 +12,10 @@
 
 #include "minishell.h"
 
-
 static char	*get_full_path(char *old_path, char *str)
 {
-	char *new_path;
-	char **command;
+	char	*new_path;
+	char	**command;
 
 	new_path = ft_strjoin(old_path, "/");
 	if (!new_path)
@@ -27,15 +26,14 @@ static char	*get_full_path(char *old_path, char *str)
 	new_path = gnl_strjoin(new_path, command[0]);
 	if (!new_path)
 		return (free(new_path), clear_matriz(command), NULL);
-	// printf("%s\n",new_path);
 	return (clear_matriz(command), new_path);
 }
 
 char	*get_path(t_map *env, char *str)
 {
-	char **arr_path;
-	char *new_path;
-	size_t i;
+	char	**arr_path;
+	char	*new_path;
+	size_t	i;
 
 	arr_path = ft_split(env->get(env, "PATH"), ':');
 	if (!arr_path)

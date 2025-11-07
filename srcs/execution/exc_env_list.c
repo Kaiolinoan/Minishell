@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 15:16:36 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 14:09:58 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/07 12:43:13 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ t_redirect	*new_redirect(char *filename, char type)
 
 t_var	*new_var(char *k, char *v, bool exported, bool commands)
 {
-	t_var *node;
+	t_var	*node;
 
 	node = malloc(sizeof(t_var));
 	if (!node)

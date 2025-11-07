@@ -6,55 +6,66 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/06 17:18:52 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/07 12:34:46 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-void    only_cd(char *path, t_map *env)
+
+static void	cd_home(char *path, t_map *env)
 {
-    char *home;
+	char	*home;
 
-    home = env->get(env, "HOME");
-    if (home)
-    {
-        path = home;
-        if (chdir(path) == -1)
-            perror("cd");
-    }
-    else
-        printf("bash: cd: HOME not set\n");
-}
-void process_cd(char *path, t_map *env)
-{
-
-    if (!path ||  (!ft_strncmp(path, "~", 1) && ft_strlen(path) == 1))
-        only_cd(path, env);
-    if (!ft_strncmp(path, ".", 1))
-        return ;
-    else if (!ft_strncmp(path, "..", 2))
-    {
-        
-    }
-    else if(!ft_strncmp(path, "-", 1))
-    {
-
-    }
-    else
-    {
-        //verificar se tenho um '~' no inicio da str
-    }
+	home = env->get(env, "HOME");
+	if (home)
+	{
+		if (chdir(home) == -1)
+			print_error(CD_ERROR, path);
+	}
+	else
+		ft_putstr_fd("bash: cd: HOME not set\n", 2);
 }
 
-int built_in_cd(char *path, t_map *env)
+static void	process_cd(char *path, t_map *env, char *old_pwd)
 {
-    char *home;
+	if (!path || (!ft_strcmp(path, "~")))
+		return (cd_home(path, env));
+	if (!ft_strcmp(path, "-"))
+	{
+		if (old_pwd)
+		{
+			if (chdir(old_pwd) == -1)
+				print_error(CD_ERROR, path);
+			else
+				return ((void)printf("%s\n", env->get(env, "OLDPWD")));
+		}
+		else
+			return (ft_putstr_fd("bash: cd: OLDPWD not set\n", 2));
+	}
+	if (path[0] == '~' && path[1] == '/')
+	{
+		cd_home(path, env);
+		if (chdir(path + 2) == -1)
+			return (print_error(CD_ERROR, path));
+		return ;
+	}
+	if (chdir(path) == -1)
+		print_error(CD_ERROR, path);
+}
 
-    home = NULL;
-    if (!access(path, F_OK))
-        return (printf("cd: %s: No such file or directory\n", path));
-    if (!access(path, X_OK))
-        return (printf("cd: %s: Permission denied\n", path));
-    process_cd(path, env);
-    return (0);
+int	built_in_cd(char *path, t_map *env)
+{
+	char	*pwd;
+	char	*old_pwd;
+
+	process_cd(path, env, env->get(env, "OLDPWD"));
+	pwd = getcwd(NULL, 0);
+	old_pwd = env->get(env, "PWD");
+	if (pwd && old_pwd)
+	{
+		env->put(env, ft_strdup("OLDPWD"), ft_strdup(old_pwd), true);
+		env->put(env, ft_strdup("PWD"), ft_strdup(pwd), true);
+		free(pwd);
+	}
+	return (0);
 }

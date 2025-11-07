@@ -14,9 +14,9 @@
 
 static void	only_export(t_map *env)
 {
-	char **matriz;
-	size_t i;
-	size_t j;
+	char	**matriz;
+	size_t	i;
+	size_t	j;
 
 	matriz = env->to_string(env);
 	if (!matriz)
@@ -40,7 +40,7 @@ static void	only_export(t_map *env)
 
 static bool	ft_check_var_name(char *str)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (str[i])
@@ -55,9 +55,10 @@ static bool	ft_check_var_name(char *str)
 	}
 	return (true);
 }
-void	process_export_args(t_command *commands, t_map *env, int i)
+
+static void	process_export_args(t_command *commands, t_map *env, int i)
 {
-	char **args;
+	char	**args;
 
 	if (ft_strchr(commands->command[i], '='))
 	{
@@ -81,25 +82,23 @@ void	process_export_args(t_command *commands, t_map *env, int i)
 		}
 	}
 	else
-		env->set_var_as_exported(env, commands->command[i]); //rever todos os comportamentos do export depois para verificar isso
+		env->set_var_as_exported(env, commands->command[i]);
 }
 
 void	built_in_export(t_command *commands, t_map *env)
 {
-	size_t i;
+	size_t	i;
 
 	i = 1;
 	if (commands->command[0] && (!commands->command[1]))
-	{
-		only_export(env);
-		return ;
-	}
+		return (only_export(env));
 	while (commands->command[i])
 		process_export_args(commands, env, i++);
 }
 
 /*CODIGO QUE ESTAVA NO EXPORT PARA TESTAR VARIAVEIS:*/
-// char *key = ft_strdup("VAR");
-// char *value = ft_strdup("20");
-// var = new_var(key, value, false, false);
-// create_variable(env, commands, var);
+/* char *key = ft_strdup("VAR");
+char *value = ft_strdup("20");
+var = new_var(key, value, false, false);
+create_variable(env, commands, var);
+ */

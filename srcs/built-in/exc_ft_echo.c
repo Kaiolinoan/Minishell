@@ -5,13 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/05 14:10:06 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 14:10:06 by klino-an         ###   ########.fr       */
+/*   Created: 2025/11/07 12:35:05 by klino-an          #+#    #+#             */
+/*   Updated: 2025/11/07 12:35:05 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 static void	print(t_command *commands, size_t i)
 {
@@ -22,7 +21,7 @@ static void	print(t_command *commands, size_t i)
 
 static bool	is_valid_flag(char *str)
 {
-	size_t j;
+	size_t	j;
 
 	j = 1;
 	if (str[0] != '-' || ft_strlen(str) <= 1)
@@ -36,9 +35,9 @@ static bool	is_valid_flag(char *str)
 
 void	built_in_echo(t_command *commands)
 {
-	size_t i;
-	bool valid_flag;
-	bool first_flag;
+	size_t	i;
+	bool	valid_flag;
+	bool	first_flag;
 
 	i = 0;
 	valid_flag = false;

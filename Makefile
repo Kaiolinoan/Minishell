@@ -15,12 +15,13 @@ PARSE_DIR	= parsing/
 
 # ================================= FILES =================================== #
 
-SRC_UTILS	= utils.c
+SRC_UTILS	= utils.c utils_2.c
 SRC_PARSE	= parse_input.c
 SRC_FILES	= main.c 
-SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c
-SRC_EXC		= exc_env_functions.c exc_env_list.c exc_env_create.c \
-			  exc_env_path.c
+SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
+			  exc_ft_unset.c 
+SRC_EXC		= exc_env_functions.c  exc_env_functions_2.c exc_env_list.c  \
+			  exc_env_create.c exc_env_path.c exc_start.c
 
 SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
       $(addprefix $(SRCDIR)$(BUILTIN_DIR), $(SRC_BUILTIN)) \

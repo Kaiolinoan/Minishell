@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 19:18:00 by kemontei          #+#    #+#             */
-/*   Updated: 2025/11/06 17:17:06 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/07 12:45:53 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 static bool	open_quotes(char *str)
 {
-	char flag;
-	size_t i;
+	char	flag;
+	size_t	i;
 
 	flag = 0;
 	i = 0;
@@ -32,18 +32,17 @@ static bool	open_quotes(char *str)
 
 static void	iso_rightarrow(char *dup, char *str, size_t *i, size_t *j)
 {
-	
 	if (str[*i] == '>')
 	{
 		if (str[*i - 1] && str[*i - 1] == '>')
-		dup[(*j)] = '>';
+			dup[(*j)] = '>';
 		else if (str[*i - 1] && str[*i - 1] != ' ')
 		{
 			dup[*j] = '\2';
 			dup[++(*j)] = '>';
 		}
 		if (str[*i + 1] && str[*i + 1] == '>')
-		return ;
+			return ;
 		if (str[*i + 1] && str[*i + 1] != ' ')
 		{
 			dup[*j] = '>';
@@ -51,7 +50,7 @@ static void	iso_rightarrow(char *dup, char *str, size_t *i, size_t *j)
 		}
 	}
 }
-	
+
 static void	iso_leftarrow(char *dup, char *str, size_t *i, size_t *j)
 {
 	if (str[*i] == '<')

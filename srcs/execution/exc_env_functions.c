@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 16:31:27 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/07 12:51:08 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,79 +90,4 @@ void	__put(t_extra *t, char *k, char *v, bool exported)
 	}
 	t->size++;
 	t->tail = node;
-}
-
-void	__destroy(t_extra *t)
-{
-	t_envlist	*tmp;
-
-	if (!t)
-		return ;
-	tmp = t->head;
-	while (t->head)
-	{
-		tmp = t->head->next;
-		free(t->head->key);
-		free(t->head->value);
-		free(t->head);
-		t->head = tmp;
-	}
-	free(t);
-}
-
-void	__print(t_extra *t)
-{
-	t_envlist	*temp;
-
-	temp = t->head;
-	while (temp)
-	{
-		if (temp->exported)
-				printf("%s=%s\n", temp->key, temp->value);
-		temp = temp->next;
-	}
-}
-
-void	__set_var_as_exported(t_extra *t, char *key)
-{
-	t_envlist	*f;
-
-	f = find(t, key);
-	if (f)
-		f->exported = true;
-	return ;
-}
-
-char	**__to_string(t_extra *t)
-{
-	char		**matriz;
-	char		*str;
-	size_t		i;
-	t_envlist	*tmp;
-
-	tmp = t->head;
-	matriz = malloc(sizeof(char *) * (list_len(t) + 1));
-	if (!matriz)
-		return (NULL);
-	i = 0;
-	str = NULL;
-	while (tmp)
-	{
-		if (tmp->exported)
-		{
-			str = ft_strdup(tmp->key);
-			if (!str)
-				return (clear_matriz(matriz), NULL);
-			str = gnl_strjoin(str, "=");
-			if (!str)
-				return (clear_matriz(matriz), free(str), NULL);
-			str = gnl_strjoin(str, tmp->value);
-			if (!str)
-				return (clear_matriz(matriz), free(str), NULL);
-			matriz[i++] = str;
-		}
-		tmp = tmp->next;
-	}
-	matriz[i] = NULL;
-	return (matriz);
 }
