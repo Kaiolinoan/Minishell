@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/13 12:02:35 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/14 12:18:37 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ static void	cd_home(char *path, t_map *env)
 
 static void	process_cd(char *path, t_map *env, char *old_pwd)
 {
-	ft_printf(path);
 	if (!path || (!ft_strcmp(path, "~")))
 		return (cd_home(path, env));
 	if (!ft_strcmp(path, "-"))
@@ -54,11 +53,15 @@ static void	process_cd(char *path, t_map *env, char *old_pwd)
 		print_error(CD_ERROR, path);
 }
 
-int	built_in_cd(char *path, t_map *env)
+int	built_in_cd(char **args, t_map *env)
 {
 	char	*pwd;
 	char	*old_pwd;
-	
+	char	*path;
+
+	if (ft_array_len(args) > 2)
+		return (printf("bash: cd: too many arguments\n"), 0);
+	path = args[1];
 	pwd = getcwd(NULL, 0);
 	old_pwd = env->get(env, "PWD");
 	process_cd(path, env, old_pwd);

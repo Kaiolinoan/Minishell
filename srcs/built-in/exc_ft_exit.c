@@ -5,29 +5,98 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/13 10:39:55 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/13 10:39:55 by klino-an         ###   ########.fr       */
+/*   Created: 2025/11/14 12:17:41 by klino-an          #+#    #+#             */
+/*   Updated: 2025/11/14 12:17:41 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void    built_in_exit(t_command *commands, t_map *env, char *str)
+static bool is_all_num(char *str)
 {
-    size_t i = 0;
-    t_command *next;
-    while(commands->next)
-    {
-        next = commands->next;
-        i = 0;
-        while(commands->command[i])
-           free(commands->command[i++]);
-        free(commands->command);
-        free(commands);
-        commands = next;
-    }
-    env->destroy(env);
-    free(str);
-    free(commands);
-    exit(-1);
+	size_t i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+		{
+			if (str[i] == '-' || str[i] == '+')
+			{
+				i++;
+				continue;
+			}
+			return (false);
+		}
+		i++;
+	}
+	return (true);
 }
+static int check_all(char *num, size_t len)
+{
+	int	 	sign;
+	char	*str;
+	
+	str = num;
+	sign = -1;
+    if (*str == '+' || *str == '-')
+    {
+        if (*str == '-')
+            sign = -1;
+        str++;
+    }
+	while (str[len] == '0')
+		len++;
+	len = 0;
+	while (str[len] >= '0' && str[len] <= '9')
+		len++;
+	if (len > 19)
+		return (0);
+	else if (len < 19)
+		return (1);
+	if (sign)
+        return (strncmp(str, "9223372036854775807", 19) <= 0);
+    return (strncmp(str, "9223372036854775808", 19) <= 0);
+	
+}
+
+static bool check_exit_arg(char **args)
+{
+	if ((!is_all_num(args[1]) && args[1]) || !check_all(args[1], 0))
+	{
+		ft_putstr_fd("bash: exit: ", 2);
+		write(2, args[1], ft_strlen(args[1]));
+		ft_putstr_fd(": numeric argument required\n", 2);
+		return (true);
+	}
+	if (ft_array_len(args) > 2)
+		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
+	return (true);
+}
+
+void	built_in_exit(t_command *commands, t_map *env, char *str)
+{
+	t_command	*next;
+	int 		nb;
+
+	if (commands->command[1])
+	{
+		nb = ft_atoi(commands->command[1]);
+		if (nb < 0 || nb > 255)
+			nb = nb % 255;
+	}
+	printf("exit\n");
+	if (!check_exit_arg(commands->command))
+		return ;
+	while (commands)
+	{
+		next = commands->next;
+		clear_matriz(commands->command);
+		free(commands);
+		commands = next;
+	}
+	env->destroy(env);
+	free(str);
+	exit(nb);
+}
+// falta fazer o bglh do modulo

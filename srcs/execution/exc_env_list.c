@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 15:16:36 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/13 11:58:27 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/14 11:34:24 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_command	*new_command(char **command)
 	node->next = NULL;
 	node->infile = NULL;
 	node->outfile = NULL;
-	clear_matriz(command);
 	return (node);
 }
 
