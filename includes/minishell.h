@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 13:13:25 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/13 11:55:24 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ void						built_in_echo(t_command *commands);
 void    					built_in_export(t_command *commands, t_map *env);
 void						built_in_pwd(t_map *env);
 void						built_in_unset(t_command *commands, t_map *env);
+void    					built_in_exit(t_command *commands, t_map *env, char *str);
+
 
 //start
 bool						is_built_in(char *str, t_map *env, t_command *commands);

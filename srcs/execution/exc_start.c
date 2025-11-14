@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 13:17:05 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/13 11:47:07 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,11 @@ bool	is_built_in(char *str, t_map *env, t_command *commands)
 		// if (commands->command[2])
         // 	return (printf("bash: cd: too many arguments\n"), true);
 		built_in_cd(commands->command[1], env);
+		return (true);
+	}
+	if (!ft_strncmp(str, "exit", 4) && ft_strlen(str) == ft_strlen2("exit"))
+	{
+		built_in_exit(commands, env, str);
 		return (true);
 	}
 	return (false);

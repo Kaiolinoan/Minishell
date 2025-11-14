@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 13:00:55 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/13 12:05:23 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,4 @@ int	main(int argc, char **argv, char **environment)
 }
 //VERIFICAR SE IREMOS MANTER AS VARIAVEIS!
 
-//EXPORT SOZINHO QUEBROU PQ EU MEXI NO TO_STRING
+//CD .. da seg fault
