@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/14 12:16:32 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/15 13:55:25 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <stdbool.h>
 
 # define CD_ERROR "bash: cd: "
+
+extern int g_exit_code;
 
 // ENV STRUCTS
 typedef struct s_envlist	t_envlist;

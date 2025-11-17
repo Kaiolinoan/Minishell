@@ -6,11 +6,15 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/14 12:19:22 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/15 13:54:45 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int g_exit_code;
+
+g_exit_code = 0;
 
 int	main(int argc, char **argv, char **environment)
 {

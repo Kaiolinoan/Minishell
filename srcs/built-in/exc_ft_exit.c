@@ -32,21 +32,22 @@ static bool is_all_num(char *str)
 	}
 	return (true);
 }
-static int check_all(char *num, size_t len)
+static int check_overflow(char *num)
 {
 	int	 	sign;
 	char	*str;
+	size_t	len;
 	
 	str = num;
-	sign = -1;
+	sign = 1;
     if (*str == '+' || *str == '-')
     {
         if (*str == '-')
             sign = -1;
         str++;
     }
-	while (str[len] == '0')
-		len++;
+	while (*str == '0')
+		*str++;
 	len = 0;
 	while (str[len] >= '0' && str[len] <= '9')
 		len++;
@@ -57,37 +58,40 @@ static int check_all(char *num, size_t len)
 	if (sign)
         return (strncmp(str, "9223372036854775807", 19) <= 0);
     return (strncmp(str, "9223372036854775808", 19) <= 0);
-	
 }
 
 static bool check_exit_arg(char **args)
 {
-	if ((!is_all_num(args[1]) && args[1]) || !check_all(args[1], 0))
+	if (!args[1])
+		return (true);
+	if (!is_all_num(args[1]) || !check_overflow(args[1]))
 	{
 		ft_putstr_fd("bash: exit: ", 2);
-		write(2, args[1], ft_strlen(args[1]));
+		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		return (true);
+		exit(2);
 	}
 	if (ft_array_len(args) > 2)
-		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
+		return(ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
 
 void	built_in_exit(t_command *commands, t_map *env, char *str)
 {
-	t_command	*next;
-	int 		nb;
+	t_command			*next;
+	long long			nb;
 
-	if (commands->command[1])
-	{
-		nb = ft_atoi(commands->command[1]);
-		if (nb < 0 || nb > 255)
-			nb = nb % 255;
-	}
+	nb = 0;
 	printf("exit\n");
 	if (!check_exit_arg(commands->command))
-		return ;
+		return (g_exit_code = 1);
+	if (commands->command[1])
+	{
+		nb = ft_atoll(commands->command[1]);
+		nb = (unsigned char)nb;
+	}
+	else
+		nb = g_exit_code;
 	while (commands)
 	{
 		next = commands->next;
