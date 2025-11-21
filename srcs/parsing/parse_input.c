@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/30 19:18:00 by kemontei          #+#    #+#             */
-/*   Updated: 2025/11/07 12:45:53 by klino-an         ###   ########.fr       */
+/*   Created: 2025/11/18 16:24:45 by klino-an          #+#    #+#             */
+/*   Updated: 2025/11/18 16:24:58 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,10 +105,11 @@ char	*parse_input(char *str)
 	char	*dup;
 
 	if (!str || !*str || space_only(str) || open_quotes(str))
-		return (ft_printf("boo"), NULL);
+		return (NULL);
 	dup = ft_calloc(ft_strlen(str), 3);
 	if (!dup)
 		return (NULL);
 	fill_dup(dup, str, 0, 0);
+	free (str);
 	return (dup);
 }

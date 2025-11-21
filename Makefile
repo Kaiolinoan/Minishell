@@ -12,22 +12,25 @@ BUILTIN_DIR	= built-in/
 UTILS_DIR	= utils/
 EXC_DIR		= execution/
 PARSE_DIR	= parsing/
+ENV_DIR		= env/
 
 # ================================= FILES =================================== #
 
 SRC_UTILS	= utils.c utils_2.c
-SRC_PARSE	= parse_input.c
+SRC_PARSE	= parse_input.c parse_main.c parse_utils.c
 SRC_FILES	= main.c 
 SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
 			  exc_ft_unset.c exc_ft_exit.c 
-SRC_EXC		= exc_env_functions.c  exc_env_functions_2.c exc_env_list.c  \
-			  exc_env_create.c exc_env_path.c exc_start.c
+SRC_ENV		= exc_env_functions.c  exc_env_functions_2.c exc_env_list.c  \
+			  exc_env_create.c exc_env_path.c
+SRC_EXC		= exc_start.c exc_close.c exc_pipes.c exc_redir.c
 
 SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
-      $(addprefix $(SRCDIR)$(BUILTIN_DIR), $(SRC_BUILTIN)) \
+      $(addprefix $(SRCDIR)$(ENV_DIR), $(SRC_ENV)) \
       $(addprefix $(SRCDIR)$(EXC_DIR), $(SRC_EXC)) \
       $(addprefix $(SRCDIR)$(UTILS_DIR), $(SRC_UTILS)) \
-      $(addprefix $(SRCDIR)$(PARSE_DIR), $(SRC_PARSE)) 
+      $(addprefix $(SRCDIR)$(PARSE_DIR), $(SRC_PARSE)) \
+      $(addprefix $(SRCDIR)$(BUILTIN_DIR), $(SRC_BUILTIN)) 
 
 # ================================ OBJECTS =================================== #
 
@@ -97,10 +100,13 @@ fclean: clean
 
 re: fclean all
 
-r:
-	make re && clear && ./$(NAME)
+reclear: 
+	@make re && clear
 
-v:
-	make re && clear && valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
+r: reclear
+	@./$(NAME) || true
+
+v: reclear
+	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
 # ------------------------------- Phony Targets ----------------------------- #
 .PHONY: all clean fclean re

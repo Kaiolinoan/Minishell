@@ -12,24 +12,20 @@
 
 #include "minishell.h"
 
-static char	*get_full_path(char *old_path, char *str)
+static char	*get_full_path(char *old_path, char **commands)
 {
 	char	*new_path;
-	char	**command;
 
 	new_path = ft_strjoin(old_path, "/");
 	if (!new_path)
 		return (NULL);
-	command = ft_split(str, ' ');
-	if (!command || !*command)
-		return (free(new_path), clear_matriz(command), NULL);
-	new_path = gnl_strjoin(new_path, command[0]);
+	new_path = gnl_strjoin(new_path, commands[0]);
 	if (!new_path)
-		return (free(new_path), clear_matriz(command), NULL);
-	return (clear_matriz(command), new_path);
+		return (free(new_path), NULL);
+	return (new_path);
 }
 
-char	*get_path(t_map *env, char *str)
+char	*get_path(t_map *env, char **commands)
 {
 	char	**arr_path;
 	char	*new_path;
@@ -42,11 +38,11 @@ char	*get_path(t_map *env, char *str)
 	new_path = NULL;
 	while (arr_path[i])
 	{
-		if (!access(str, F_OK))
-			return (clear_matriz(arr_path), str);
+		if (!access(commands[0], F_OK))
+			return (clear_matriz(arr_path), commands[0]);
 		if (new_path)
 			free(new_path);
-		new_path = get_full_path(arr_path[i], str);
+		new_path = get_full_path(arr_path[i], commands);
 		if (!new_path)
 			return (clear_matriz(arr_path), NULL);
 		if (!access(new_path, F_OK))

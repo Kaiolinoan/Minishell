@@ -25,7 +25,22 @@ void	clear_matriz(char **matriz)
 	free(matriz);
 }
 
-size_t	list_len(t_extra *env)
+size_t	list_len_command(t_command *commands)
+{
+	size_t		count;
+	t_command	*temp;
+
+	temp = commands;
+	count = 0;
+	while (temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	return (count);
+}
+
+size_t	list_len_extra(t_extra *env)
 {
 	size_t		count;
 	t_envlist	*temp;
@@ -80,13 +95,3 @@ void	sort_str(char **matriz)
 	}
 }
 
-bool	space_only(char *str)
-{
-	while (*str)
-	{
-		if (*str != ' ')
-			return (false);
-		str++;
-	}
-	return (true);
-}

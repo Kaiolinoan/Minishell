@@ -15,14 +15,18 @@
 static bool is_all_num(char *str)
 {
 	size_t i;
+	bool sign;
 
 	i = 0;
+	sign = false;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
 		{
-			if (str[i] == '-' || str[i] == '+')
+			if ((str[0] == '-' || str[0] == '+') && !sign
+				&& ft_isdigit(str[1]) != 0)
 			{
+				sign = true;
 				i++;
 				continue;
 			}
@@ -47,7 +51,7 @@ static int check_overflow(char *num)
         str++;
     }
 	while (*str == '0')
-		*str++;
+		str++;
 	len = 0;
 	while (str[len] >= '0' && str[len] <= '9')
 		len++;
@@ -55,7 +59,7 @@ static int check_overflow(char *num)
 		return (0);
 	else if (len < 19)
 		return (1);
-	if (sign)
+	if (sign == 1)
         return (strncmp(str, "9223372036854775807", 19) <= 0);
     return (strncmp(str, "9223372036854775808", 19) <= 0);
 }
@@ -72,11 +76,11 @@ static bool check_exit_arg(char **args)
 		exit(2);
 	}
 	if (ft_array_len(args) > 2)
-		return(ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
+		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
 
-void	built_in_exit(t_command *commands, t_map *env, char *str)
+void	built_in_exit(t_command *commands, t_map *env)
 {
 	t_command			*next;
 	long long			nb;
@@ -84,7 +88,10 @@ void	built_in_exit(t_command *commands, t_map *env, char *str)
 	nb = 0;
 	printf("exit\n");
 	if (!check_exit_arg(commands->command))
-		return (g_exit_code = 1);
+	{
+		g_exit_code = 1;
+		return ;
+	}
 	if (commands->command[1])
 	{
 		nb = ft_atoll(commands->command[1]);
@@ -100,7 +107,6 @@ void	built_in_exit(t_command *commands, t_map *env, char *str)
 		commands = next;
 	}
 	env->destroy(env);
-	free(str);
 	exit(nb);
 }
 // falta fazer o bglh do modulo

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/15 13:55:25 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/21 18:44:14 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,18 @@ struct						s_extra
 	int						size;
 };
 
+typedef enum e_type
+{
+    NONE = 0,
+    OUTPUT,
+    OUTPUT_APPEND,
+    INPUT,
+    HEREDOC,
+}   t_type;
+
 typedef struct s_redirect
 {
-	char type;
+	t_type type;
 	char *filename;
 	struct s_redirect *next;
 }	t_redirect;
@@ -89,6 +98,15 @@ typedef struct s_commands
 	t_redirect 			*outfile;
 	struct s_commands 	*next;
 }	t_command;
+
+typedef struct s_pipes
+{
+	int		pipe_fd1[2];
+	int		pipe_fd2[2];
+	int		*current;
+	int		*prev;
+}	t_pipe;
+
 
 
 //#################################    EXECUTION    #################################################
@@ -117,7 +135,7 @@ char						**ft_split_env(char *env);
 
 
 //env path
-char						*get_path(t_map *env, char *str);
+char						*get_path(t_map *env, char **commands);
 
 //variables
 // void					    create_variable(t_map *env, t_command *commands, t_var *var);
@@ -128,26 +146,38 @@ void						built_in_echo(t_command *commands);
 void    					built_in_export(t_command *commands, t_map *env);
 void						built_in_pwd(t_map *env);
 void						built_in_unset(t_command *commands, t_map *env);
-void    					built_in_exit(t_command *commands, t_map *env, char *str);
+void    					built_in_exit(t_command *commands, t_map *env);
 
 
-//start
-bool						is_built_in(char *str, t_map *env, t_command *commands);
-void						process_input(char *str, t_map *env, char **environment);
+//start, close, redir and pipes 
+void						handle_input (char *str, t_map *env);
+void 						ft_close(int *fd);
+void						close_all(t_pipe *pipe);
+void						initialize_pipes(t_pipe *pipe);
+bool						create_pipes(t_pipe *p);
+void						switch_pipes(t_pipe *p);
+void						 check_redir(t_redirect *input, t_redirect *output, t_pipe *pipe);
 
 //#################################    PARSING    #################################################
 // parse input
 char						*parse_input(char *str);
 
+// parse main
+t_command					*parse_main(char *input, t_command  *head);
 
-// utils
+// parse utils
+bool						space_only(char *str);
+
+//#################################    UTILS    #################################################
 bool						space_only(char *str);
 void						clear_matriz(char **matriz);
-size_t						list_len(t_extra *env);
+size_t						list_len_extra(t_extra *env);
+size_t						list_len_command(t_command *commands);
 int							ft_strcmp(char *s1, char *s2);
 void						sort_str(char **matriz);
 void						print_error(char *str, char *filename);
 size_t						ft_array_len(char **arr);
-
+long long					ft_atoll(const char *str);
+void						free_grid(char **grid);
 
 #endif

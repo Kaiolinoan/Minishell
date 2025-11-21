@@ -6,79 +6,152 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/14 12:50:54 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/21 19:54:40 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-bool	is_built_in(char *str, t_map *env, t_command *commands)
+static bool	is_built_in(t_map *env, t_command *commands)
 {
-	if (!ft_strncmp(str, "env", 3) && ft_strlen(str) == ft_strlen("env"))
-	{
-		env->print(env);
-		return (true);
-	}
-	if (!ft_strncmp(str, "pwd", 3) && ft_strlen(str) == ft_strlen("pwd"))
-	{
-		built_in_pwd(env);
-		return (true);
-	}
-	if (!ft_strncmp(str, "echo", 4))
-	{
-		built_in_echo(commands);
-		return (true);
-	}
-	if (!ft_strncmp(str, "unset", 5))
-	{
-		built_in_unset(commands, env);
-		return (true);
-	}
-	if (!ft_strncmp(str, "export", 6))
-	{
-		built_in_export(commands, env);
-		return (true);
-	}
-	if (!ft_strncmp(str, "cd", 2))
-	{
-		built_in_cd(commands->command, env);
-		return (true);
-	}
-	if (!ft_strncmp(str, "exit", 4))
-	{
-		built_in_exit(commands, env, str);
-		return (true);
-	}
+	char *str;
+
+	str = commands->command[0];
+	if (!ft_strcmp(str, "env"))
+		return (env->print(env), true);
+	if (!ft_strcmp(str, "pwd"))
+		return (built_in_pwd(env), true);
+	if (!ft_strcmp(str, "echo"))
+		return (built_in_echo(commands), true);
+	if (!ft_strcmp(str, "unset"))
+		return (built_in_unset(commands, env), true);
+	if (!ft_strcmp(str, "export"))
+		return (built_in_export(commands, env), true);
+	if (!ft_strcmp(str, "cd"))
+		return (built_in_cd(commands->command, env), true);
+	if (!ft_strcmp(str, "exit"))
+		return (built_in_exit(commands, env), true);
 	return (false);
 }
 
-void	process_input(char *str, t_map *env, char **environment)
+static void	single_command(t_map *env, t_command *commands, t_pipe *pipe)
 {
 	int		pid;
 	char	*path;
-	char	**input;
 
 	pid = fork();
-	if (!pid)
+	if (pid < 0)
+		printf("erro no fork\n");
+	else if (pid == 0)
 	{
-		input = ft_split(str, ' ');
-		if (!input)
-		{
-			free(str);
-			env->destroy(env);
-			return ;
-		}
-		path = get_path(env, str);
+		check_redir(commands->infile, commands->outfile, pipe);
+		path = get_path(env, commands->command);
 		if (!path)
 		{
 			printf("aqui tem que ser um command not found!\n");
-			clear_matriz(input);
 			return ;
 		}
-		execve(path, input, environment);
-		clear_matriz(input);
+		execve(path, commands->command, env->to_string(env));
 		free(path);
 		printf("falha ao executar execve\n");
 	}
-	wait(NULL);
+	else
+		wait(NULL);
+}
+
+static void	child_process(t_map *env, t_command *commands, t_pipe *pipe)
+{
+	char *path;
+	
+	path = get_path(env, commands->command);
+	if (!path)
+	{
+		for (int i = 0; commands->command[i]; i++)
+			printf("%s\n", commands->command[i]);
+		printf("aqui tem que ser um command not found!\n");
+		exit (127);
+	}
+	if (pipe->prev && !commands->infile)
+		dup2(pipe->prev[0], STDIN_FILENO);
+	if (commands->next && !commands->outfile) 
+		dup2(pipe->current[1], STDOUT_FILENO);
+	close_all(pipe);
+	if (is_built_in(env, commands))
+		exit(g_exit_code);
+	execve(path, commands->command, env->to_string(env));
+	ft_printf("erro no execve");
+	exit (127);
+}
+
+void test_out(t_command *commands)
+{
+	t_redirect *out;
+
+	out = malloc(sizeof(t_redirect));
+	if (!out)
+		return ;
+	out->filename = "b";
+	out->type = OUTPUT;
+	commands->outfile = out;
+}
+
+void test_in(t_command *commands)
+{
+	t_redirect *in;
+
+	in = malloc(sizeof(t_redirect));
+	if (!in)
+		return ;
+	in->filename = "a";
+	in->type = INPUT;
+	commands->infile = in;
+}
+
+void	handle_input (char *str, t_map *env)
+{
+	t_command	*commands;
+	t_pipe		*pipe;
+	pid_t		pid;
+
+	pipe = malloc (sizeof(t_pipe));
+	if (!pipe)
+		return ;
+	commands = NULL;
+	commands = parse_main(str, commands);
+	// printf("BEFORE TEST OUTFILE PTR: %p\n", commands->outfile);
+	test_in(commands);
+	commands->outfile = NULL;
+
+	// printf("AFTER TEST OUTFILE PTR: %p\n", commands->outfile);
+	if (!commands->next)
+	{
+		if (!is_built_in(env, commands))
+			return (single_command(env, commands, pipe));
+		else 
+			exit (2);
+	}
+	printf("klasdlaskdlasdklsadkdaslksda\n");
+	initialize_pipes(pipe);
+	while (commands)
+	{
+		if (commands->next)
+			if (!create_pipes(pipe))
+				return ((void)printf("ERROR: pipe()\n"));
+		pid = fork();
+		if (pid < 0)
+			return ((void)printf("erro no fork\n"));
+		else if (pid == 0)
+			child_process(env, commands, pipe);
+		else
+		{
+		    if (commands->next)
+		        ft_close(&pipe->current[1]);
+		    if (pipe->prev)
+		        (ft_close(&pipe->prev[0]), ft_close(&pipe->prev[1]));
+		}
+		switch_pipes(pipe);
+		commands = commands->next;
+	}
+	while (wait(NULL) != -1);
+	free(pipe);
 }

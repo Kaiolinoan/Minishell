@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 13:29:27 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/18 15:17:04 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ char	**__to_string(t_extra *t)
 	size_t		i;
 
 	tmp = t->head;
-	matriz = malloc(sizeof(char *) * (list_len(t) + 1));
+	matriz = malloc(sizeof(char *) * (list_len_extra(t) + 1));
 	if (!matriz)
 		return (NULL);
 	i = 0;
