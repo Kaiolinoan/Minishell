@@ -1,0 +1,11 @@
+a
+b
+includes
+Libft
+Makefile
+minishell
+notes.txt
+objs
+readline.supp
+srcs
+subject

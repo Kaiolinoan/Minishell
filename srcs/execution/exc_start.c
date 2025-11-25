@@ -6,152 +6,114 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/21 19:54:40 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:15:36 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static bool	is_built_in(t_map *env, t_command *commands)
+// static bool	is_built_in(t_map *env, t_command *commands)
+// {
+// 	char *str;
+
+// 	str = commands->args[0];
+// 	if (!ft_strcmp(str, "env"))
+// 		return (env->print(env), true);
+// 	if (!ft_strcmp(str, "pwd"))
+// 		return (built_in_pwd(env), true);
+// 	if (!ft_strcmp(str, "echo"))
+// 		return (built_in_echo(commands), true);
+// 	if (!ft_strcmp(str, "unset"))
+// 		return (built_in_unset(commands, env), true);
+// 	if (!ft_strcmp(str, "export"))
+// 		return (built_in_export(commands, env), true);
+// 	if (!ft_strcmp(str, "cd"))
+// 		return (built_in_cd(commands->args, env), true);
+// 	if (!ft_strcmp(str, "exit"))
+// 		return (built_in_exit(commands, env), true);
+// 	return (false);
+// }
+
+void wait_all(t_command *cmd)
 {
-	char *str;
-
-	str = commands->command[0];
-	if (!ft_strcmp(str, "env"))
-		return (env->print(env), true);
-	if (!ft_strcmp(str, "pwd"))
-		return (built_in_pwd(env), true);
-	if (!ft_strcmp(str, "echo"))
-		return (built_in_echo(commands), true);
-	if (!ft_strcmp(str, "unset"))
-		return (built_in_unset(commands, env), true);
-	if (!ft_strcmp(str, "export"))
-		return (built_in_export(commands, env), true);
-	if (!ft_strcmp(str, "cd"))
-		return (built_in_cd(commands->command, env), true);
-	if (!ft_strcmp(str, "exit"))
-		return (built_in_exit(commands, env), true);
-	return (false);
-}
-
-static void	single_command(t_map *env, t_command *commands, t_pipe *pipe)
-{
-	int		pid;
-	char	*path;
-
-	pid = fork();
-	if (pid < 0)
-		printf("erro no fork\n");
-	else if (pid == 0)
+	while (cmd)
 	{
-		check_redir(commands->infile, commands->outfile, pipe);
-		path = get_path(env, commands->command);
-		if (!path)
-		{
-			printf("aqui tem que ser um command not found!\n");
-			return ;
-		}
-		execve(path, commands->command, env->to_string(env));
-		free(path);
-		printf("falha ao executar execve\n");
-	}
-	else
 		wait(NULL);
-}
-
-static void	child_process(t_map *env, t_command *commands, t_pipe *pipe)
-{
-	char *path;
-	
-	path = get_path(env, commands->command);
-	if (!path)
-	{
-		for (int i = 0; commands->command[i]; i++)
-			printf("%s\n", commands->command[i]);
-		printf("aqui tem que ser um command not found!\n");
-		exit (127);
+		cmd = cmd->next;
 	}
-	if (pipe->prev && !commands->infile)
-		dup2(pipe->prev[0], STDIN_FILENO);
-	if (commands->next && !commands->outfile) 
-		dup2(pipe->current[1], STDOUT_FILENO);
-	close_all(pipe);
-	if (is_built_in(env, commands))
-		exit(g_exit_code);
-	execve(path, commands->command, env->to_string(env));
-	ft_printf("erro no execve");
-	exit (127);
 }
 
-void test_out(t_command *commands)
+static void	single_command(t_map *env, t_command *cmd, int in, int out)
 {
-	t_redirect *out;
+	printf("cmd: %s in: %i out: %i\n", cmd->args[0], in , out);		
 
-	out = malloc(sizeof(t_redirect));
-	if (!out)
-		return ;
-	out->filename = "b";
-	out->type = OUTPUT;
-	commands->outfile = out;
-}
-
-void test_in(t_command *commands)
-{
-	t_redirect *in;
-
-	in = malloc(sizeof(t_redirect));
-	if (!in)
-		return ;
-	in->filename = "a";
-	in->type = INPUT;
-	commands->infile = in;
-}
-
-void	handle_input (char *str, t_map *env)
-{
-	t_command	*commands;
-	t_pipe		*pipe;
-	pid_t		pid;
-
-	pipe = malloc (sizeof(t_pipe));
-	if (!pipe)
-		return ;
-	commands = NULL;
-	commands = parse_main(str, commands);
-	// printf("BEFORE TEST OUTFILE PTR: %p\n", commands->outfile);
-	test_in(commands);
-	commands->outfile = NULL;
-
-	// printf("AFTER TEST OUTFILE PTR: %p\n", commands->outfile);
-	if (!commands->next)
+	cmd->pid = fork();
+	if (cmd->pid < 0)
+		printf("ERROR: fork()\n");
+	else if (cmd->pid == 0)
 	{
-		if (!is_built_in(env, commands))
-			return (single_command(env, commands, pipe));
-		else 
-			exit (2);
+		dup2(in, STDIN_FILENO);
+		dup2(out, STDOUT_FILENO);
+		execve(cmd->path, cmd->args, env->to_string(env));
+		ft_putstr_fd("ERROR: execve()\n", 2);
+		built_in_exit(cmd, env);
 	}
-	printf("klasdlaskdlasdklsadkdaslksda\n");
-	initialize_pipes(pipe);
-	while (commands)
-	{
-		if (commands->next)
-			if (!create_pipes(pipe))
-				return ((void)printf("ERROR: pipe()\n"));
-		pid = fork();
-		if (pid < 0)
-			return ((void)printf("erro no fork\n"));
-		else if (pid == 0)
-			child_process(env, commands, pipe);
-		else
-		{
-		    if (commands->next)
-		        ft_close(&pipe->current[1]);
-		    if (pipe->prev)
-		        (ft_close(&pipe->prev[0]), ft_close(&pipe->prev[1]));
-		}
-		switch_pipes(pipe);
-		commands = commands->next;
-	}
-	while (wait(NULL) != -1);
-	free(pipe);
+	wait_all(cmd);
+	close(in);
+	close(out);
 }
+
+// void test_out(t_command *commands)
+// {
+// 	t_redirect *out;
+
+// 	if (!commands)
+// 		return ;
+// 	out = malloc(sizeof(t_redirect));
+// 	if (!out)
+// 		return ;
+// 	out->filename = "b";
+// 	out->type = OUTPUT;
+// 	commands->outfile = out;
+// }
+
+// void test_in(t_command *commands)
+// {
+// 	t_redirect *in;
+
+// 	if (!commands)
+// 		return ;
+// 	in = malloc(sizeof(t_redirect));
+// 	if (!in)
+// 		return ;
+// 	in->filename = "a";
+// 	in->type = INPUT;
+// 	commands->infile = in;
+// }
+
+
+
+void exec_all(t_command *head, t_map *env)
+{
+	t_command	*cmd;
+	int			in;
+	int			out;
+	int			fds[2];
+
+	if (!head || !env)
+		return ;
+	cmd = head;
+	in = dup(STDIN_FILENO);
+	while (cmd)
+	{	
+		out = dup(STDOUT_FILENO);
+		if (cmd->next && pipe(fds) != -1)
+			out = change_fd(out, fds[1]);
+		// tratar das redirections
+		single_command(env, cmd, in, out);
+		in = change_fd(in, fds[0]);
+		cmd = cmd->next;
+	}		
+	wait_all(head);
+}
+

@@ -60,9 +60,9 @@ static void	process_export_args(t_command *commands, t_map *env, int i)
 {
 	char	**args;
 
-	if (ft_strchr(commands->command[i], '='))
+	if (ft_strchr(commands->args[i], '='))
 	{
-		args = ft_split_env(commands->command[i]);
+		args = ft_split_env(commands->args[i]);
 		if (!args)
 			return ;
 		if (args[0] && args[1])
@@ -82,7 +82,7 @@ static void	process_export_args(t_command *commands, t_map *env, int i)
 		}
 	}
 	else
-		env->set_var_as_exported(env, commands->command[i]);
+		env->set_var_as_exported(env, commands->args[i]);
 }
 
 void	built_in_export(t_command *commands, t_map *env)
@@ -90,9 +90,9 @@ void	built_in_export(t_command *commands, t_map *env)
 	size_t	i;
 
 	i = 1;
-	if (commands->command[0] && (!commands->command[1]))
+	if (commands->args[0] && (!commands->args[1]))
 		return (only_export(env));
-	while (commands->command[i])
+	while (commands->args[i])
 		process_export_args(commands, env, i++);
 }
 

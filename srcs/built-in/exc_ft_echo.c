@@ -14,8 +14,8 @@
 
 static void	print(t_command *commands, size_t i)
 {
-	printf("%s", commands->command[i]);
-	if (commands->command[i + 1])
+	printf("%s", commands->args[i]);
+	if (commands->args[i + 1])
 		printf(" ");
 }
 
@@ -42,12 +42,12 @@ void	built_in_echo(t_command *commands)
 	i = 0;
 	valid_flag = false;
 	first_flag = true;
-	while (commands->command[++i])
+	while (commands->args[++i])
 	{
-		if (first_flag && is_valid_flag(commands->command[i]))
+		if (first_flag && is_valid_flag(commands->args[i]))
 		{
 			valid_flag = true;
-			if (commands->command[i + 1])
+			if (commands->args[i + 1])
 				continue ;
 			return ;
 		}

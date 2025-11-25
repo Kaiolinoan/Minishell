@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:14:33 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/21 18:17:57 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:22:25 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,7 @@ void ft_close(int *fd)
 	*fd = -1;
 }
 
-void close_all(t_pipe *pipe)
+int change_fd(int old, int new)
 {
-	if (pipe->prev)
-	{
-		ft_close(&pipe->prev[1]);
-		ft_close(&pipe->prev[0]);
-	}
-	if (pipe->current)
-	{
-		ft_close(&pipe->current[0]);
-		ft_close(&pipe->current[1]);
-	}
+	return (close(old), new);
 }

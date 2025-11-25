@@ -6,38 +6,40 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/18 16:33:46 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_command	*new_cmdnode(char **args)
+static t_command	*new_cmdnode(char **args, t_map *env)
 {
 	t_command	*node;
 
 	node = malloc(sizeof(t_command));
 	if (!node)
 		return (NULL);
-	node->command = args;
+	node->args = args;
+	node->pid = 0;
+	node->path = get_path(env, args);
 	node->infile = NULL;
 	node->outfile = NULL;
 	node->next = NULL;
 	return (node);
 }
 
-static t_command	*fill_cmdlist(t_command *head, char *command)
+static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 {
-	char		**args;
+	char		**cmds;
 	t_command	*new_node;
 	t_command	*current;
 
-	args = ft_split(command, '\2');
+	cmds = ft_split(args, '\2');
 	if (!args)
 		return (NULL);
-	new_node = new_cmdnode(args);
+	new_node = new_cmdnode(cmds, env);
 	if (!new_node)
-		return (free_grid(args), NULL);
+		return (free_grid(cmds), NULL);
 	if (!head)
 		head = new_node;
 	else
@@ -50,26 +52,26 @@ static t_command	*fill_cmdlist(t_command *head, char *command)
 	return (head);
 }
 
-t_command	*parse_main(char *input, t_command  *head)
+t_command	*parse_main(char *input, t_command  *head, t_map *env)
 {
 	size_t	i;
-	char	**command;
+	char	**args;
 
 	input = parse_input(input);
 	if (!input)
 		return (NULL);
-	command = ft_split(input, '\3');
-	if (!command)
+	args = ft_split(input, '\3');
+	if (!args)
 		return (NULL);
 	i = 0;
-	while (command[i])
+	while (args[i])
 	{
-		head = fill_cmdlist(head, command[i]);
+		head = fill_cmdlist(head, args[i], env);
 		if (!head)
 			return (NULL);
 		i++;
 	}
 	free(input);
-	free_grid(command);
+	free_grid(args);
 	return (head);
 }

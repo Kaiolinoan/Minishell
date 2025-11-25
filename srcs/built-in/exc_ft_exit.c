@@ -87,14 +87,14 @@ void	built_in_exit(t_command *commands, t_map *env)
 
 	nb = 0;
 	printf("exit\n");
-	if (!check_exit_arg(commands->command))
+	if (!check_exit_arg(commands->args))
 	{
 		g_exit_code = 1;
 		return ;
 	}
-	if (commands->command[1])
+	if (commands->args[1])
 	{
-		nb = ft_atoll(commands->command[1]);
+		nb = ft_atoll(commands->args[1]);
 		nb = (unsigned char)nb;
 	}
 	else
@@ -102,7 +102,7 @@ void	built_in_exit(t_command *commands, t_map *env)
 	while (commands)
 	{
 		next = commands->next;
-		clear_matriz(commands->command);
+		clear_matriz(commands->args);
 		free(commands);
 		commands = next;
 	}

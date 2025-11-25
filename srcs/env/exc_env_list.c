@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 15:16:36 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/14 11:34:24 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:33:35 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ t_envlist	*new_node(char *k, char *v, bool exported)
 	return (node);
 }
 
-t_command	*new_command(char **command)
+t_command	*new_command(char **args)
 {
 	t_command	*node;
 
 	node = malloc(sizeof(t_command));
 	if (!node)
 		return (NULL);
-	node->command = command;
+	node->args = args;
 	node->next = NULL;
 	node->infile = NULL;
 	node->outfile = NULL;

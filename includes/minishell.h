@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/21 18:44:14 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,21 +93,13 @@ typedef struct s_redirect
 
 typedef struct s_commands
 {
-	char 				**command;
+	pid_t				pid;
+	char 				**args;
+	char				*path;
 	t_redirect 			*infile;
 	t_redirect 			*outfile;
 	struct s_commands 	*next;
 }	t_command;
-
-typedef struct s_pipes
-{
-	int		pipe_fd1[2];
-	int		pipe_fd2[2];
-	int		*current;
-	int		*prev;
-}	t_pipe;
-
-
 
 //#################################    EXECUTION    #################################################
 
@@ -125,7 +117,7 @@ char 						**__to_string(t_extra *t);
 // env list
 t_map						*new_map(void);
 t_envlist					*new_node(char *k, char *v, bool exported);
-t_command					*new_command(char **command);
+t_command					*new_command(char **args);
 t_redirect					*new_redirect(char *filename, char type);
 t_var						*new_var(char *k, char *v, bool exported, bool commands);
 
@@ -150,20 +142,17 @@ void    					built_in_exit(t_command *commands, t_map *env);
 
 
 //start, close, redir and pipes 
-void						handle_input (char *str, t_map *env);
+void						exec_all (t_command*cmd, t_map *env);
 void 						ft_close(int *fd);
-void						close_all(t_pipe *pipe);
-void						initialize_pipes(t_pipe *pipe);
-bool						create_pipes(t_pipe *p);
-void						switch_pipes(t_pipe *p);
-void						 check_redir(t_redirect *input, t_redirect *output, t_pipe *pipe);
+int 						change_fd(int old, int new);
+void						check_redir(t_redirect *input, t_redirect *output);
 
 //#################################    PARSING    #################################################
 // parse input
 char						*parse_input(char *str);
 
 // parse main
-t_command					*parse_main(char *input, t_command  *head);
+t_command					*parse_main(char *input, t_command  *head, t_map *env);
 
 // parse utils
 bool						space_only(char *str);
