@@ -6,13 +6,13 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:42:23 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 16:54:55 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:36:19 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int here_doc(char *limiter)
+int exec_here_doc(char *limiter)
 {
 	char	*line;
     int     fd;
@@ -28,86 +28,81 @@ int here_doc(char *limiter)
     {
         while (1)
         {
-            line = get_next_line(0);
+            line = readline("> ");
             if (!line)
-                (free(line), exit(0));
+                (ft_close(&fd), exit(0));
             if ((ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-    			&& (line[ft_strlen(limiter)] == '\n'))
+    			&& (line[ft_strlen(limiter)] == '\0'))
                 {
                     free(line);
                     break ;
                 }
             ft_putstr_fd(line, fd);
+            ft_putstr_fd("\n", fd);
             free(line);
         }
         ft_close(&fd);
         exit(0);
     }
-	return (waitpid(pid, NULL, 0), fd);
+    wait(NULL);
+    ft_close(&fd);
+    fd = open("/tmp/here_temp", O_RDONLY);
+	return (fd);
 }
 
-static void helper_input(t_redirect *input)
+static int helper_input(t_redirect *input)
 {
     int fd;
-    int temp_fd;
-
-    if (input == NULL)
-		return ;
-    temp_fd = -1;
-    t_redirect *head = input;
-	while (head)
-	{   
-        ft_close(&temp_fd);
-		if (head->type == INPUT)
+    
+    if (!input)
+		return  -1;
+	while (input)
+    {
+		if (input->type == INPUT)
 		{
-			fd = open(head->filename, O_RDONLY);
+			fd = open(input->filename, O_RDONLY);
 			if (fd < 0)
-				return ;
-            temp_fd = fd;
+				return (ft_putstr_fd("ERROR: open()\n", 2), -1);
 		}
-		else if (head->type == HEREDOC)
-        {
-            temp_fd = here_doc(head->filename);
-            if (temp_fd == -1)
-                return (ft_putstr_fd("ERROR: here_doc\n", 2));
-        }
-		head = head->next;
+		input = input->next;
 	}
-    (dup2(temp_fd, STDIN_FILENO), ft_close(&temp_fd));
+    return fd;
 }
 
-static void helper_output(t_redirect *output)
+static int helper_output(t_redirect *output)
 {
     int fd;
-
-    if (output == NULL)
-		return ;
-    fd = -1;
+    if (!output)
+		return (-1) ;
 	while (output)
 	{
-        ft_close(&fd);
 		if (output->type == OUTPUT)
 			fd = open(output->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		else if (output->type == OUTPUT_APPEND)
 			fd = open(output->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
-        {
-            ft_putstr_fd("erro ao abrir fd no output\n", 2);
-			return ;
-        }
+			return (ft_putstr_fd("ERROR: open()\n", 2), -1);
 		output = output->next;
 	}
-	dup2(fd, STDOUT_FILENO);
-    ft_close(&fd);
+    return (fd);
 }
 
-void check_redir(t_redirect *input, t_redirect *output)
+void check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)
 		return ;
-    helper_input(input);
-	helper_output(output);
-	//fazer a verificao depois
+    if (input)
+    {
+        *in = change_fd(*in, helper_input(input));
+        if (*in < 0)
+            return ;
+    }
+    if (output)
+    {
+        *out = change_fd(*out, helper_output(output));
+        if (*out < 0)
+            return ;
+    }
 }
 
 //nao esta printando aqui dentro, e o append nao funciona

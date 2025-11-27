@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 20:15:36 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:38:43 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,39 +59,39 @@ static void	single_command(t_map *env, t_command *cmd, int in, int out)
 		built_in_exit(cmd, env);
 	}
 	wait_all(cmd);
-	close(in);
-	close(out);
+	ft_close(&in);
+	ft_close(&out);
 }
 
-// void test_out(t_command *commands)
-// {
-// 	t_redirect *out;
+void test_out(t_command *commands, char *filename, t_type type)
+{
+	t_redirect *out;
 
-// 	if (!commands)
-// 		return ;
-// 	out = malloc(sizeof(t_redirect));
-// 	if (!out)
-// 		return ;
-// 	out->filename = "b";
-// 	out->type = OUTPUT;
-// 	commands->outfile = out;
-// }
+	if (!commands)
+		return ;
+	out = malloc(sizeof(t_redirect));
+	if (!out)
+		return ;
+	out->filename = filename;
+	out->type = type;
+	out->next = NULL;
+	commands->outfile = out;
+}
 
-// void test_in(t_command *commands)
-// {
-// 	t_redirect *in;
+void test_in(t_command *commands, char *filename, t_type type)
+{
+	t_redirect *in;
 
-// 	if (!commands)
-// 		return ;
-// 	in = malloc(sizeof(t_redirect));
-// 	if (!in)
-// 		return ;
-// 	in->filename = "a";
-// 	in->type = INPUT;
-// 	commands->infile = in;
-// }
-
-
+	if (!commands)
+		return ;
+	in = malloc(sizeof(t_redirect));
+	if (!in)
+		return ;
+	in->filename = filename;
+	in->type = type;
+	in->next = NULL;
+	commands->infile = in;
+}
 
 void exec_all(t_command *head, t_map *env)
 {
@@ -104,12 +104,19 @@ void exec_all(t_command *head, t_map *env)
 		return ;
 	cmd = head;
 	in = dup(STDIN_FILENO);
+	test_in(cmd, "a", INPUT);
+	// test_in(cmd->next, "a", HEREDOC);
+	// cmd->infile = NULL;
+	test_out(cmd, "c", OUTPUT); 
 	while (cmd)
-	{	
+	{
+		if (cmd->infile && cmd->infile->type == HEREDOC)
+			in = change_fd(in, exec_here_doc(cmd->infile->filename));
 		out = dup(STDOUT_FILENO);
 		if (cmd->next && pipe(fds) != -1)
 			out = change_fd(out, fds[1]);
-		// tratar das redirections
+		printf("cmd: %s in: %i out: %i\n", cmd->args[0], in , out);		
+		check_redir(cmd->infile, cmd->outfile, &in, &out);
 		single_command(env, cmd, in, out);
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;

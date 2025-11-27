@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:35:33 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,9 @@ void    					built_in_exit(t_command *commands, t_map *env);
 void						exec_all (t_command*cmd, t_map *env);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
-void						check_redir(t_redirect *input, t_redirect *output);
+void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
+int							exec_here_doc(char *limiter);
+
 
 //#################################    PARSING    #################################################
 // parse input
