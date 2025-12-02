@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/11/28 12:43:17 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	main(int argc, char **argv, char **environment)
 {
 	char		*str;
 	t_map		*env;
+	t_command	*cmd;
 
 	(void)argc;
 	(void)argv;
@@ -27,11 +28,13 @@ int	main(int argc, char **argv, char **environment)
 	{
 		str = readline("minishell> ");
 		if (!str)
-			return (printf("Saindo do minishell!\n"), exit(0), -1);
+			break ;
 		if (*str)
 			add_history(str);
-		exec_all(parse_main(str, NULL, env), env);
+		cmd = parse_main(str, NULL, env);
+		exec_all((cmd), env);
 	}
-	env->destroy(env);
+	printf("Saindo do minishell!\n");
+	built_in_exit(cmd, env);
 }
 //VERIFICAR SE IREMOS MANTER AS VARIAVEIS!

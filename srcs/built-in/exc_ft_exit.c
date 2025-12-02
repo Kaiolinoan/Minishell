@@ -79,10 +79,23 @@ static bool check_exit_arg(char **args)
 		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
-
-void	built_in_exit(t_command *commands, t_map *env)
+static void free_all(t_command *commands)
 {
 	t_command			*next;
+
+	while (commands)
+	{
+		next = commands->next;
+		list_clear_redir(commands->infile);
+		list_clear_redir(commands->outfile);
+		// free(commands->path);
+		clear_matriz(commands->args);
+		free(commands);
+		commands = next;
+	}
+}
+void	built_in_exit(t_command *commands, t_map *env)
+{
 	long long			nb;
 
 	nb = 0;
@@ -99,13 +112,7 @@ void	built_in_exit(t_command *commands, t_map *env)
 	}
 	else
 		nb = g_exit_code;
-	while (commands)
-	{
-		next = commands->next;
-		clear_matriz(commands->args);
-		free(commands);
-		commands = next;
-	}
+	free_all(commands);
 	env->destroy(env);
 	exit(nb);
 }

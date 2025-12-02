@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/27 17:35:33 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:47:55 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,9 @@ typedef enum e_type
 
 typedef struct s_redirect
 {
-	t_type type;
-	char *filename;
+	char	*filename;
+	t_type	type;
+	int		fd;
 	struct s_redirect *next;
 }	t_redirect;
 
@@ -170,5 +171,6 @@ void						print_error(char *str, char *filename);
 size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
+void						list_clear_redir(t_redirect *head);
 
 #endif

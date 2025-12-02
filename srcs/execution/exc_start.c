@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/27 17:38:43 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:53:58 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,26 @@ void wait_all(t_command *cmd)
 	}
 }
 
+void exec_failure(t_map *env, t_command *cmd, int in, int out)
+{
+	if (!cmd->path)
+	{
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": command not found\n", 2);
+	}
+	ft_putstr_fd("ERROR: execve()\n", 2);
+	perror("execve");
+	ft_close(&in);
+	ft_close(&out);
+	printf("saiu aki\n");
+	built_in_exit(cmd, env);
+}
+
 static void	single_command(t_map *env, t_command *cmd, int in, int out)
 {
-	printf("cmd: %s in: %i out: %i\n", cmd->args[0], in , out);		
-
+	char **environment;
+	printf("cmd in: %d, out: %d \n", in, out);
+	environment = env->to_string(env);
 	cmd->pid = fork();
 	if (cmd->pid < 0)
 		printf("ERROR: fork()\n");
@@ -54,13 +70,15 @@ static void	single_command(t_map *env, t_command *cmd, int in, int out)
 	{
 		dup2(in, STDIN_FILENO);
 		dup2(out, STDOUT_FILENO);
-		execve(cmd->path, cmd->args, env->to_string(env));
-		ft_putstr_fd("ERROR: execve()\n", 2);
-		built_in_exit(cmd, env);
+		execve(cmd->path, cmd->args, environment);
+		clear_matriz(environment);
+		exec_failure(env, cmd, in, out);
 	}
 	wait_all(cmd);
 	ft_close(&in);
 	ft_close(&out);
+	printf("cmd dps in: %d, out: %d \n", in, out);
+	clear_matriz(environment);
 }
 
 void test_out(t_command *commands, char *filename, t_type type)
@@ -75,6 +93,7 @@ void test_out(t_command *commands, char *filename, t_type type)
 	out->filename = filename;
 	out->type = type;
 	out->next = NULL;
+	out->fd = -1;
 	commands->outfile = out;
 }
 
@@ -90,7 +109,27 @@ void test_in(t_command *commands, char *filename, t_type type)
 	in->filename = filename;
 	in->type = type;
 	in->next = NULL;
+	in->fd = -1;
 	commands->infile = in;
+}
+bool check_here_doc(t_command *cmd)
+{
+	t_command	*head;
+
+	head = cmd;
+	while (cmd)
+	{
+		if (cmd->infile && cmd->infile->type == HEREDOC)
+		{
+			cmd->infile->fd = exec_here_doc(cmd->infile->filename);
+			printf("fd: %d\n", cmd->infile->fd);
+			if (cmd->infile->fd < 0)
+				return (false);
+		}
+		cmd = cmd->next;
+	}
+	cmd = head;
+	return (true);
 }
 
 void exec_all(t_command *head, t_map *env)
@@ -104,23 +143,20 @@ void exec_all(t_command *head, t_map *env)
 		return ;
 	cmd = head;
 	in = dup(STDIN_FILENO);
-	test_in(cmd, "a", INPUT);
-	// test_in(cmd->next, "a", HEREDOC);
-	// cmd->infile = NULL;
-	test_out(cmd, "c", OUTPUT); 
+	test_in(cmd, "a", HEREDOC);
+	// test_out(cmd, "c", OUTPUT);
+	if (!check_here_doc(cmd))
+		return (built_in_exit(cmd, env));
 	while (cmd)
 	{
-		if (cmd->infile && cmd->infile->type == HEREDOC)
-			in = change_fd(in, exec_here_doc(cmd->infile->filename));
 		out = dup(STDOUT_FILENO);
 		if (cmd->next && pipe(fds) != -1)
 			out = change_fd(out, fds[1]);
-		printf("cmd: %s in: %i out: %i\n", cmd->args[0], in , out);		
 		check_redir(cmd->infile, cmd->outfile, &in, &out);
 		single_command(env, cmd, in, out);
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;
-	}		
-	wait_all(head);
+	}
+	
 }
 

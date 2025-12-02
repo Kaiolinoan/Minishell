@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:47:46 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/18 16:33:07 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/02 16:29:21 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,18 @@ void	free_grid(char **grid)
 	while (grid[i])
 		free(grid[i++]);
 	free(grid);
+}
+
+void list_clear_redir(t_redirect *head)
+{
+	t_redirect *next;
+
+	while(head)
+	{
+		next = head->next;
+		free(head);
+		ft_close(&head->fd);
+		head = next;
+	}
+	head = NULL;
 }
