@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/02 16:53:58 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:43:58 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,16 @@ void exec_failure(t_map *env, t_command *cmd, int in, int out)
 		ft_putstr_fd(cmd->args[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
 	}
-	ft_putstr_fd("ERROR: execve()\n", 2);
-	perror("execve");
+	ft_putstr_fd("ERROR: execve()\n", 2); // arrumar isso para nao aparecer duas mensagens 
 	ft_close(&in);
 	ft_close(&out);
-	printf("saiu aki\n");
 	built_in_exit(cmd, env);
 }
 
 static void	single_command(t_map *env, t_command *cmd, int in, int out)
 {
-	char **environment;
-	printf("cmd in: %d, out: %d \n", in, out);
+	char	**environment;
+
 	environment = env->to_string(env);
 	cmd->pid = fork();
 	if (cmd->pid < 0)
@@ -75,9 +73,9 @@ static void	single_command(t_map *env, t_command *cmd, int in, int out)
 		exec_failure(env, cmd, in, out);
 	}
 	wait_all(cmd);
-	ft_close(&in);
 	ft_close(&out);
-	printf("cmd dps in: %d, out: %d \n", in, out);
+	ft_close(&in);
+	// ft_close(&cmd->infile->fd);
 	clear_matriz(environment);
 }
 
@@ -112,17 +110,16 @@ void test_in(t_command *commands, char *filename, t_type type)
 	in->fd = -1;
 	commands->infile = in;
 }
+
 bool check_here_doc(t_command *cmd)
 {
 	t_command	*head;
-
 	head = cmd;
 	while (cmd)
 	{
 		if (cmd->infile && cmd->infile->type == HEREDOC)
 		{
 			cmd->infile->fd = exec_here_doc(cmd->infile->filename);
-			printf("fd: %d\n", cmd->infile->fd);
 			if (cmd->infile->fd < 0)
 				return (false);
 		}
@@ -142,11 +139,10 @@ void exec_all(t_command *head, t_map *env)
 	if (!head || !env)
 		return ;
 	cmd = head;
-	in = dup(STDIN_FILENO);
-	test_in(cmd, "a", HEREDOC);
-	// test_out(cmd, "c", OUTPUT);
 	if (!check_here_doc(cmd))
 		return (built_in_exit(cmd, env));
+	in = dup(STDIN_FILENO);
+	test_in(cmd, "a", HEREDOC);	
 	while (cmd)
 	{
 		out = dup(STDOUT_FILENO);
@@ -157,6 +153,5 @@ void exec_all(t_command *head, t_map *env)
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;
 	}
-	
 }
 

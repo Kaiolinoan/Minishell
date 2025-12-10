@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:42:23 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/02 16:57:31 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/09 17:40:06 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int exec_here_doc(char *limiter)
         here_child(limiter);
     wait(NULL);
     fd = open("/tmp/here_temp", O_RDONLY);
+    unlink("/tmp/here_temp");
 	return (fd);
 }
 
@@ -98,19 +99,13 @@ void check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
         
     if (input)
     {
-        printf("redir: in: %d, out: %d \n", *in, *out);
+        printf("%d\n", *in);
         if (input->type == INPUT)
             *in = change_fd(*in, helper_input(input));
         if (input->type == HEREDOC)
-        {
-            int tmp = *in;
-            printf("before: %d\n", tmp);
-            *in = change_fd(*in, input->fd);
-            printf("after %d\n", *in);
-        }
+            *in = change_fd(*in, input->fd); // aqui estou pegando o fd do primeiro e nao do ultimo
         if (*in < 0)
-            return ;
-        printf("dps redir: in: %d, out: %d \n", *in, *out);
+            return ; // nao e prar retornar e sim sair do programa
     }
     if (output)
     {
