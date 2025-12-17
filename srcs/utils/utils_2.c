@@ -77,11 +77,13 @@ void list_clear_redir(t_redirect *head)
 {
 	t_redirect *next;
 
+	if (!head)
+		return ;
 	while(head)
 	{
 		next = head->next;
-		free(head);
 		ft_close(&head->fd);
+		free(head);
 		head = next;
 	}
 	head = NULL;

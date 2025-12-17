@@ -20,6 +20,8 @@
 # include <stdio.h>
 # include <errno.h>
 # include <stdbool.h>
+# include <dirent.h>
+
 
 # define CD_ERROR "bash: cd: "
 
@@ -78,9 +80,9 @@ struct						s_extra
 typedef enum e_type
 {
     NONE = 0,
-    OUTPUT,
+    OUTPUT = 60,
+    INPUT = 62,
     OUTPUT_APPEND,
-    INPUT,
     HEREDOC,
 }   t_type;
 
@@ -147,8 +149,11 @@ void						exec_all (t_command*cmd, t_map *env);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
 void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
-int							exec_here_doc(char *limiter);
+int							exec_here_doc(t_command *cmd, t_map *env);
 
+//helpers
+void 						wait_all(t_command *cmd);
+bool						check_here_doc(t_command *cmd, t_map *env);
 
 //#################################    PARSING    #################################################
 // parse input
@@ -172,5 +177,7 @@ size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
 void						list_clear_redir(t_redirect *head);
+void						ft_exit(t_map *env, t_command *cmd, int nb);
+void						free_all(t_command *commands);
 
 #endif

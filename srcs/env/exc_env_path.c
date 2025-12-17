@@ -39,7 +39,7 @@ char	*get_path(t_map *env, char **commands)
 	while (arr_path[i])
 	{
 		if (!access(commands[0], F_OK))
-			return (clear_matriz(arr_path), commands[0]);
+			return (clear_matriz(arr_path), ft_strdup(commands[0]));
 		if (new_path)
 			free(new_path);
 		new_path = get_full_path(arr_path[i], commands);

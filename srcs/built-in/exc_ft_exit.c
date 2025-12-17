@@ -66,6 +66,8 @@ static int check_overflow(char *num)
 
 static bool check_exit_arg(char **args)
 {
+	if (!args)
+		return (false);
 	if (!args[1])
 		return (true);
 	if (!is_all_num(args[1]) || !check_overflow(args[1]))
@@ -79,20 +81,11 @@ static bool check_exit_arg(char **args)
 		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
-static void free_all(t_command *commands)
+void ft_exit(t_map *env, t_command *cmd, int nb)
 {
-	t_command			*next;
-
-	while (commands)
-	{
-		next = commands->next;
-		list_clear_redir(commands->infile);
-		list_clear_redir(commands->outfile);
-		// free(commands->path);
-		clear_matriz(commands->args);
-		free(commands);
-		commands = next;
-	}
+	free_all(cmd);
+	env->destroy(env);
+	exit(nb);
 }
 void	built_in_exit(t_command *commands, t_map *env)
 {
@@ -100,6 +93,8 @@ void	built_in_exit(t_command *commands, t_map *env)
 
 	nb = 0;
 	printf("exit\n");
+	if (!commands)
+		return (ft_exit(env, commands, 0));
 	if (!check_exit_arg(commands->args))
 	{
 		g_exit_code = 1;
@@ -112,8 +107,6 @@ void	built_in_exit(t_command *commands, t_map *env)
 	}
 	else
 		nb = g_exit_code;
-	free_all(commands);
-	env->destroy(env);
-	exit(nb);
+	ft_exit(env, commands, nb);
 }
 // falta fazer o bglh do modulo

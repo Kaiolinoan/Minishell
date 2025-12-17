@@ -22,8 +22,11 @@ int	main(int argc, char **argv, char **environment)
 
 	(void)argc;
 	(void)argv;
+	if (argc > 1)
+		return (0);
 	env = new_map();
 	create_env(env, environment);
+	cmd = NULL;
 	while (1)
 	{
 		str = readline("minishell> ");
@@ -32,9 +35,9 @@ int	main(int argc, char **argv, char **environment)
 		if (*str)
 			add_history(str);
 		cmd = parse_main(str, NULL, env);
-		exec_all((cmd), env);
+		exec_all(cmd, env);
 	}
 	printf("Saindo do minishell!\n");
-	built_in_exit(cmd, env);
+	ft_exit(env, cmd, 0);
 }
 //VERIFICAR SE IREMOS MANTER AS VARIAVEIS!

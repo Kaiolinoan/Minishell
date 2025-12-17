@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/09 17:43:58 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/16 18:35:15 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,57 @@
 // 		return (built_in_exit(commands, env), true);
 // 	return (false);
 // }
-
-void wait_all(t_command *cmd)
+static int check_error_msg(t_command *cmd)
 {
-	while (cmd)
+	// if (!cmd->path)
+	// {
+	// 	ft_putstr_fd(cmd->args[0], 2);
+	// 	ft_putstr_fd(": command not found\n", 2);
+	// 	return (127);
+	// }
+	if (errno == ENOENT)
 	{
-		wait(NULL);
-		cmd = cmd->next;
+		ft_putstr_fd(cmd->args[0], 2);
+		ft_putstr_fd(": No such file or directory\n", 2);
+		return (127);
 	}
+	else if (errno ==  EACCES)
+	{
+		DIR *d;
+
+		d = opendir(cmd->args[0]);
+		if (d)
+		{
+			(closedir(d), ft_putstr_fd(cmd->args[0], 2));
+			ft_putstr_fd(": Is a directory\n", 2);
+			return (126);
+		}
+		else 
+		{
+			ft_putstr_fd(cmd->args[0], 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+			return (126);
+		}
+	}
+	return (127);
+} 
+void cmd_not_found(t_command *cmd, t_map *env, int in, int out)
+{
+	ft_putstr_fd(cmd->args[0], 2);
+	ft_putstr_fd(": command not found\n", 2);
+	ft_close(&in);
+	ft_close(&out);
+	ft_exit(env, cmd, 127);
 }
 
 void exec_failure(t_map *env, t_command *cmd, int in, int out)
 {
-	if (!cmd->path)
-	{
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": command not found\n", 2);
-	}
-	ft_putstr_fd("ERROR: execve()\n", 2); // arrumar isso para nao aparecer duas mensagens 
+	int exit_code;
+
+	exit_code = check_error_msg(cmd);
 	ft_close(&in);
 	ft_close(&out);
-	built_in_exit(cmd, env);
+	ft_exit(env, cmd, exit_code);
 }
 
 static void	single_command(t_map *env, t_command *cmd, int in, int out)
@@ -66,9 +96,15 @@ static void	single_command(t_map *env, t_command *cmd, int in, int out)
 		printf("ERROR: fork()\n");
 	else if (cmd->pid == 0)
 	{
+		// ft_printf("path:%s\ncmd: %s\n", cmd->path, cmd->args[0]);
 		dup2(in, STDIN_FILENO);
 		dup2(out, STDOUT_FILENO);
-		execve(cmd->path, cmd->args, environment);
+		if (!cmd->path && ft_strchr(cmd->args[0], '/') == NULL)
+			(clear_matriz(environment), cmd_not_found(cmd, env, in , out));
+		if (ft_strchr(cmd->args[0], '/'))
+			execve(cmd->args[0], cmd->args, environment);
+		else 
+			execve(cmd->path, cmd->args, environment);
 		clear_matriz(environment);
 		exec_failure(env, cmd, in, out);
 	}
@@ -111,24 +147,6 @@ void test_in(t_command *commands, char *filename, t_type type)
 	commands->infile = in;
 }
 
-bool check_here_doc(t_command *cmd)
-{
-	t_command	*head;
-	head = cmd;
-	while (cmd)
-	{
-		if (cmd->infile && cmd->infile->type == HEREDOC)
-		{
-			cmd->infile->fd = exec_here_doc(cmd->infile->filename);
-			if (cmd->infile->fd < 0)
-				return (false);
-		}
-		cmd = cmd->next;
-	}
-	cmd = head;
-	return (true);
-}
-
 void exec_all(t_command *head, t_map *env)
 {
 	t_command	*cmd;
@@ -139,10 +157,10 @@ void exec_all(t_command *head, t_map *env)
 	if (!head || !env)
 		return ;
 	cmd = head;
-	if (!check_here_doc(cmd))
+	// test_in(cmd, "a", HEREDOC);	
+	if (!check_here_doc(cmd, env))
 		return (built_in_exit(cmd, env));
 	in = dup(STDIN_FILENO);
-	test_in(cmd, "a", HEREDOC);	
 	while (cmd)
 	{
 		out = dup(STDOUT_FILENO);
@@ -153,5 +171,8 @@ void exec_all(t_command *head, t_map *env)
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;
 	}
+	// ft_close(&in);
+	// ft_close(&out);
+	// ft_close(&cmd->infile->fd);
 }
 

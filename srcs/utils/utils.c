@@ -23,6 +23,7 @@ void	clear_matriz(char **matriz)
 	while (matriz[i])
 		free(matriz[i++]);
 	free(matriz);
+	matriz = NULL;
 }
 
 size_t	list_len_command(t_command *commands)
@@ -92,6 +93,22 @@ void	sort_str(char **matriz)
 			j++;
 		}
 		i++;
+	}
+}
+
+void free_all(t_command *commands)
+{
+	t_command			*next;
+
+	while (commands)
+	{
+		next = commands->next;
+		list_clear_redir(commands->infile);
+		list_clear_redir(commands->outfile);
+		free(commands->path);
+		clear_matriz(commands->args);
+		free(commands);
+		commands = next;
 	}
 }
 
