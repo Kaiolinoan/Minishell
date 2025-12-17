@@ -100,6 +100,8 @@ void free_all(t_command *commands)
 {
 	t_command			*next;
 
+	if (!commands)
+		return ;
 	while (commands)
 	{
 		next = commands->next;
@@ -110,5 +112,6 @@ void free_all(t_command *commands)
 		free(commands);
 		commands = next;
 	}
+	commands = NULL;
 }
 

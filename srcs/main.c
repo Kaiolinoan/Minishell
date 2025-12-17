@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/28 12:43:17 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:01:42 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ int	main(int argc, char **argv, char **environment)
 			break ;
 		if (*str)
 			add_history(str);
+		free_all(cmd);
 		cmd = parse_main(str, NULL, env);
 		exec_all(cmd, env);
 	}

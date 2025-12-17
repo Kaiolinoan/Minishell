@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/16 18:35:15 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/17 17:33:48 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,6 @@
 // }
 static int check_error_msg(t_command *cmd)
 {
-	// if (!cmd->path)
-	// {
-	// 	ft_putstr_fd(cmd->args[0], 2);
-	// 	ft_putstr_fd(": command not found\n", 2);
-	// 	return (127);
-	// }
 	if (errno == ENOENT)
 	{
 		ft_putstr_fd(cmd->args[0], 2);
@@ -171,8 +165,5 @@ void exec_all(t_command *head, t_map *env)
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;
 	}
-	// ft_close(&in);
-	// ft_close(&out);
-	// ft_close(&cmd->infile->fd);
 }
 
