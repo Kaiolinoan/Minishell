@@ -64,7 +64,7 @@ static int check_overflow(char *num)
     return (strncmp(str, "9223372036854775808", 19) <= 0);
 }
 
-static bool check_exit_arg(char **args)
+static bool check_exit_arg(char **args, t_map *env, t_command *cmd)
 {
 	if (!args)
 		return (false);
@@ -75,7 +75,7 @@ static bool check_exit_arg(char **args)
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		exit(2);
+		ft_exit(env, cmd, 2);
 	}
 	if (ft_array_len(args) > 2)
 		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
@@ -95,7 +95,7 @@ void	built_in_exit(t_command *commands, t_map *env)
 	printf("exit\n");
 	if (!commands)
 		return (ft_exit(env, commands, 0));
-	if (!check_exit_arg(commands->args))
+	if (!check_exit_arg(commands->args, env, commands))
 	{
 		g_exit_code = 1;
 		return ;

@@ -6,33 +6,34 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/17 17:33:48 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/22 18:55:43 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static bool	is_built_in(t_map *env, t_command *commands)
-// {
-// 	char *str;
+static bool	is_built_in(t_map *env, t_command *commands)
+{
+	char *str;
 
-// 	str = commands->args[0];
-// 	if (!ft_strcmp(str, "env"))
-// 		return (env->print(env), true);
-// 	if (!ft_strcmp(str, "pwd"))
-// 		return (built_in_pwd(env), true);
-// 	if (!ft_strcmp(str, "echo"))
-// 		return (built_in_echo(commands), true);
-// 	if (!ft_strcmp(str, "unset"))
-// 		return (built_in_unset(commands, env), true);
-// 	if (!ft_strcmp(str, "export"))
-// 		return (built_in_export(commands, env), true);
-// 	if (!ft_strcmp(str, "cd"))
-// 		return (built_in_cd(commands->args, env), true);
-// 	if (!ft_strcmp(str, "exit"))
-// 		return (built_in_exit(commands, env), true);
-// 	return (false);
-// }
+	str = commands->args[0];
+	if (!ft_strcmp(str, "env"))
+		return (env->print(env), true);
+	if (!ft_strcmp(str, "pwd"))
+		return (built_in_pwd(env), true);
+	if (!ft_strcmp(str, "echo"))
+		return (built_in_echo(commands), true);
+	if (!ft_strcmp(str, "unset"))
+		return (built_in_unset(commands, env), true);
+	if (!ft_strcmp(str, "export"))
+		return (built_in_export(commands, env), true);
+	if (!ft_strcmp(str, "cd"))
+		return (built_in_cd(commands->args, env), true);
+	if (!ft_strcmp(str, "exit"))
+		return (built_in_exit(commands, env), true);
+	return (false);
+}
+
 static int check_error_msg(t_command *cmd)
 {
 	if (errno == ENOENT)
@@ -161,7 +162,8 @@ void exec_all(t_command *head, t_map *env)
 		if (cmd->next && pipe(fds) != -1)
 			out = change_fd(out, fds[1]);
 		check_redir(cmd->infile, cmd->outfile, &in, &out);
-		single_command(env, cmd, in, out);
+		if (!is_built_in(env, cmd))	
+			single_command(env, cmd, in, out);
 		in = change_fd(in, fds[0]);
 		cmd = cmd->next;
 	}

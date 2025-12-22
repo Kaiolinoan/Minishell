@@ -55,34 +55,65 @@ static bool	ft_check_var_name(char *str)
 	}
 	return (true);
 }
+// static bool check_var_sintax(char *str)
+// {
+// 	if (!ft_strchr(str, '='))
+// 	{
+// 		printf("bash: export: `%s': not a valid identifier\n",
+// 				str);
+// 		return (false);
+// 	}
+// 	return (true);
+// }
+// static void	process_export_args(t_command *commands, t_map *env, int i)
+// {
+// 	char	**args;
+
+// 	if (check_var_sintax(commands->args[i]))
+// 	{
+// 		args = ft_split_env(commands->args[i]);
+// 		if (!args)
+// 			return ;
+// 		if (args[0] && args[1])
+// 		{
+// 			// printf("args[0]: %s, ascii: %d\n", args[0], args[0][0]);
+// 			// printf("args[1]: %s, ascii: %d\n", args[1], args[1][0]);	
+// 			if (ft_check_var_name(args[0]) && args[0][0] != '\0')
+// 				env->put(env, args[0], args[1], true);
+// 			else
+// 				printf("bash: export: `%s': not a valid identifier\n",
+// 					args[0]);
+// 		}
+// 		else
+// 		{
+// 			if (args[0])
+// 				free(args[0]);
+// 			if (args[1])
+// 				free(args[1]);
+// 		}
+// 	}
+// 	else
+// 		env->set_var_as_exported(env, commands->args[i]);
+// }
 
 static void	process_export_args(t_command *commands, t_map *env, int i)
 {
-	char	**args;
-
+	char *name;
+	char **args;
+	(void)env;
+	name = NULL;
 	if (ft_strchr(commands->args[i], '='))
 	{
 		args = ft_split_env(commands->args[i]);
-		if (!args)
-			return ;
-		if (args[0] && args[1])
-		{
-			if (ft_check_var_name(args[0]))
-				env->put(env, args[0], args[1], true);
-			else
-				printf("bash: export: `%s': not a valid identifier\n",
-					args[0]);
-		}
-		else
-		{
-			if (args[0])
-				free(args[0]);
-			if (args[1])
-				free(args[1]);
-		}
+		if (args[0] != NULL)
+			name = args[0];
 	}
 	else
-		env->set_var_as_exported(env, commands->args[i]);
+		name = commands->args[i];
+	ft_printf("%s\n", name);
+	if (!ft_check_var_name(name))
+		printf("bash: export: `%s': not a valid identifier\n",
+				name);
 }
 
 void	built_in_export(t_command *commands, t_map *env)
@@ -93,7 +124,11 @@ void	built_in_export(t_command *commands, t_map *env)
 	if (commands->args[0] && (!commands->args[1]))
 		return (only_export(env));
 	while (commands->args[i])
-		process_export_args(commands, env, i++);
+	{
+		if (commands->args[i][0] != '\0')
+			process_export_args(commands, env, i++);
+	}
+	
 }
 
 /*CODIGO QUE ESTAVA NO EXPORT PARA TESTAR VARIAVEIS:*/
