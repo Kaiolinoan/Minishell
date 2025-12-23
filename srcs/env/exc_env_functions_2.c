@@ -37,7 +37,7 @@ void	__print(t_extra *t)
 	temp = t->head;
 	while (temp)
 	{
-		if (temp->exported)
+		if (temp->exported && *temp->value)
 			printf("%s=%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
@@ -50,6 +50,8 @@ void	__set_var_as_exported(t_extra *t, char *key)
 	f = find(t, key);
 	if (f)
 		f->exported = true;
+	else 
+		t->put(t, ft_strdup(key), NULL, true);
 	return ;
 }
 
@@ -65,8 +67,8 @@ static char	*get_full_str(t_envlist *tmp)
 	if (!str)
 		return (free(str), NULL);
 	str = gnl_strjoin(str, tmp->value);
-	if (!str)
-		return (free(str), NULL);
+	// if (!str)
+	// 	return (free(str), NULL);
 	return (str);
 }
 

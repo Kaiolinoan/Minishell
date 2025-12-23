@@ -66,11 +66,6 @@ int	ft_strcmp(char *s1, char *s2)
 	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-// void	create_variable(t_map *env, t_var *var)
-// {
-// 	env->put(env, var->key, var->value, var->is_exported);
-// }
-
 void	sort_str(char **matriz)
 {
 	size_t	i;
