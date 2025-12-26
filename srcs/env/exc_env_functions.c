@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 12:51:08 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/26 17:12:42 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	__put(t_extra *t, char *k, char *v, bool exported)
 	t_envlist	*f;
 	t_envlist	*node;
 
-	if (!k || !v || !t)
+	if (!k || !t)
 		return ;
 	f = find(t, k);
 	if (f)

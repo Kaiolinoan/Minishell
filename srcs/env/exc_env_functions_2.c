@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/18 15:17:04 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/26 17:23:49 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,15 @@ static char	*get_full_str(t_envlist *tmp)
 	str = ft_strdup(tmp->key);
 	if (!str)
 		return (NULL);
-	str = gnl_strjoin(str, "=");
-	if (!str)
-		return (free(str), NULL);
-	str = gnl_strjoin(str, tmp->value);
+	if (tmp->value)
+	{	
+		str = gnl_strjoin(str, "=");
+		if (!str)
+			return (free(str), NULL);
+		str = gnl_strjoin(str, tmp->value);
+	}
 	// if (!str)
-	// 	return (free(str), NULL);
+		// return (free(str), NULL);
 	return (str);
 }
 
