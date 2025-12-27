@@ -6,13 +6,13 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/17 14:38:17 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/27 17:47:25 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	cd_home(char *path, t_map *env)
+static int	cd_home(char *path, t_map *env)
 {
 	char	*home;
 
@@ -20,13 +20,14 @@ static void	cd_home(char *path, t_map *env)
 	if (home)
 	{
 		if (chdir(home) == -1)
-			print_error(CD_ERROR, path);
+			return (print_error(CD_ERROR, path), 1);
 	}
 	else
-		ft_putstr_fd("bash: cd: HOME not set\n", 2);
+		return (ft_putstr_fd("bash: cd: HOME not set\n", 2), 1);
+	return (0);
 }
 
-static void	process_cd(char *path, t_map *env, char *old_pwd)
+static int	process_cd(char *path, t_map *env, char *old_pwd)
 {
 	if (!path || (!ft_strcmp(path, "~")))
 		return (cd_home(path, env));
@@ -35,22 +36,23 @@ static void	process_cd(char *path, t_map *env, char *old_pwd)
 		if (old_pwd)
 		{
 			if (chdir(old_pwd) == -1)
-				print_error(CD_ERROR, path);
+				return (print_error(CD_ERROR, path), 1);
 			else
-				return ((void)printf("%s\n", env->get(env, "OLDPWD")));
+				return (printf("%s\n", env->get(env, "OLDPWD")), 0);
 		}
 		else
-			return (ft_putstr_fd("bash: cd: OLDPWD not set\n", 2));
+			return (ft_putstr_fd("bash: cd: OLDPWD not set\n", 2), 1);
 	}
 	if (path[0] == '~' && path[1] == '/')
 	{
 		cd_home(path, env);
 		if (chdir(path + 2) == -1)
-			return (print_error(CD_ERROR, path));
-		return ;
+			return (print_error(CD_ERROR, path), 1);
+		return (0);
 	}
 	if (chdir(path) == -1)
-		print_error(CD_ERROR, path);
+		return (print_error(CD_ERROR, path), 1);
+	return (0);
 }
 
 int	built_in_cd(char **args, t_map *env)
@@ -58,18 +60,19 @@ int	built_in_cd(char **args, t_map *env)
 	char	*pwd;
 	char	*old_pwd;
 	char	*path;
+	int 	exit_code;
 
 	if (ft_array_len(args) > 2)
-		return (printf("bash: cd: too many arguments\n"), 0);
+		return (printf("bash: cd: too many arguments\n"), 1);
 	path = args[1];
 	pwd = getcwd(NULL, 0);
 	old_pwd = env->get(env, "PWD");
-	process_cd(path, env, old_pwd);
+	exit_code = process_cd(path, env, old_pwd);
 	if (pwd && old_pwd)
 	{
 		env->put(env, ft_strdup("OLDPWD"), ft_strdup(old_pwd), true);
 		env->put(env, ft_strdup("PWD"), ft_strdup(pwd), true);
 		free(pwd);
 	}
-	return (0);
+	return (exit_code);
 }

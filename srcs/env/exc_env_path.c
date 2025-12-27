@@ -44,10 +44,10 @@ char	*get_path(t_map *env, char **commands)
 			free(new_path);
 		new_path = get_full_path(arr_path[i], commands);
 		if (!new_path)
-			return (clear_matriz(arr_path), NULL);
+			return (clear_matriz(arr_path), ft_strdup(""));
 		if (!access(new_path, F_OK))
 			return (clear_matriz(arr_path), new_path);
 		i++;
 	}
-	return (clear_matriz(arr_path), free(new_path), NULL);
+	return (clear_matriz(arr_path), free(new_path), ft_strdup(""));
 }

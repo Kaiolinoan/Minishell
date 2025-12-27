@@ -33,7 +33,7 @@ static bool	is_valid_flag(char *str)
 	return (false);
 }
 
-void	built_in_echo(t_command *commands)
+int	built_in_echo(t_command *commands)
 {
 	size_t	i;
 	bool	valid_flag;
@@ -49,11 +49,12 @@ void	built_in_echo(t_command *commands)
 			valid_flag = true;
 			if (commands->args[i + 1])
 				continue ;
-			return ;
+			return (0);
 		}
 		first_flag = false;
 		print(commands, i);
 	}
 	if (!valid_flag)
 		printf("\n");
+	return (0);	
 }

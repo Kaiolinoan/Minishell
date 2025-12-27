@@ -26,14 +26,14 @@ static void print_export(char **matriz, int i)
 	i++;
 }
 
-static void	only_export(t_map *env)
+static int	only_export(t_map *env)
 {
 	char	**matriz;
 	size_t	i;
 
 	matriz = env->to_string(env);
 	if (!matriz)
-		return ;
+		return (1);
 	i = 0;
 	sort_str(matriz);
 	while (matriz[i])
@@ -46,6 +46,7 @@ static void	only_export(t_map *env)
 		i++;
 	}
 	clear_matriz(matriz);
+	return (0);
 }
 
 static bool	ft_check_var_name(char *str)
@@ -66,7 +67,7 @@ static bool	ft_check_var_name(char *str)
 	return (true);
 }
 
-static void	process_export_args(t_command *commands, t_map *env, int i)
+static int	process_export_args(t_command *commands, t_map *env, int i)
 {
 	char *name;
 	char **args;
@@ -78,29 +79,32 @@ static void	process_export_args(t_command *commands, t_map *env, int i)
 	{
 		args = ft_split_env(commands->args[i]);
 		if (!*args[0])
-			return ((void)printf("bash: export: `%s': not a valid identifier\n",
-				commands->args[i]));
+			return (printf("bash: export: `%s': not a valid identifier\n",
+				commands->args[i]), 1);
 		name = args[0];
 		flag = true;
 	}
 	else
 		name = commands->args[i];
 	if (!ft_check_var_name(name))
-		return ((void)printf("bash: export: `%s': not a valid identifier\n",
-				commands->args[i]));
+		return (printf("bash: export: `%s': not a valid identifier\n",
+				commands->args[i]), 1);
 	if (flag)
 		env->put(env, name, args[1], true);
 	else
 		env->set_var_as_exported(env, commands->args[i]);
+	return (0);
 }
 
-void	built_in_export(t_command *commands, t_map *env)
+int	built_in_export(t_command *commands, t_map *env)
 {
 	size_t	i;
+	int		exit_code;
 
 	i = 1;
 	if (commands->args[0] && (!commands->args[1]))
 		return (only_export(env));
 	while (commands->args[i])
-		process_export_args(commands, env, i++);
+		exit_code = process_export_args(commands, env, i++);
+	return (exit_code);
 }

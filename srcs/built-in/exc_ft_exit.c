@@ -87,19 +87,16 @@ void ft_exit(t_map *env, t_command *cmd, int nb)
 	env->destroy(env);
 	exit(nb);
 }
-void	built_in_exit(t_command *commands, t_map *env)
+int	built_in_exit(t_command *commands, t_map *env)
 {
 	long long			nb;
 
 	nb = 0;
 	printf("exit\n");
 	if (!commands)
-		return (ft_exit(env, commands, 0));
+		return (ft_exit(env, commands, 0), 0);
 	if (!check_exit_arg(commands->args, env, commands))
-	{
-		g_exit_code = 1;
-		return ;
-	}
+		return (g_exit_code = 1);
 	if (commands->args[1])
 	{
 		nb = ft_atoll(commands->args[1]);
@@ -108,5 +105,6 @@ void	built_in_exit(t_command *commands, t_map *env)
 	else
 		nb = g_exit_code;
 	ft_exit(env, commands, nb);
+	return (nb);
 }
 // falta fazer o bglh do modulo

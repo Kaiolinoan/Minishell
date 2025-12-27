@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/02 12:47:55 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/27 01:40:52 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ struct						s_map
 	char					**(*to_string)(t_map *t);
 	void					(*remove)(t_map *t, char *k);
 	void					(*destroy)(t_map *t);
-	void					(*print)(t_map *t);
+	int						(*print)(t_map *t);
 	void					(*set_var_as_exported)(t_map *t, char *key);
 };
 
@@ -70,7 +70,7 @@ struct						s_extra
 	char					**(*to_string)(t_extra *t);
 	void					(*remove)(t_extra *t, char *k);
 	void					(*destroy)(t_extra *t);
-	void					(*print)(t_extra *t);
+	int						(*print)(t_extra *t);
 	void					(*set_var_as_exported)(t_extra *t, char *key);
 	t_envlist				*head;
 	t_envlist				*tail;
@@ -113,7 +113,7 @@ void						__remove(t_extra *t, char *k);
 void						__put(t_extra *t, char *k, char *v, bool exported);
 void						__set_var_as_exported(t_extra *t, char *key);
 void						__destroy(t_extra *t);
-void						__print(t_extra *t);
+int							__print(t_extra *t);
 char 						**__to_string(t_extra *t);
 
 
@@ -137,11 +137,11 @@ char						*get_path(t_map *env, char **commands);
 
 //built-ins
 int							built_in_cd(char **args, t_map *env);
-void						built_in_echo(t_command *commands);
-void    					built_in_export(t_command *commands, t_map *env);
-void						built_in_pwd(t_map *env);
-void						built_in_unset(t_command *commands, t_map *env);
-void    					built_in_exit(t_command *commands, t_map *env);
+int							built_in_echo(t_command *commands);
+int	    					built_in_export(t_command *commands, t_map *env);
+int							built_in_pwd(t_map *env);
+int							built_in_unset(t_command *commands, t_map *env);
+int	    					built_in_exit(t_command *commands, t_map *env);
 
 
 //start, close, redir and pipes 

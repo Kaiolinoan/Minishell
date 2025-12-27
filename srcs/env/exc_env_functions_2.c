@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/26 17:23:49 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/26 20:08:38 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void	__destroy(t_extra *t)
 	free(t);
 }
 
-void	__print(t_extra *t)
+int	__print(t_extra *t)
 {
 	t_envlist	*temp;
 
@@ -41,6 +41,7 @@ void	__print(t_extra *t)
 			printf("%s=%s\n", temp->key, temp->value);
 		temp = temp->next;
 	}
+	return (0);
 }
 
 void	__set_var_as_exported(t_extra *t, char *key)

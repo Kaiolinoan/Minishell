@@ -6,13 +6,13 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:24:32 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/07 12:41:29 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/26 20:13:05 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	built_in_pwd(t_map *env)
+int	built_in_pwd(t_map *env)
 {
 	char	*buffer;
 	char	*env_pwd;
@@ -33,6 +33,8 @@ void	built_in_pwd(t_map *env)
 			ft_putstr_fd("pwd: error retrieving current directory: \
 				getcwd: cannot access parent directories:", 2);
 			write(2, strerror(errno), ft_strlen(strerror(errno)));
+			return (1);
 		}
 	}
+	return (0);
 }
