@@ -1,11 +1,30 @@
 #include "minishell.h"
 
-void wait_all(t_command *cmd)
+void wait_all(t_command *cmd, t_map *env)
 {
-	while (cmd)
-	{
-		wait(NULL);
+	t_command	*temp;
+	int			status;
+	int			exit_code;
+	int			last_pid;
+
+	temp = cmd;
+	while (cmd->next)
 		cmd = cmd->next;
+	last_pid = cmd->pid;
+	while (temp)
+	{
+		if (waitpid(temp->pid, &status, 0) > 0)
+		{
+			if (last_pid == temp->pid)
+			{
+				if (WIFEXITED(status))
+					exit_code = WEXITSTATUS(status);
+				if (WIFSIGNALED(status))
+					exit_code = 128 +  WTERMSIG(status);
+			}
+		}
+		temp = temp->next;
 	}
+	env->put(env, ft_strdup("?") , ft_itoa(exit_code), true); //alterar para false dps que tiver a expansao
 }
 

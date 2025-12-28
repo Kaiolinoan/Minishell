@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/27 18:28:10 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/27 20:35:56 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void exec_failure(t_map *env, t_command *cmd, int in, int out)
 	ft_exit(env, cmd, exit_code);
 }
 
-void finish_process(int *in, int *out, t_command *cmd, char **matriz)
+void finish_process(int *in, int *out, t_command *cmd, char **matriz) //checar isso depois
 {
 	(void) cmd;
 	ft_close(out);
@@ -89,7 +89,9 @@ void finish_process(int *in, int *out, t_command *cmd, char **matriz)
 static void	single_command(t_map *env, t_command *cmd, int in, int out)
 {
 	char	**environment;
+	int 	built_in_status;
 
+	built_in_status = 0;
 	environment = env->to_string(env);
 	cmd->pid = fork();
 	if (cmd->pid < 0)
@@ -104,15 +106,19 @@ static void	single_command(t_map *env, t_command *cmd, int in, int out)
 			execve(cmd->args[0], cmd->args, environment);
 		else
 		{
-			if (is_built_in(env, cmd) == -1)
-				execve(cmd->path, cmd->args, environment);
-			finish_process(&in, &out, cmd, environment);
-			return (ft_exit(env, cmd, 0));
+			built_in_status = is_built_in(env, cmd);
+			if (built_in_status != -1)
+			{
+				env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true); //alterar para false dps que tiver a expansao
+				finish_process(&in, &out, cmd, environment); 
+				return (ft_exit(env, cmd, 0));
+			}
+			execve(cmd->path, cmd->args, environment);
 		}
 		clear_matriz(environment);
 		exec_failure(env, cmd, in, out);
 	}
-	wait_all(cmd);
+	wait_all(cmd, env);
 	finish_process(&in, &out, cmd, environment);
 }
 

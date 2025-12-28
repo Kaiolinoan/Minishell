@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/27 01:40:52 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/27 20:19:55 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,7 @@ void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
 int							exec_here_doc(t_command *cmd, t_map *env);
 
 //helpers
-void 						wait_all(t_command *cmd);
+void 						wait_all(t_command *cmd, t_map *env);
 bool						check_here_doc(t_command *cmd, t_map *env);
 
 //#################################    PARSING    #################################################
