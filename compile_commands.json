@@ -1,0 +1,434 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/main.o",
+      "srcs/main.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/main.c",
+    "output": "/home/kaio/Minishell/objs/main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/env/exc_env_functions.o",
+      "srcs/env/exc_env_functions.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/env/exc_env_functions.c",
+    "output": "/home/kaio/Minishell/objs/env/exc_env_functions.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/env/exc_env_functions_2.o",
+      "srcs/env/exc_env_functions_2.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/env/exc_env_functions_2.c",
+    "output": "/home/kaio/Minishell/objs/env/exc_env_functions_2.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/env/exc_env_list.o",
+      "srcs/env/exc_env_list.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/env/exc_env_list.c",
+    "output": "/home/kaio/Minishell/objs/env/exc_env_list.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/env/exc_env_create.o",
+      "srcs/env/exc_env_create.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/env/exc_env_create.c",
+    "output": "/home/kaio/Minishell/objs/env/exc_env_create.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/env/exc_env_path.o",
+      "srcs/env/exc_env_path.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/env/exc_env_path.c",
+    "output": "/home/kaio/Minishell/objs/env/exc_env_path.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_start.o",
+      "srcs/execution/exc_start.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_start.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_start.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_close.o",
+      "srcs/execution/exc_close.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_close.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_close.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_pipes.o",
+      "srcs/execution/exc_pipes.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_pipes.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_pipes.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_redir.o",
+      "srcs/execution/exc_redir.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_redir.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_redir.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_helpers.o",
+      "srcs/execution/exc_helpers.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_helpers.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_helpers.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_heredoc.o",
+      "srcs/execution/exc_heredoc.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_heredoc.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_heredoc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/execution/exc_command.o",
+      "srcs/execution/exc_command.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/execution/exc_command.c",
+    "output": "/home/kaio/Minishell/objs/execution/exc_command.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/utils/utils.o",
+      "srcs/utils/utils.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/utils/utils.c",
+    "output": "/home/kaio/Minishell/objs/utils/utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/utils/utils_2.o",
+      "srcs/utils/utils_2.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/utils/utils_2.c",
+    "output": "/home/kaio/Minishell/objs/utils/utils_2.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/parsing/parse_input.o",
+      "srcs/parsing/parse_input.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/parsing/parse_input.c",
+    "output": "/home/kaio/Minishell/objs/parsing/parse_input.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/parsing/parse_main.o",
+      "srcs/parsing/parse_main.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/parsing/parse_main.c",
+    "output": "/home/kaio/Minishell/objs/parsing/parse_main.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/parsing/parse_utils.o",
+      "srcs/parsing/parse_utils.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/parsing/parse_utils.c",
+    "output": "/home/kaio/Minishell/objs/parsing/parse_utils.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_cd.o",
+      "srcs/built-in/exc_ft_cd.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_cd.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_cd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_export.o",
+      "srcs/built-in/exc_ft_export.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_export.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_export.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_echo.o",
+      "srcs/built-in/exc_ft_echo.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_echo.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_echo.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_pwd.o",
+      "srcs/built-in/exc_ft_pwd.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_pwd.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_pwd.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_unset.o",
+      "srcs/built-in/exc_ft_unset.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_unset.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_unset.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/cc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g3",
+      "-Iincludes/",
+      "-ILibft/",
+      "-c",
+      "-o",
+      "objs/built-in/exc_ft_exit.o",
+      "srcs/built-in/exc_ft_exit.c"
+    ],
+    "directory": "/home/kaio/Minishell",
+    "file": "/home/kaio/Minishell/srcs/built-in/exc_ft_exit.c",
+    "output": "/home/kaio/Minishell/objs/built-in/exc_ft_exit.o"
+  }
+]

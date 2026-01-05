@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/27 20:19:55 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/05 11:01:57 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,14 @@ typedef struct s_redirect
 	struct s_redirect *next;
 }	t_redirect;
 
+typedef struct s_exec
+{
+	int			in;
+	int			out;
+	int			fds[2];
+	size_t		len;
+}	t_exec;
+
 typedef struct s_commands
 {
 	pid_t				pid;
@@ -101,6 +109,7 @@ typedef struct s_commands
 	char				*path;
 	t_redirect 			*infile;
 	t_redirect 			*outfile;
+	t_exec				*exec;
 	struct s_commands 	*next;
 }	t_command;
 
@@ -123,6 +132,8 @@ t_envlist					*new_node(char *k, char *v, bool exported);
 t_command					*new_command(char **args);
 t_redirect					*new_redirect(char *filename, char type);
 t_var						*new_var(char *k, char *v, bool exported, bool commands);
+t_exec						*new_exec(void);
+
 
 // env create
 void						create_env(t_map *env, char **enviroment);
@@ -136,6 +147,7 @@ char						*get_path(t_map *env, char **commands);
 // void					    create_variable(t_map *env, t_command *commands, t_var *var);
 
 //built-ins
+int							is_built_in(t_map *env, t_command *commands);
 int							built_in_cd(char **args, t_map *env);
 int							built_in_echo(t_command *commands);
 int	    					built_in_export(t_command *commands, t_map *env);
@@ -146,6 +158,7 @@ int	    					built_in_exit(t_command *commands, t_map *env);
 
 //start, close, redir and pipes 
 void						exec_all (t_command*cmd, t_map *env);
+void						handle_command(t_map *env, t_command *cmd, int in, int out);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
 void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
@@ -160,7 +173,7 @@ bool						check_here_doc(t_command *cmd, t_map *env);
 char						*parse_input(char *str);
 
 // parse main
-t_command					*parse_main(char *input, t_command  *head, t_map *env);
+t_command					*parse_main(char *input, t_map *env);
 
 // parse utils
 bool						space_only(char *str);

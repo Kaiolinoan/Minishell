@@ -11,6 +11,7 @@ void wait_all(t_command *cmd, t_map *env)
 	while (cmd->next)
 		cmd = cmd->next;
 	last_pid = cmd->pid;
+	exit_code = 0;
 	while (temp)
 	{
 		if (waitpid(temp->pid, &status, 0) > 0)

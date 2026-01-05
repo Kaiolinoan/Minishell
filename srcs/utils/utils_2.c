@@ -83,6 +83,7 @@ void list_clear_redir(t_redirect *head)
 	{
 		next = head->next;
 		ft_close(&head->fd);
+		free(head->filename);
 		free(head);
 		head = next;
 	}

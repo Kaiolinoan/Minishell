@@ -6,13 +6,20 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/17 17:01:42 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/31 12:08:20 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int g_exit_code = 0;
+
+void process_all(t_command *cmd, t_map *env)
+{
+	exec_all(cmd, env);
+	// free_all(cmd);
+	return ;
+}
 
 int	main(int argc, char **argv, char **environment)
 {
@@ -26,7 +33,7 @@ int	main(int argc, char **argv, char **environment)
 		return (0);
 	env = new_map();
 	create_env(env, environment);
-	cmd = NULL;
+	// cmd = NULL;
 	while (1)
 	{
 		str = readline("minishell> ");
@@ -34,9 +41,9 @@ int	main(int argc, char **argv, char **environment)
 			break ;
 		if (*str)
 			add_history(str);
-		free_all(cmd);
-		cmd = parse_main(str, NULL, env);
-		exec_all(cmd, env);
+		// free_all(cmd);
+		cmd = parse_main(str, env);
+		process_all(cmd, env);
 	}
 	printf("Saindo do minishell!\n");
 	ft_exit(env, cmd, 0);

@@ -6,13 +6,13 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/27 20:35:56 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/05 11:31:17 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	is_built_in(t_map *env, t_command *commands)
+int	is_built_in(t_map *env, t_command *commands)
 {
 	char *str;
 	int exit_code;
@@ -36,91 +36,6 @@ static int	is_built_in(t_map *env, t_command *commands)
 	return (exit_code);
 }
 //exit nao esta saindo
-static int check_error_msg(t_command *cmd)
-{
-	if (!cmd->path[0])
-		return (ft_putstr_fd(*cmd->args, 2), ft_putstr_fd(": command not found\n", 2), 127);
-	else if (errno == ENOENT)
-	{
-		ft_putstr_fd(cmd->args[0], 2);
-		ft_putstr_fd(": No such file or directory\n", 2);
-		return (127);
-	}
-	else if (errno ==  EACCES)
-	{
-		DIR *d;
-
-		d = opendir(cmd->args[0]);
-		if (d)
-		{
-			(closedir(d), ft_putstr_fd(cmd->args[0], 2));
-			ft_putstr_fd(": Is a directory\n", 2);
-			return (126);
-		}
-		else 
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			ft_putstr_fd(": Permission denied\n", 2);
-			return (126);
-		}
-	}
-	return (127);
-} 
-
-void exec_failure(t_map *env, t_command *cmd, int in, int out)
-{
-	int exit_code;
-
-	exit_code = check_error_msg(cmd);
-	ft_close(&in);
-	ft_close(&out);
-	ft_exit(env, cmd, exit_code);
-}
-
-void finish_process(int *in, int *out, t_command *cmd, char **matriz) //checar isso depois
-{
-	(void) cmd;
-	ft_close(out);
-	ft_close(in);
-	// ft_close(&cmd->infile->fd);
-	clear_matriz(matriz);
-}
-
-static void	single_command(t_map *env, t_command *cmd, int in, int out)
-{
-	char	**environment;
-	int 	built_in_status;
-
-	built_in_status = 0;
-	environment = env->to_string(env);
-	cmd->pid = fork();
-	if (cmd->pid < 0)
-		printf("ERROR: fork()\n");
-	else if (cmd->pid == 0)
-	{
-		// ft_printf("path:%s\ncmd: %s\n", cmd->path, cmd->args[0]);
-		// ft_printf("in:%d\nout: %d\n", in, out);
-		dup2(in, STDIN_FILENO);
-		dup2(out, STDOUT_FILENO);
-		if (ft_strchr(cmd->args[0], '/'))
-			execve(cmd->args[0], cmd->args, environment);
-		else
-		{
-			built_in_status = is_built_in(env, cmd);
-			if (built_in_status != -1)
-			{
-				env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true); //alterar para false dps que tiver a expansao
-				finish_process(&in, &out, cmd, environment); 
-				return (ft_exit(env, cmd, 0));
-			}
-			execve(cmd->path, cmd->args, environment);
-		}
-		clear_matriz(environment);
-		exec_failure(env, cmd, in, out);
-	}
-	wait_all(cmd, env);
-	finish_process(&in, &out, cmd, environment);
-}
 
 void test_out(t_command *commands, char *filename, t_type type)
 {
@@ -153,34 +68,45 @@ void test_in(t_command *commands, char *filename, t_type type)
 	in->fd = -1;
 	commands->infile = in;
 }
+void fill_len(t_command *cmd)
+{
+	t_command *temp;
+	size_t		len;
+
+	len = list_len_command(cmd);
+	temp = cmd;
+	while (temp)
+	{
+		temp->exec->len = len;
+		temp = temp->next;
+	}
+}
 
 void exec_all(t_command *head, t_map *env)
 {
 	t_command	*cmd;
-	int			in;
-	int			out;
-	int			fds[2];
 
 	if (!head || !env)
 		return ;
 	cmd = head;
-	// test_in(cmd, "a", HEREDOC);	
+	// test_in(cmd, "a", HEREDOC);
+	fill_len(cmd);
 	if (!check_here_doc(cmd, env))
 		return ((void)built_in_exit(cmd, env));
-	in = dup(STDIN_FILENO);
+	cmd->exec->in = dup(STDIN_FILENO);
 	while (cmd)
 	{
-		out = dup(STDOUT_FILENO);
+		cmd->exec->out = dup(STDOUT_FILENO);
 		if (cmd->next)
-		{
-			if (pipe(fds) != -1)
-				out = change_fd(out, fds[1]);
-		}
-		check_redir(cmd->infile, cmd->outfile, &in, &out);
-		single_command(env, cmd, in, out);
-		in = change_fd(in, fds[0]);
+			if (pipe(cmd->exec->fds) != -1)
+				cmd->exec->out = change_fd(cmd->exec->out, cmd->exec->fds[1]);
+		check_redir(cmd->infile, cmd->outfile, &cmd->exec->in, &cmd->exec->out);
+		handle_command(env, cmd, cmd->exec->in, cmd->exec->out);
+		cmd->exec->in = change_fd(cmd->exec->in, cmd->exec->fds[0]);
 		cmd = cmd->next;
 	}
+	free_all(head);
 }
 
+//set follow-fork-mode child
 

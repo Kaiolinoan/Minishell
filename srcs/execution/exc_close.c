@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:14:33 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/02 16:44:53 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/30 18:12:08 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,7 @@ void ft_close(int *fd)
 
 int change_fd(int old, int new)
 {
-	return (close(old), new);
+	if (old != -1)
+		ft_close(&old);
+	return (new);
 }

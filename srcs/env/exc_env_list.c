@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 15:16:36 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 19:33:35 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/05 11:02:44 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,17 +74,32 @@ t_redirect	*new_redirect(char *filename, char type)
 	return (node);
 }
 
-t_var	*new_var(char *k, char *v, bool exported, bool commands)
-{
-	t_var	*node;
+// t_var	*new_var(char *k, char *v, bool exported, bool commands)
+// {
+// 	t_var	*node;
 
-	node = malloc(sizeof(t_var));
+// 	node = malloc(sizeof(t_var));
+// 	if (!node)
+// 		return (NULL);
+// 	node->key = k;
+// 	node->value = v;
+// 	node->is_exported = exported;
+// 	node->commands = commands;
+// 	node->next = NULL;
+// 	return (node);
+// }
+
+t_exec	*new_exec(void)
+{
+	t_exec	*node;
+
+	node = malloc(sizeof(t_exec));
 	if (!node)
 		return (NULL);
-	node->key = k;
-	node->value = v;
-	node->is_exported = exported;
-	node->commands = commands;
-	node->next = NULL;
+	node->in = -1;
+	node->out = -1;
+	node->fds[0] = -1;
+	node->fds[1] = -1;
+	node->len = 0;
 	return (node);
 }

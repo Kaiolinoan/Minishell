@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
+/*   Updated: 2025/12/30 18:03:12 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node->args = args;
 	node->pid = 0;
 	node->path = get_path(env, args);
+	node->exec = new_exec();
 	node->infile = NULL;
 	node->outfile = NULL;
 	node->next = NULL;
@@ -35,7 +36,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	t_command	*current;
 
 	cmds = ft_split(args, '\2');
-	if (!args)
+	if (!cmds)
 		return (NULL);
 	new_node = new_cmdnode(cmds, env);
 	if (!new_node)
@@ -52,11 +53,13 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	return (head);
 }
 
-t_command	*parse_main(char *input, t_command  *head, t_map *env)
+t_command	*parse_main(char *input, t_map *env)
 {
-	size_t	i;
-	char	**args;
+	size_t		i;
+	char		**args;
+	t_command	*head;
 
+	head = NULL;
 	input = parse_input(input);
 	if (!input)
 		return (NULL);
