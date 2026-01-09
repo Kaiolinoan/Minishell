@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/31 12:08:20 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:17:30 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,12 @@ int g_exit_code = 0;
 
 void process_all(t_command *cmd, t_map *env)
 {
+	if (!cmd || !env)
+		return ;
+	if (!check_here_doc(cmd, env))
+		return (ft_exit(env, cmd, 999));// checar isso aqui
+	fill_len(cmd);
 	exec_all(cmd, env);
-	// free_all(cmd);
-	return ;
 }
 
 int	main(int argc, char **argv, char **environment)
@@ -27,13 +30,13 @@ int	main(int argc, char **argv, char **environment)
 	t_map		*env;
 	t_command	*cmd;
 
-	(void)argc;
 	(void)argv;
 	if (argc > 1)
 		return (0);
+	cmd = NULL;
 	env = new_map();
 	create_env(env, environment);
-	// cmd = NULL;
+	signals_init();
 	while (1)
 	{
 		str = readline("minishell> ");
@@ -41,7 +44,7 @@ int	main(int argc, char **argv, char **environment)
 			break ;
 		if (*str)
 			add_history(str);
-		// free_all(cmd);
+		free_all(cmd);
 		cmd = parse_main(str, env);
 		process_all(cmd, env);
 	}

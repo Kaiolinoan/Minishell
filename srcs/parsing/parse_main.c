@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/30 18:03:12 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/07 16:23:59 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node->infile = NULL;
 	node->outfile = NULL;
 	node->next = NULL;
+	node->prev = NULL;
 	return (node);
 }
 
@@ -49,6 +50,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 		while (current->next)
 			current = current->next;
 		current->next = new_node;
+		new_node->prev = current;
 	}
 	return (head);
 }

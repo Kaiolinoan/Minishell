@@ -19,6 +19,8 @@ void	clear_matriz(char **matriz)
 {
 	size_t	i;
 
+	if (!matriz)
+		return ;
 	i = 0;
 	while (matriz[i])
 		free(matriz[i++]);
@@ -93,11 +95,14 @@ void	sort_str(char **matriz)
 
 void clear_exec(t_exec *exec)
 {
+	if (!exec)
+		return ;
 	ft_close(&exec->in);
 	ft_close(&exec->out);
 	ft_close(&exec->fds[0]);
 	ft_close(&exec->fds[1]);
 	free(exec);
+	exec = NULL;
 }
 
 void free_all(t_command *commands)
@@ -106,6 +111,8 @@ void free_all(t_command *commands)
 
 	if (!commands)
 		return ;
+	while (commands->prev)
+		commands = commands->prev;
 	while (commands)
 	{
 		next = commands->next;

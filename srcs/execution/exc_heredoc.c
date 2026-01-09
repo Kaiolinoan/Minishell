@@ -8,6 +8,7 @@ static void here_child(char *limiter, t_command *cmd, t_map *env)
 
     fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
     line = NULL;
+
     while (1)
     {
         line = readline("> ");

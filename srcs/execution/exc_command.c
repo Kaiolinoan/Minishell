@@ -62,6 +62,7 @@ void execute_command(t_command *cmd, t_map *env)
 	char	**environment;
 
 	environment = env->to_string(env);
+	built_in_status = 0;
 	if (ft_strchr(cmd->args[0], '/'))
 		execve(cmd->args[0], cmd->args, environment);
 	else
@@ -70,36 +71,33 @@ void execute_command(t_command *cmd, t_map *env)
 		if (built_in_status != -1)
 			env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true); //alterar para false dps que tiver a expansao
 		else
-		{
-			fprintf(stderr, "CHILD %d exiting\n", getpid());
 			execve(cmd->path, cmd->args, environment);
-		}
 	}
 	clear_matriz(environment);
-	fprintf(stderr, "CHILD %d exiting\n", getpid());
-	ft_exit(env, cmd, built_in_status);
-
 }
 
-void	handle_command(t_map *env, t_command *cmd, int in, int out)
+void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 {
-	// printf("%zu\n", cmd->exec->len);
+	ft_printf("in: %d, out %d\n", exec->in, exec->out);
 	if (!cmd->next && cmd->exec->len == 1)
 		if (single_built_in(cmd, env) != -1)
-			return ((void)printf("opa\n"));
+			return ;
 	cmd->pid = fork();
 	if (cmd->pid < 0)
 		printf("ERROR: fork()\n");
 	else if (cmd->pid == 0)
 	{
-		dup2(in, STDIN_FILENO);
-		dup2(out, STDOUT_FILENO);
+		child_signal();
+		dup2(exec->in, STDIN_FILENO);
+		dup2(exec->out, STDOUT_FILENO);
 		close_fds(cmd->exec);
 		execute_command(cmd, env);
-		exec_failure(env, cmd, &in, &out);
+		exec_failure(env, cmd, &exec->in, &exec->out);
 		ft_exit(env, cmd, 1);
 	}
 	wait_all(cmd, env);
-    close_fds(cmd->exec);
-	// free_all(cmd);
+	if (!cmd->next)
+		ft_close(&exec->fds[0]);
+	ft_close(&exec->fds[1]);
+		// close_fds(cmd->exec);
 }

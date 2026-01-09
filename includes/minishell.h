@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/05 11:01:57 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:47:03 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <errno.h>
 # include <stdbool.h>
 # include <dirent.h>
+# include <signal.h>
 
 
 # define CD_ERROR "bash: cd: "
@@ -111,6 +112,7 @@ typedef struct s_commands
 	t_redirect 			*outfile;
 	t_exec				*exec;
 	struct s_commands 	*next;
+	struct s_commands 	*prev;
 }	t_command;
 
 //#################################    EXECUTION    #################################################
@@ -158,7 +160,7 @@ int	    					built_in_exit(t_command *commands, t_map *env);
 
 //start, close, redir and pipes 
 void						exec_all (t_command*cmd, t_map *env);
-void						handle_command(t_map *env, t_command *cmd, int in, int out);
+void						handle_command(t_map *env, t_command *cmd, t_exec *exec);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
 void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
@@ -167,6 +169,11 @@ int							exec_here_doc(t_command *cmd, t_map *env);
 //helpers
 void 						wait_all(t_command *cmd, t_map *env);
 bool						check_here_doc(t_command *cmd, t_map *env);
+
+//signals
+void						signals_init();
+void						child_signal();
+
 
 //#################################    PARSING    #################################################
 // parse input
@@ -192,5 +199,8 @@ void						free_grid(char **grid);
 void						list_clear_redir(t_redirect *head);
 void						ft_exit(t_map *env, t_command *cmd, int nb);
 void						free_all(t_command *commands);
+void						clear_exec(t_exec *exec);
+void						fill_len(t_command *cmd);
+
 
 #endif

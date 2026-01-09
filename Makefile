@@ -23,7 +23,7 @@ SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
 			  exc_ft_unset.c exc_ft_exit.c 
 SRC_ENV		= exc_env_functions.c  exc_env_functions_2.c exc_env_list.c  \
 			  exc_env_create.c exc_env_path.c
-SRC_EXC		= exc_start.c exc_close.c exc_pipes.c exc_redir.c exc_helpers.c exc_heredoc.c exc_command.c
+SRC_EXC		= exc_start.c exc_close.c exc_pipes.c exc_redir.c exc_helpers.c exc_heredoc.c exc_command.c exc_signals.c \
 
 SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
       $(addprefix $(SRCDIR)$(ENV_DIR), $(SRC_ENV)) \
@@ -43,7 +43,7 @@ LIBFT		= $(LIBFTDIR)libft.a
 # =============================== COMPILER ================================== #
 
 CC				= cc
-CFLAGS			= -Wall -Wextra -Werror -g3
+CFLAGS			= -Wall -Wextra -Werror -g -DREADLINE_NO_SIGNALS 
 INCLUDES		= -I$(INCDIR)
 RM				= rm -f
 MAKE			= make
@@ -104,9 +104,9 @@ reclear:
 	@make re && clear
 
 r: reclear
-	@./$(NAME) || true
+	@./$(NAME) 
 
 v: reclear
-	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
+	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --trace-children=yes --suppressions=readline.supp ./$(NAME)
 # ------------------------------- Phony Targets ----------------------------- #
 .PHONY: all clean fclean re

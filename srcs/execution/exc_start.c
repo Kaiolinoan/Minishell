@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/05 11:31:17 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/09 12:51:27 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,27 +85,22 @@ void fill_len(t_command *cmd)
 void exec_all(t_command *head, t_map *env)
 {
 	t_command	*cmd;
+	t_exec		exec;
 
-	if (!head || !env)
-		return ;
 	cmd = head;
 	// test_in(cmd, "a", HEREDOC);
-	fill_len(cmd);
-	if (!check_here_doc(cmd, env))
-		return ((void)built_in_exit(cmd, env));
-	cmd->exec->in = dup(STDIN_FILENO);
+	exec.in = dup(STDIN_FILENO);
 	while (cmd)
 	{
-		cmd->exec->out = dup(STDOUT_FILENO);
+		exec.out = dup(STDOUT_FILENO);
 		if (cmd->next)
-			if (pipe(cmd->exec->fds) != -1)
-				cmd->exec->out = change_fd(cmd->exec->out, cmd->exec->fds[1]);
-		check_redir(cmd->infile, cmd->outfile, &cmd->exec->in, &cmd->exec->out);
-		handle_command(env, cmd, cmd->exec->in, cmd->exec->out);
-		cmd->exec->in = change_fd(cmd->exec->in, cmd->exec->fds[0]);
+			if (pipe(exec.fds) != -1)
+				exec.out = change_fd(exec.out, exec.fds[1]);
+		check_redir(cmd->infile, cmd->outfile, &exec.in, &exec.out);
+		handle_command(env, cmd, &exec);
+		exec.in = change_fd(exec.in, exec.fds[0]);
 		cmd = cmd->next;
 	}
-	free_all(head);
 }
 
 //set follow-fork-mode child
