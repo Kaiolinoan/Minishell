@@ -2,14 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
-/*   Created: 2025/11/05 14:09:48 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 14:09:48 by klino-an         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/13 00:25:44 by kelle             #+#    #+#             */
+/*   Updated: 2026/01/13 00:25:44 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +16,8 @@ void	clear_matriz(char **matriz)
 {
 	size_t	i;
 
+	if (!matriz)
+		return ;
 	i = 0;
 	while (matriz[i])
 		free(matriz[i++]);
@@ -96,19 +95,26 @@ void	sort_str(char **matriz)
 	}
 }
 
-void free_all(t_command *commands)
+void free_all(t_command **commands)
 {
 	t_command			*next;
+	t_command			*current;
 
-	while (commands)
+	if (!commands || !*commands)
+		return ;
+	current = *commands;
+	while (current)
 	{
-		next = commands->next;
-		list_clear_redir(commands->infile);
-		list_clear_redir(commands->outfile);
-		free(commands->path);
-		clear_matriz(commands->args);
-		free(commands);
-		commands = next;
+		next = current->next;
+		list_clear_redir(current->infile);
+		list_clear_redir(current->outfile);
+		if (current->path)
+			free(current->path);
+		clear_matriz(current->cmd);
+		clear_matriz(current->args);
+		free(current);
+		current = next;
 	}
+	*commands = NULL;
 }
 

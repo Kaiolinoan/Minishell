@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:25:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/18 16:25:39 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/12 20:39:42 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,23 @@ bool	space_only(char *str)
 		str++;
 	}
 	return (true);
+}
+
+char	identify_quote(char flag, char c)
+{
+    if (!flag && (c == '"' || c == '\''))
+        return (c);
+    if (flag && flag == c)
+        return (0);
+    return (flag);
+}
+
+bool	var_start(char c)
+{
+	return (ft_isalpha(c) || c == '_');
+}
+
+bool	var_char(char c)
+{
+	return (ft_isalnum(c) || c == '_');
 }

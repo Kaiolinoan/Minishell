@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:47:46 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/02 16:29:21 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 03:47:12 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void list_clear_redir(t_redirect *head)
 	{
 		next = head->next;
 		ft_close(&head->fd);
+		if (head->filename)
+			free(head->filename);
 		free(head);
 		head = next;
 	}

@@ -31,6 +31,8 @@ char	*get_path(t_map *env, char **commands)
 	char	*new_path;
 	size_t	i;
 
+	if (!commands || !commands[0])
+		return (NULL);
 	arr_path = ft_split(env->get(env, "PATH"), ':');
 	if (!arr_path)
 		return (NULL);

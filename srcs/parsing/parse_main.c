@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/25 19:47:00 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 04:08:26 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node = malloc(sizeof(t_command));
 	if (!node)
 		return (NULL);
-	node->args = args;
+	node->cmd = args;
+	node->args = NULL;
 	node->pid = 0;
 	node->path = get_path(env, args);
 	node->infile = NULL;
@@ -35,8 +36,8 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	t_command	*current;
 
 	cmds = ft_split(args, '\2');
-	if (!args)
-		return (NULL);
+	if (!args || !cmds || !cmds[0])
+		return (free_grid(cmds), NULL);
 	new_node = new_cmdnode(cmds, env);
 	if (!new_node)
 		return (free_grid(cmds), NULL);
@@ -62,16 +63,18 @@ t_command	*parse_main(char *input, t_command  *head, t_map *env)
 		return (NULL);
 	args = ft_split(input, '\3');
 	if (!args)
-		return (NULL);
+		return (free(input), NULL);
 	i = 0;
 	while (args[i])
 	{
 		head = fill_cmdlist(head, args[i], env);
 		if (!head)
-			return (NULL);
+			return (free(input), free_grid(args), NULL);
 		i++;
 	}
-	free(input);
-	free_grid(args);
-	return (head);
+	if (!in_redirection(head))
+		return (free_all(&head), free_grid(args), free(input), NULL);
+	// if (!expand_and_shi(head, env))
+	// 	return (free_grid(args), free(input), NULL);
+	return (free_grid(args), free(input), head);
 }

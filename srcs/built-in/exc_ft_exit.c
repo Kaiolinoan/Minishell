@@ -83,7 +83,7 @@ static bool check_exit_arg(char **args)
 }
 void ft_exit(t_map *env, t_command *cmd, int nb)
 {
-	free_all(cmd);
+	free_all(&cmd);
 	env->destroy(env);
 	exit(nb);
 }

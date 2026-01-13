@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/28 12:43:17 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 05:11:07 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ int	main(int argc, char **argv, char **environment)
 		if (*str)
 			add_history(str);
 		cmd = parse_main(str, NULL, env);
+		print_nodes_after_input(cmd);
 		exec_all(cmd, env);
+		free_all(&cmd);
 	}
 	printf("Saindo do minishell!\n");
 	ft_exit(env, cmd, 0);
