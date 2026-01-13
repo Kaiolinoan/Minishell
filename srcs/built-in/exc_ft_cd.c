@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/27 17:47:25 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 14:50:11 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	built_in_cd(char **args, t_map *env)
 	if (ft_array_len(args) > 2)
 		return (printf("bash: cd: too many arguments\n"), 1);
 	path = args[1];
-	pwd = getcwd(NULL, 0);
+	pwd = getcwd(NULL, 0);// se for dar fix em diretoria fantasma seria aqui
 	old_pwd = env->get(env, "PWD");
 	exit_code = process_cd(path, env, old_pwd);
 	if (pwd && old_pwd)

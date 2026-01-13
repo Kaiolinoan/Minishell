@@ -6,22 +6,21 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:42:23 by klino-an          #+#    #+#             */
-/*   Updated: 2025/12/09 17:40:06 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/12 15:22:05 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-static int helper_input(t_redirect *input)
+static int	helper_input(t_redirect *input)
 {
-    int fd;
-    
-    if (!input)
+	int	fd;
+
+	if (!input)
 		return (-1);
-    fd = STDIN_FILENO;
+	fd = STDIN_FILENO;
 	while (input)
-    {
+	{
 		if (input->type == INPUT)
 		{
 			fd = open(input->filename, O_RDONLY);
@@ -30,15 +29,16 @@ static int helper_input(t_redirect *input)
 		}
 		input = input->next;
 	}
-    return fd;
+	return (fd);
 }
 
-static int helper_output(t_redirect *output)
+static int	helper_output(t_redirect *output)
 {
-    int fd;
-    if (!output)
+	int	fd;
+
+	if (!output)
 		return (-1);
-    fd = STDOUT_FILENO;
+	fd = STDOUT_FILENO;
 	while (output)
 	{
 		if (output->type == OUTPUT)
@@ -49,27 +49,26 @@ static int helper_output(t_redirect *output)
 			return (ft_putstr_fd("ERROR: open()\n", 2), -1);
 		output = output->next;
 	}
-    return (fd);
+	return (fd);
 }
 
-void check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
+void	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)
 		return ;
-        
-    if (input)
-    {
-        if (input->type == INPUT)
-            *in = change_fd(*in, helper_input(input));
-        if (input->type == HEREDOC)
-            *in = change_fd(*in, input->fd); // aqui estou pegando o fd do primeiro e nao do ultimo
-        if (*in < 0)
-            return ;
-    }
-    if (output)
-    {
-        *out = change_fd(*out, helper_output(output));
-        if (*out < 0)
-            return ;
-    }
+	if (input)
+	{
+		if (input->type == INPUT)
+			*in = change_fd(*in, helper_input(input));
+		if (input->type == HEREDOC)
+			*in = change_fd(*in, input->fd);// aqui estou pegando o fd do primeiro e nao do ultimo
+		if (*in < 0)
+			return ;
+	}
+	if (output)
+	{
+		*out = change_fd(*out, helper_output(output));
+		if (*out < 0)
+			return ;
+	}
 }

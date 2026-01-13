@@ -1,32 +1,34 @@
 #include "minishell.h"
 
-void sigint_handler(int signal)
+void	sigint_handler(int signal)
 {
-	(void) signal;
+	(void)signal;
 	write(STDOUT_FILENO, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-void signals_init()
+void	signals_init(void)
 {
-	struct sigaction sa_int;
-    // struct sigaction sa_quit;
+	struct sigaction	sa_int;
 
-    sa_int.sa_handler = sigint_handler;
-    sigemptyset(&sa_int.sa_mask);
-    sa_int.sa_flags = SA_RESTART;
-    // sa_quit.sa_handler = SIG_IGN;
-    // sigemptyset(&sa_quit.sa_mask);
-    // sa_quit.sa_flags = SA_RESTART;
-
+	// struct sigaction sa_quit;
+	sa_int.sa_handler = sigint_handler;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = SA_RESTART;
+	// sa_quit.sa_handler = SIG_IGN;
+	// sigemptyset(&sa_quit.sa_mask);
+	// sa_quit.sa_flags = SA_RESTART;
 	sigaction(SIGINT, &sa_int, NULL);
 	// sigaction(SIGQUIT, &sa_quit, NULL);
-    signal(SIGQUIT, SIG_IGN);	
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGPIPE, SIG_IGN);
 }
 
-void child_signal()
+void	child_signal(void)
 {
+    signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
+    signal(SIGPIPE, SIG_DFL);
 }

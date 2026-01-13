@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-void wait_all(t_command *cmd, t_map *env)
+void	wait_all(t_command *cmd, t_map *env)
 {
 	t_command	*temp;
 	int			status;
@@ -15,17 +15,20 @@ void wait_all(t_command *cmd, t_map *env)
 	while (temp)
 	{
 		if (waitpid(temp->pid, &status, 0) > 0)
-		{
 			if (last_pid == temp->pid)
 			{
+				if (WIFSIGNALED(status))
+				{
+					if (WTERMSIG(status) == SIGQUIT)
+						write(2, "Quit (core dumped)\n", 20);
+					if (WTERMSIG(status) == SIGINT)
+					   	write(2, "\n", 1);
+					exit_code = 128 + WTERMSIG(status);
+				}
 				if (WIFEXITED(status))
 					exit_code = WEXITSTATUS(status);
-				if (WIFSIGNALED(status))
-					exit_code = 128 +  WTERMSIG(status);
 			}
-		}
 		temp = temp->next;
 	}
-	env->put(env, ft_strdup("?") , ft_itoa(exit_code), true); //alterar para false dps que tiver a expansao
+	env->put(env, ft_strdup("?"), ft_itoa(exit_code), true);// alterar para false dps que tiver a expansao
 }
-

@@ -101,11 +101,10 @@ void clear_exec(t_exec *exec)
 	ft_close(&exec->out);
 	ft_close(&exec->fds[0]);
 	ft_close(&exec->fds[1]);
-	free(exec);
 	exec = NULL;
 }
 
-void free_all(t_command *commands)
+void free_all(t_command *commands, t_exec *exec)
 {
 	t_command			*next;
 
@@ -119,11 +118,11 @@ void free_all(t_command *commands)
 		list_clear_redir(commands->infile);
 		list_clear_redir(commands->outfile);
 		free(commands->path);
-		clear_exec(commands->exec);
 		clear_matriz(commands->args);
 		free(commands);
 		commands = next;
 	}
+	clear_exec(exec);
 	commands = NULL;
 }
 

@@ -64,7 +64,7 @@ static int check_overflow(char *num)
     return (strncmp(str, "9223372036854775808", 19) <= 0);
 }
 
-static bool check_exit_arg(char **args, t_map *env, t_command *cmd)
+static bool check_exit_arg(char **args, t_map *env, t_command *cmd, t_exec *exec)
 {
 	if (!args)
 		return (false);
@@ -75,27 +75,27 @@ static bool check_exit_arg(char **args, t_map *env, t_command *cmd)
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		ft_exit(env, cmd, 2);
+		ft_exit(env, cmd, exec, 2);
 	}
 	if (ft_array_len(args) > 2)
 		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
-void ft_exit(t_map *env, t_command *cmd, int nb)
+void ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb)
 {
-	free_all(cmd);
+	free_all(cmd, exec);
 	env->destroy(env);
 	exit(nb);
 }
-int	built_in_exit(t_command *commands, t_map *env)
+int	built_in_exit(t_command *commands, t_map *env, t_exec *exec)
 {
 	long long			nb;
 
 	nb = 0;
 	printf("exit\n");
 	if (!commands)
-		return (ft_exit(env, commands, 0), 0);
-	if (!check_exit_arg(commands->args, env, commands))
+		return (ft_exit(env, commands, exec, 0), 0);
+	if (!check_exit_arg(commands->args, env, commands, exec))
 		return (g_exit_code = 1);
 	if (commands->args[1])
 	{
@@ -104,7 +104,12 @@ int	built_in_exit(t_command *commands, t_map *env)
 	}
 	else
 		nb = g_exit_code;
-	ft_exit(env, commands, nb);
+	close_fds(exec, commands, true);
+	printf("in: %d\n", exec->in);
+	printf("out: %d\n", exec->out);
+	printf("pipe[0]: %d\n", exec->fds[0]);
+	printf("pipe[1]: %d\n", exec->fds[1]);
+	ft_exit(env, commands, exec, nb);
 	return (nb);
 }
 // falta fazer o bglh do modulo

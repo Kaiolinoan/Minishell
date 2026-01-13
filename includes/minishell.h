@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/09 12:47:03 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:27:10 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@
 # include <stdbool.h>
 # include <dirent.h>
 # include <signal.h>
+# include <sys/stat.h>
+
 
 
 # define CD_ERROR "bash: cd: "
@@ -110,7 +112,6 @@ typedef struct s_commands
 	char				*path;
 	t_redirect 			*infile;
 	t_redirect 			*outfile;
-	t_exec				*exec;
 	struct s_commands 	*next;
 	struct s_commands 	*prev;
 }	t_command;
@@ -149,26 +150,28 @@ char						*get_path(t_map *env, char **commands);
 // void					    create_variable(t_map *env, t_command *commands, t_var *var);
 
 //built-ins
-int							is_built_in(t_map *env, t_command *commands);
+int							is_built_in(t_map *env, t_command *commands, t_exec *exec);
 int							built_in_cd(char **args, t_map *env);
 int							built_in_echo(t_command *commands);
 int	    					built_in_export(t_command *commands, t_map *env);
 int							built_in_pwd(t_map *env);
 int							built_in_unset(t_command *commands, t_map *env);
-int	    					built_in_exit(t_command *commands, t_map *env);
+int	    					built_in_exit(t_command *commands, t_map *env, t_exec *exec);
 
 
-//start, close, redir and pipes 
-void						exec_all (t_command*cmd, t_map *env);
+//start, redir and pipes 
+void						exec_all (t_command*cmd, t_map *env, t_exec *exec);
 void						handle_command(t_map *env, t_command *cmd, t_exec *exec);
+void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
+
+//close
+void						close_fds(t_exec *exec, t_command *cmd, bool is_parent);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
-void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
-int							exec_here_doc(t_command *cmd, t_map *env);
 
 //helpers
 void 						wait_all(t_command *cmd, t_map *env);
-bool						check_here_doc(t_command *cmd, t_map *env);
+bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 
 //signals
 void						signals_init();
@@ -197,10 +200,8 @@ size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
 void						list_clear_redir(t_redirect *head);
-void						ft_exit(t_map *env, t_command *cmd, int nb);
-void						free_all(t_command *commands);
+void						ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb);
+void						free_all(t_command *commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
-void						fill_len(t_command *cmd);
-
 
 #endif

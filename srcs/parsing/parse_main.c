@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/07 16:23:59 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 11:00:39 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node->args = args;
 	node->pid = 0;
 	node->path = get_path(env, args);
-	node->exec = new_exec();
 	node->infile = NULL;
 	node->outfile = NULL;
 	node->next = NULL;

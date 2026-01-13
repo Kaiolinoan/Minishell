@@ -6,11 +6,24 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 15:12:33 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 14:52:50 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void check_shell_lvl(t_map *env)
+{
+	char	*old_lvl;
+	int		new_lvl;
+
+	old_lvl = env->get(env, "SHLVL");
+	if (!old_lvl)
+		return (env->put(env, ft_strdup("SHLVL"), ft_strdup("1"), true));
+	new_lvl = ft_atoi(old_lvl);	
+	new_lvl++;
+	env->put(env, ft_strdup("SHLVL"), ft_itoa(new_lvl), true);
+}
 
 char	**ft_split_env(char *env)
 {
@@ -59,4 +72,5 @@ void	create_env(t_map *env, char **environment)
 		}
 		i++;
 	}
+	check_shell_lvl(env);
 }
