@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:42:23 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/12 15:22:05 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/15 13:15:20 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,26 @@ static int	helper_output(t_redirect *output)
 	return (fd);
 }
 
+void print_inside_redir(t_redirect *ptr)
+{
+	t_redirect *temp;
+
+	temp = ptr;
+	while (temp)
+	{
+		printf("filename: %s\n", temp->filename);
+		printf("fd: %d\n", temp->fd);
+		printf("type: %d\n", temp->type);
+		temp = temp->next;
+	}
+}
+
 void	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)
 		return ;
+	print_inside_redir(input);
+	print_inside_redir(output);
 	if (input)
 	{
 		if (input->type == INPUT)

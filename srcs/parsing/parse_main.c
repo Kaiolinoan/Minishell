@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 11:00:39 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:23:44 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node = malloc(sizeof(t_command));
 	if (!node)
 		return (NULL);
-	node->args = args;
+	node->cmd = args;
+	node->args = NULL;
 	node->pid = 0;
 	node->path = get_path(env, args);
 	node->infile = NULL;
@@ -36,8 +37,8 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	t_command	*current;
 
 	cmds = ft_split(args, '\2');
-	if (!cmds)
-		return (NULL);
+	if (!cmds || !cmds || !cmds[0])
+		return (free_grid(cmds), NULL);
 	new_node = new_cmdnode(cmds, env);
 	if (!new_node)
 		return (free_grid(cmds), NULL);
@@ -54,7 +55,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	return (head);
 }
 
-t_command	*parse_main(char *input, t_map *env)
+t_command	*parse_main(char *input, t_map *env, t_exec *exec)
 {
 	size_t		i;
 	char		**args;
@@ -66,16 +67,19 @@ t_command	*parse_main(char *input, t_map *env)
 		return (NULL);
 	args = ft_split(input, '\3');
 	if (!args)
-		return (NULL);
+		return (free(input), NULL);
 	i = 0;
 	while (args[i])
 	{
 		head = fill_cmdlist(head, args[i], env);
 		if (!head)
-			return (NULL);
+			return (free(input), free_grid(args), NULL);
 		i++;
 	}
-	free(input);
-	free_grid(args);
-	return (head);
+	if (!in_redirection(head))
+		return (free_all(head, exec), free_grid(args), free(input), NULL);
+	// if (!expand_and_shi(head, env))
+	// 	return (free_grid(args), free(input), NULL);
+	return (free_grid(args), free(input), head);
 }
+

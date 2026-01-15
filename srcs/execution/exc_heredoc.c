@@ -47,18 +47,25 @@ static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 {
 	t_command	*head;
+	t_redirect	*temp;
 
 	head = cmd;
+	temp = head->infile;
 	while (cmd)
 	{
-		if (cmd->infile && cmd->infile->type == HEREDOC)
+		while (cmd->infile)
 		{
-			cmd->infile->fd = exec_here_doc(cmd, env, exec);
-			if (cmd->infile->fd < 0)
-				return (false);
+			if (cmd->infile->type == HEREDOC)
+			{
+				cmd->infile->fd = exec_here_doc(cmd, env, exec);
+				if (cmd->infile->fd < 0)
+					return (false);
+			}
+			cmd->infile = cmd->infile->next;
 		}
 		cmd = cmd->next;
 	}
 	cmd = head;
+	cmd->infile = temp;
 	return (true);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_input.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:45 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/18 16:24:58 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 03:44:11 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,17 @@
 
 static bool	open_quotes(char *str)
 {
-	char	flag;
+	char	quote;
 	size_t	i;
 
-	flag = 0;
+	quote = 0;
 	i = 0;
 	while (str[i])
 	{
-		if ((str[i] == '\'' || str[i] == '"') && !flag)
-			flag = str[i];
-		else if (flag == str[i])
-			flag = 0;
+		quote = identify_quote(quote, str[i]);
 		i++;
 	}
-	return (flag != 0);
+	return (quote != 0);
 }
 
 static void	iso_rightarrow(char *dup, char *str, size_t *i, size_t *j)
@@ -79,12 +76,9 @@ static void	fill_dup(char *dup, char *str, size_t i, size_t j)
 	flag = 0;
 	while (str[i])
 	{
-		if (!flag && (str[i] == '\'' || str[i] == '"'))
-			flag = str[i];
-		else if (flag == str[i])
-			flag = 0;
+		flag = identify_quote(flag, str[i]);
 		dup[j] = str[i];
-		if (flag == 0)
+		if (!flag)
 		{
 			if (str[i] == ' ')
 				dup[j] = '\2';

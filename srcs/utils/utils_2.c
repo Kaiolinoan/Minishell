@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:47:46 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/06 14:06:36 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:08:44 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,8 @@ void list_clear_redir(t_redirect *head)
 	{
 		next = head->next;
 		ft_close(&head->fd);
-		// free(head->filename);
+		if (head->filename)
+			free(head->filename);
 		free(head);
 		head = next;
 	}

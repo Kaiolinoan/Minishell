@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 12:12:22 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/15 13:06:46 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ int	main(int argc, char **argv, char **environment)
 		if (*str)
 			add_history(str);
 		free_all(cmd, &exec);
-		cmd = parse_main(str, env);
+		cmd = parse_main(str, env, &exec);
+		print_nodes_after_input(cmd);
 		process_all(cmd, env, &exec);
 	}
 	printf("Saindo do minishell!\n");

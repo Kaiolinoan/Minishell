@@ -2,14 +2,11 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+        
-	+:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+      
-	+#+        */
-/*                                                +#+#+#+#+#+  
-	+#+           */
-/*   Created: 2025/11/05 14:09:48 by klino-an          #+#    #+#             */
-/*   Updated: 2025/11/05 14:09:48 by klino-an         ###   ########.fr       */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/13 00:25:44 by kelle             #+#    #+#             */
+/*   Updated: 2026/01/13 00:25:44 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +116,7 @@ void free_all(t_command *commands, t_exec *exec)
 		list_clear_redir(commands->outfile);
 		free(commands->path);
 		clear_matriz(commands->args);
+		clear_matriz(commands->cmd);
 		free(commands);
 		commands = next;
 	}

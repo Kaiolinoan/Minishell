@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 11:27:10 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/13 18:24:46 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ struct						s_extra
 
 typedef enum e_type
 {
-    NONE = 0,
     OUTPUT = 60,
     INPUT = 62,
     OUTPUT_APPEND,
@@ -108,6 +107,7 @@ typedef struct s_exec
 typedef struct s_commands
 {
 	pid_t				pid;
+	char				**cmd;
 	char 				**args;
 	char				*path;
 	t_redirect 			*infile;
@@ -179,14 +179,27 @@ void						child_signal();
 
 
 //#################################    PARSING    #################################################
+// parse cmdlist
+int 						in_redirection(t_command *head);
+
+// parse expansion
+char						*expand(char *str, t_map *env);
+int						expand_and_shi(t_command *head, t_map *env);
+
+
 // parse input
 char						*parse_input(char *str);
 
 // parse main
-t_command					*parse_main(char *input, t_map *env);
+t_command					*parse_main(char *input, t_map *env, t_exec *exec);
+
+//parse redirection
+int							handle_redirection(t_command *cmdnode, int i, char redir);
 
 // parse utils
 bool						space_only(char *str);
+char						identify_quote(char flag, char c);
+void						print_nodes_after_input(t_command *head);
 
 //#################################    UTILS    #################################################
 bool						space_only(char *str);
