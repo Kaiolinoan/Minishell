@@ -16,15 +16,15 @@ ENV_DIR		= env/
 
 # ================================= FILES =================================== #
 
-SRC_UTILS	= utils.c utils_2.c print_cmd.c
+SRC_UTILS	= utils_1.c utils_2.c  print_cmd.c free.c alloc_nodes.c
 SRC_PARSE	= parse_input.c parse_main.c parse_utils.c parse_cmdlist.c \
 			  parse_redirection.c parse_expansion.c
 SRC_FILES	= main.c 
 SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
 			  exc_ft_unset.c exc_ft_exit.c 
-SRC_ENV		= exc_env_functions.c  exc_env_functions_2.c exc_env_list.c  \
+SRC_ENV		= exc_env_functions.c  exc_env_functions_2.c   \
 			  exc_env_create.c exc_env_path.c
-SRC_EXC		= exc_start.c exc_close.c exc_pipes.c exc_redir.c exc_helpers.c exc_heredoc.c exc_command.c exc_signals.c \
+SRC_EXC		= exc_start.c exc_close.c  exc_redir.c exc_heredoc.c exc_command.c exc_signals.c \
 
 SRC = $(addprefix $(SRCDIR), $(SRC_FILES)) \
       $(addprefix $(SRCDIR)$(ENV_DIR), $(SRC_ENV)) \
@@ -108,6 +108,6 @@ r: reclear
 	@./$(NAME) 
 
 v: reclear
-	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --trace-children=yes --suppressions=readline.supp ./$(NAME)
+	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)
 # ------------------------------- Phony Targets ----------------------------- #
 .PHONY: all clean fclean re

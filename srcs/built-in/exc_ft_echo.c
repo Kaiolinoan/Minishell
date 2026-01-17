@@ -12,13 +12,6 @@
 
 #include "minishell.h"
 
-static void	print(t_command *commands, size_t i)
-{
-	printf("%s", commands->args[i]);
-	if (commands->args[i + 1])
-		printf(" ");
-}
-
 static bool	is_valid_flag(char *str)
 {
 	size_t	j;
@@ -52,7 +45,9 @@ int	built_in_echo(t_command *commands)
 			return (0);
 		}
 		first_flag = false;
-		print(commands, i);
+		printf("%s", commands->args[i]);
+		if (commands->args[i + 1])
+			printf(" ");
 	}
 	if (!valid_flag)
 		printf("\n");

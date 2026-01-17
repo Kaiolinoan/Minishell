@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void check_shell_lvl(t_map *env)
+static void check_shell_lvl(t_map *env)
 {
 	char	*old_lvl;
 	int		new_lvl;

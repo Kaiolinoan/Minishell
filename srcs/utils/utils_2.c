@@ -63,30 +63,13 @@ long long	ft_atoll(const char *str)
 	return (nb * sign);
 }
 
-void	free_grid(char **grid)
+void	init_exec(t_exec *exec, t_command *cmd)
 {
-	size_t	i;
-
-	i = 0;
-	while (grid[i])
-		free(grid[i++]);
-	free(grid);
-}
-
-void list_clear_redir(t_redirect *head)
-{
-	t_redirect *next;
-
-	if (!head)
-		return ;
-	while(head)
-	{
-		next = head->next;
-		ft_close(&head->fd);
-		if (head->filename)
-			free(head->filename);
-		free(head);
-		head = next;
-	}
-	head = NULL;
+	exec->fds[0] = -1;
+	exec->fds[1] = -1;
+	exec->in = -1;
+	exec->out = -1;
+	exec->temp_in = -1;
+	exec->temp_out = -1;
+	exec->len = list_len_command(cmd);
 }

@@ -35,47 +35,44 @@ int	is_built_in(t_map *env, t_command *commands, t_exec *exec)
 		exit_code = built_in_exit(commands, env, exec);
 	return (exit_code);
 }
-// exit nao esta saindo
-
-void	test_out(t_command *commands, char *filename, t_type type)
+static int get_exit_status(int status)
 {
-	t_redirect	*out;
+	int			exit_code;
 
-	if (!commands)
-		return ;
-	out = malloc(sizeof(t_redirect));
-	if (!out)
-		return ;
-	out->filename = filename;
-	out->type = type;
-	out->next = NULL;
-	out->fd = -1;
-	commands->outfile = out;
+	exit_code = 0;
+	if (WIFSIGNALED(status))
+	{
+		if (WTERMSIG(status) == SIGQUIT)
+			write(2, "Quit (core dumped)\n", 20);
+		if (WTERMSIG(status) == SIGINT)
+		   	write(2, "\n", 1);
+		exit_code = 128 + WTERMSIG(status);
+	}
+	if (WIFEXITED(status))
+		exit_code = WEXITSTATUS(status);
+	return (exit_code); 
 }
 
-void	test_in(t_command *commands, char *filename, t_type type)
+static void	wait_all(t_command *cmd, t_map *env)
 {
-	t_redirect	*in;
+	t_command	*temp;
+	int			status;
+	int			exit_code;
+	int			last_pid;
 
-	if (!commands)
-		return ;
-	in = malloc(sizeof(t_redirect));
-	if (!in)
-		return ;
-	in->filename = filename;
-	in->type = type;
-	in->next = NULL;
-	in->fd = -1;
-	commands->infile = in;
-}
-
-void	init_exec(t_exec *exec, t_command *cmd)
-{
-	exec->fds[0] = -1;
-	exec->fds[1] = -1;
-	exec->in = -1;
-	exec->out = -1;
-	exec->len = list_len_command(cmd);
+	temp = cmd;
+	while (cmd->next)
+		cmd = cmd->next;
+	last_pid = cmd->pid;
+	exit_code = 0;
+	while (temp)
+	{
+		if (waitpid(temp->pid, &status, 0) > 0)
+			if (last_pid == temp->pid)
+				get_exit_status(status);
+		temp = temp->next;
+	}
+	env->put(env, ft_strdup("?"), ft_itoa(exit_code), true);// alterar para false dps que tiver a expansao
 }
 
 void	exec_all(t_command *head, t_map *env, t_exec *exec)
@@ -83,8 +80,6 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 	t_command	*cmd;
 
 	cmd = head;
-	// test_in(cmd, "a", HEREDOC);
-	init_exec(exec, cmd);
 	exec->in = dup(STDIN_FILENO);
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);

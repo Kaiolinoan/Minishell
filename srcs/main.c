@@ -18,6 +18,7 @@ void process_all(t_command *cmd, t_map *env, t_exec *exec)
 {
 	if (!cmd || !env)
 		return ;
+	init_exec(exec, cmd);
 	if (!check_here_doc(cmd, env, exec))
 		return (ft_exit(env, cmd, exec, 999));// checar isso aqui
 	exec_all(cmd, env, exec);
@@ -53,4 +54,3 @@ int	main(int argc, char **argv, char **environment)
 	printf("Saindo do minishell!\n");
 	ft_exit(env, cmd, &exec, 0);
 }
-//VERIFICAR SE IREMOS MANTER AS VARIAVEIS!

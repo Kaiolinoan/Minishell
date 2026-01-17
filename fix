@@ -12,3 +12,5 @@ cat >< a
 cat >> a >> b >> c >> d
 cat << a << b
 ec"ho" hello
+cat >> opa
+< oi cat

@@ -74,21 +74,6 @@ t_redirect	*new_redirect(char *filename, char type)
 	return (node);
 }
 
-// t_var	*new_var(char *k, char *v, bool exported, bool commands)
-// {
-// 	t_var	*node;
-
-// 	node = malloc(sizeof(t_var));
-// 	if (!node)
-// 		return (NULL);
-// 	node->key = k;
-// 	node->value = v;
-// 	node->is_exported = exported;
-// 	node->commands = commands;
-// 	node->next = NULL;
-// 	return (node);
-// }
-
 t_exec	*new_exec(void)
 {
 	t_exec	*node;

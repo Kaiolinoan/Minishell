@@ -52,26 +52,24 @@ static int	helper_output(t_redirect *output)
 	return (fd);
 }
 
-void print_inside_redir(t_redirect *ptr)
-{
-	t_redirect *temp;
+// void print_inside_redir(t_redirect *ptr)
+// {
+// 	t_redirect *temp;
 
-	temp = ptr;
-	while (temp)
-	{
-		printf("filename: %s\n", temp->filename);
-		printf("fd: %d\n", temp->fd);
-		printf("type: %d\n", temp->type);
-		temp = temp->next;
-	}
-}
+// 	temp = ptr;
+// 	while (temp)
+// 	{
+// 		printf("filename: %s\n", temp->filename);
+// 		printf("fd: %d\n", temp->fd);
+// 		printf("type: %d\n", temp->type);
+// 		temp = temp->next;
+// 	}
+// }
 
 void	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)
 		return ;
-	print_inside_redir(input);
-	print_inside_redir(output);
 	if (input)
 	{
 		if (input->type == INPUT)

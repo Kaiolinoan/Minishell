@@ -41,10 +41,18 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 {
 	int	built_in_status;
 
+	exec->temp_in = dup(STDIN_FILENO);
+	exec->temp_out = dup(STDOUT_FILENO);
+	dup2(exec->in, STDIN_FILENO);
+	dup2(exec->out, STDOUT_FILENO);
 	built_in_status = is_built_in(env, cmd, exec);
 	if (built_in_status != -1)
 		env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true);
 	// alterar para false dps que tiver a expansao
+	dup2(exec->temp_in, STDIN_FILENO);
+	dup2(exec->temp_out, STDOUT_FILENO);
+	ft_close(&exec->temp_in);
+	ft_close(&exec->temp_out);
 	return (built_in_status);
 }
 
@@ -96,5 +104,4 @@ void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 	}
 	close_fds(exec, cmd, true);
 }
- // ls | cat da erro
  

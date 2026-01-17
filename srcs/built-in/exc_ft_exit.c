@@ -105,11 +105,6 @@ int	built_in_exit(t_command *commands, t_map *env, t_exec *exec)
 	else
 		nb = g_exit_code;
 	close_fds(exec, commands, true);
-	printf("in: %d\n", exec->in);
-	printf("out: %d\n", exec->out);
-	printf("pipe[0]: %d\n", exec->fds[0]);
-	printf("pipe[1]: %d\n", exec->fds[1]);
 	ft_exit(env, commands, exec, nb);
 	return (nb);
 }
-// falta fazer o bglh do modulo

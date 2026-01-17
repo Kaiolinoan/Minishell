@@ -24,8 +24,6 @@
 # include <signal.h>
 # include <sys/stat.h>
 
-
-
 # define CD_ERROR "bash: cd: "
 
 extern int g_exit_code;
@@ -41,15 +39,6 @@ struct						s_envlist
 	t_envlist				*next;
 	t_envlist				*prev;
 };
-
-typedef struct s_variables
-{
-	char				*key;
-	char				*value;
-	bool				is_exported;
-	bool				commands;
-	struct s_variables	*next;
-}	t_var;
 
 typedef struct s_map		t_map;
 
@@ -100,6 +89,8 @@ typedef struct s_exec
 {
 	int			in;
 	int			out;
+	int			temp_in;
+	int			temp_out;
 	int			fds[2];
 	size_t		len;
 }	t_exec;
@@ -134,7 +125,6 @@ t_map						*new_map(void);
 t_envlist					*new_node(char *k, char *v, bool exported);
 t_command					*new_command(char **args);
 t_redirect					*new_redirect(char *filename, char type);
-t_var						*new_var(char *k, char *v, bool exported, bool commands);
 t_exec						*new_exec(void);
 
 
@@ -163,6 +153,8 @@ int	    					built_in_exit(t_command *commands, t_map *env, t_exec *exec);
 void						exec_all (t_command*cmd, t_map *env, t_exec *exec);
 void						handle_command(t_map *env, t_command *cmd, t_exec *exec);
 void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
+void						init_exec(t_exec *exec, t_command *cmd);
+
 
 //close
 void						close_fds(t_exec *exec, t_command *cmd, bool is_parent);
@@ -170,7 +162,6 @@ void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
 
 //helpers
-void 						wait_all(t_command *cmd, t_map *env);
 bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 
 //signals
@@ -184,7 +175,7 @@ int 						in_redirection(t_command *head);
 
 // parse expansion
 char						*expand(char *str, t_map *env);
-int						expand_and_shi(t_command *head, t_map *env);
+int							expand_and_shi(t_command *head, t_map *env);
 
 
 // parse input
