@@ -16,7 +16,7 @@ ENV_DIR		= env/
 
 # ================================= FILES =================================== #
 
-SRC_UTILS	= utils.c utils_2.c print_cmd.c
+SRC_UTILS	= utils.c utils_2.c print_cmd.c cleaning_functions.c
 SRC_PARSE	= parse_input.c parse_main.c parse_utils.c parse_cmdlist.c \
 			  parse_redirection.c parse_expansion.c
 SRC_FILES	= main.c 

@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:45 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 03:44:11 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/16 02:41:45 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ static void	iso_rightarrow(char *dup, char *str, size_t *i, size_t *j)
 {
 	if (str[*i] == '>')
 	{
-		if (str[*i - 1] && str[*i - 1] == '>')
+		if (*i > 0 && str[*i - 1] == '>')
 			dup[(*j)] = '>';
-		else if (str[*i - 1] && str[*i - 1] != ' ')
+		else if (*i > 0 && str[*i - 1] != ' ')
 		{
 			dup[*j] = '\2';
 			dup[++(*j)] = '>';
@@ -52,9 +52,9 @@ static void	iso_leftarrow(char *dup, char *str, size_t *i, size_t *j)
 {
 	if (str[*i] == '<')
 	{
-		if (str[*i - 1] && str[*i - 1] == '<')
+		if (*i > 0 && str[*i - 1] == '<')
 			dup[(*j)] = '<';
-		else if (str[*i - 1] && str[*i - 1] != ' ')
+		else if (*i > 0 && str[*i - 1] != ' ')
 		{
 			dup[*j] = '\2';
 			dup[++(*j)] = '<';

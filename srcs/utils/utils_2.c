@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:47:46 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 18:08:44 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/16 04:40:11 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ void	free_grid(char **grid)
 	free(grid);
 }
 
-void list_clear_redir(t_redirect *head)
+void	list_clear_redir(t_redirect *head)
 {
-	t_redirect *next;
+	t_redirect	*next;
 
 	if (!head)
 		return ;
-	while(head)
+	while (head)
 	{
 		next = head->next;
 		ft_close(&head->fd);

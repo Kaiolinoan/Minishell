@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:25:35 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/12 20:39:42 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/16 04:39:11 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ bool	space_only(char *str)
 
 char	identify_quote(char flag, char c)
 {
-    if (!flag && (c == '"' || c == '\''))
-        return (c);
-    if (flag && flag == c)
-        return (0);
-    return (flag);
+	if (!flag && (c == '"' || c == '\''))
+		return (c);
+	if (flag && flag == c)
+		return (0);
+	return (flag);
 }
 
 bool	var_start(char c)

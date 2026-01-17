@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:32:35 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/13 03:41:04 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/16 04:38:03 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	fill_args(t_command *current)
 {
 	int	i;
 	int	j;
-	int count;
+	int	count;
 
 	count = args_count(current->cmd);
 	if (!count)
@@ -48,8 +48,8 @@ static int	fill_args(t_command *current)
 		{
 			current->args[j] = ft_strdup(current->cmd[i]);
 			if (!current->args[j])
-				return(free_grid(current->args), 0);
-			j++;	
+				return (free_grid(current->args), 0);
+			j++;
 		}
 		i++;
 	}
@@ -57,28 +57,54 @@ static int	fill_args(t_command *current)
 	return (1);
 }
 
-int in_redirection(t_command *head)
+static int	process_redirection(t_command *current, int *i, char redir_type)
 {
-	int         i;
-	t_command   *current;
+	if (!current->cmd[*i + 1])
+		return (0);
+	if (current->cmd[*i + 1][0] == '<' || current->cmd[*i + 1][0] == '>')
+		return (0);
+	if (redir_type == '<' && current->infile)
+		return (0);
+	if (redir_type == '>' && current->outfile)
+		return (0);
+	if (!handle_redirection(current, *i, redir_type))
+		return (0);
+	*i += 2;
+	return (1);
+}
+
+static int	search_redirections(t_command *current)
+{
+	int	i;
+
+	i = 0;
+	while (current->cmd[i])
+	{
+		if (current->cmd[i][0] == '<')
+		{
+			if (!process_redirection(current, &i, '<'))
+				return (0);
+			continue ;
+		}
+		if (current->cmd[i][0] == '>')
+		{
+			if (!process_redirection(current, &i, '>'))
+				return (0);
+			continue ;
+		}
+		i++;
+	}
+	return (fill_args(current));
+}
+
+int	in_redirection(t_command *head)
+{
+	t_command	*current;
 
 	current = head;
 	while (current)
 	{
-		i = 0;
-		while (current->cmd[i])
-		{
-			if (current->cmd[i][0] == '<' || current->cmd[i][0] == '>')
-			{
-				if (!current->cmd[i + 1])
-					return (0);
-				if (!handle_redirection(current, i, current->cmd[i][0]))
-					return (0);
-				break ;
-			}
-			i++;
-		}
-		if (!fill_args(current))
+		if (!search_redirections(current))
 			return (0);
 		current = current->next;
 	}
