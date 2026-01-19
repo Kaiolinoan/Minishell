@@ -6,6 +6,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	char	*line;
 	int		fd;
 
+	signal(SIGINT, heredoc_sigint);
 	limiter = cmd->infile->filename;
 	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	line = NULL;
@@ -32,13 +33,18 @@ static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 {
 	pid_t	pid;
 	int		fd;
+	int status;
 
+	signal(SIGINT, SIG_IGN);
 	pid = fork();
 	if (pid < 0)
 		return (-1);
 	if (!pid)
 		here_child(cmd, env, exec);
-	wait(NULL);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
+		return (unlink("/tmp/here_temp"), -2);
+	signal(SIGINT, sigint_handler);
 	fd = open("/tmp/here_temp", O_RDONLY);
 	unlink("/tmp/here_temp");
 	return (fd);

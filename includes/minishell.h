@@ -24,6 +24,8 @@
 # include <signal.h>
 # include <sys/stat.h>
 
+# define PWD_ERROR "pwd: error retrieving current directory:\
+ getcwd: cannot access parent directories: "
 # define CD_ERROR "bash: cd: "
 
 extern int g_exit_code;
@@ -119,7 +121,6 @@ void						__destroy(t_extra *t);
 int							__print(t_extra *t);
 char 						**__to_string(t_extra *t);
 
-
 // env list
 t_map						*new_map(void);
 t_envlist					*new_node(char *k, char *v, bool exported);
@@ -136,9 +137,6 @@ char						**ft_split_env(char *env);
 //env path
 char						*get_path(t_map *env, char **commands);
 
-//variables
-// void					    create_variable(t_map *env, t_command *commands, t_var *var);
-
 //built-ins
 int							is_built_in(t_map *env, t_command *commands, t_exec *exec);
 int							built_in_cd(char **args, t_map *env);
@@ -148,13 +146,11 @@ int							built_in_pwd(t_map *env);
 int							built_in_unset(t_command *commands, t_map *env);
 int	    					built_in_exit(t_command *commands, t_map *env, t_exec *exec);
 
-
 //start, redir and pipes 
 void						exec_all (t_command*cmd, t_map *env, t_exec *exec);
 void						handle_command(t_map *env, t_command *cmd, t_exec *exec);
-void						check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
+int							check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
 void						init_exec(t_exec *exec, t_command *cmd);
-
 
 //close
 void						close_fds(t_exec *exec, t_command *cmd, bool is_parent);
@@ -167,6 +163,8 @@ bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 //signals
 void						signals_init();
 void						child_signal();
+void 						heredoc_sigint(int sig);
+void						sigint_handler(int signal);
 
 
 //#################################    PARSING    #################################################
@@ -177,12 +175,11 @@ int 						in_redirection(t_command *head);
 char						*expand(char *str, t_map *env);
 int							expand_and_shi(t_command *head, t_map *env);
 
-
 // parse input
 char						*parse_input(char *str);
 
 // parse main
-t_command					*parse_main(char *input, t_map *env, t_exec *exec);
+t_command					*parse_main(char *input, t_exec *exec);
 
 //parse redirection
 int							handle_redirection(t_command *cmdnode, int i, char redir);

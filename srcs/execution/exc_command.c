@@ -48,7 +48,8 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 	built_in_status = is_built_in(env, cmd, exec);
 	if (built_in_status != -1)
 		env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true);
-	// alterar para false dps que tiver a expansao
+		// alterar para false dps que tiver a expansao
+	// printf("depois: %s\n", env->get(env, "?"));
 	dup2(exec->temp_in, STDIN_FILENO);
 	dup2(exec->temp_out, STDOUT_FILENO);
 	ft_close(&exec->temp_in);
@@ -64,6 +65,8 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 
 	built_in_status = 0;
 	environment = env->to_string(env);
+	cmd->path = get_path(env, cmd->args);
+	// ft_printf("%s\n", cmd->path);
 	path_status = path_look_up(cmd, environment);
 	if (path_status > 0)
 	{

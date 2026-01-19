@@ -25,7 +25,7 @@ static int	helper_input(t_redirect *input)
 		{
 			fd = open(input->filename, O_RDONLY);
 			if (fd < 0)
-				return (ft_putstr_fd("ERROR: open()\n", 2), -1);
+				return (perror(input->filename), -1);
 		}
 		input = input->next;
 	}
@@ -46,43 +46,41 @@ static int	helper_output(t_redirect *output)
 		else if (output->type == OUTPUT_APPEND)
 			fd = open(output->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
-			return (ft_putstr_fd("ERROR: open()\n", 2), -1);
+			return (perror(output->filename), -1);
 		output = output->next;
 	}
 	return (fd);
 }
 
-// void print_inside_redir(t_redirect *ptr)
-// {
-// 	t_redirect *temp;
+void print_inside_redir(t_redirect *ptr)
+{
+	t_redirect *temp;
 
-// 	temp = ptr;
-// 	while (temp)
-// 	{
-// 		printf("filename: %s\n", temp->filename);
-// 		printf("fd: %d\n", temp->fd);
-// 		printf("type: %d\n", temp->type);
-// 		temp = temp->next;
-// 	}
-// }
+	temp = ptr;
+	while (temp)
+	{
+		printf("filename: %s\n", temp->filename);
+		printf("fd: %d\n", temp->fd);
+		printf("type: %d\n", temp->type);
+		temp = temp->next;
+	}
+}
 
-void	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
+int	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)
-		return ;
+		return (-2);
+	// print_inside_redir(input);
 	if (input)
 	{
 		if (input->type == INPUT)
 			*in = change_fd(*in, helper_input(input));
 		if (input->type == HEREDOC)
 			*in = change_fd(*in, input->fd);// aqui estou pegando o fd do primeiro e nao do ultimo
-		if (*in < 0)
-			return ;
 	}
 	if (output)
-	{
 		*out = change_fd(*out, helper_output(output));
-		if (*out < 0)
-			return ;
-	}
+	if (*in < 0 || *out < 0)
+		return (-1);
+	return (true);
 }

@@ -20,17 +20,8 @@ static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 		return ;
 	init_exec(exec, cmd);
 	if (!check_here_doc(cmd, env, exec))
-		return (ft_exit(env, cmd, exec, 999));// checar isso aqui
+		return ;// checar isso aqui
 	exec_all(cmd, env, exec);
-}
-
-static void	initialize_exec(t_exec *exec)
-{
-	exec->in = -1;
-	exec->out = -1;
-	exec->fds[0] = -1;
-	exec->fds[1] = -1;
-	exec->len = 0;
 }
 
 int	main(int argc, char **argv, char **environment)
@@ -46,7 +37,6 @@ int	main(int argc, char **argv, char **environment)
 	cmd = NULL;
 	env = new_map();
 	create_env(env, environment);
-	initialize_exec(&exec);
 	while (1)
 	{
 		signals_init();
@@ -55,12 +45,12 @@ int	main(int argc, char **argv, char **environment)
 			break ;
 		if (*str)
 			add_history(str);
-		cmd = parse_main(str, env, &exec);
+		free_all(cmd, &exec);
+		cmd = parse_main(str, &exec);
+		print_nodes_after_input(cmd);
 		if (!cmd)
 			continue ;
-		print_nodes_after_input(cmd);
 		process_all(cmd, env, &exec);
-		free_all(cmd, &exec);
 	}
 	printf("Saindo do minishell!\n");
 	ft_exit(env, cmd, &exec, 0);

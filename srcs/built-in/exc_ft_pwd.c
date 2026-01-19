@@ -30,9 +30,8 @@ int	built_in_pwd(t_map *env)
 			printf("%s\n", env_pwd);
 		else
 		{
-			ft_putstr_fd("pwd: error retrieving current directory: \
-				getcwd: cannot access parent directories:", 2);
-			write(2, strerror(errno), ft_strlen(strerror(errno)));
+			ft_putstr_fd(PWD_ERROR, 2);
+			perror(NULL);
 			return (1);
 		}
 	}

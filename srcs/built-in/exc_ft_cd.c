@@ -38,14 +38,15 @@ static int	process_cd(char *path, t_map *env, char *old_pwd)
 			if (chdir(old_pwd) == -1)
 				return (print_error(CD_ERROR, path), 1);
 			else
-				return (printf("%s\n", env->get(env, "OLDPWD")), 0);
+				return (ft_printf("%s\n", old_pwd), 0);
 		}
 		else
 			return (ft_putstr_fd("bash: cd: OLDPWD not set\n", 2), 1);
 	}
 	if (path[0] == '~' && path[1] == '/')
 	{
-		cd_home(path, env);
+		if (cd_home(path, env) == 1)
+			return (1);
 		if (chdir(path + 2) == -1)
 			return (print_error(CD_ERROR, path), 1);
 		return (0);
@@ -67,7 +68,7 @@ int	built_in_cd(char **args, t_map *env)
 	path = args[1];
 	pwd = getcwd(NULL, 0);// se for dar fix em diretoria fantasma seria aqui
 	old_pwd = env->get(env, "PWD");
-	exit_code = process_cd(path, env, old_pwd);
+	exit_code = process_cd(path, env, env->get(env, "OLDPWD"));
 	if (pwd && old_pwd)
 	{
 		env->put(env, ft_strdup("OLDPWD"), ft_strdup(old_pwd), true);

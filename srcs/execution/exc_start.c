@@ -35,11 +35,11 @@ int	is_built_in(t_map *env, t_command *commands, t_exec *exec)
 		exit_code = built_in_exit(commands, env, exec);
 	return (exit_code);
 }
-static int get_exit_status(int status)
+static int get_exit_status(int status, t_map *env)
 {
 	int			exit_code;
 
-	exit_code = 0;
+	exit_code = ft_atoi(env->get(env, "?"));
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGQUIT)
@@ -64,12 +64,12 @@ static void	wait_all(t_command *cmd, t_map *env)
 	while (cmd->next)
 		cmd = cmd->next;
 	last_pid = cmd->pid;
-	exit_code = 0;
+	exit_code = ft_atoi(env->get(env, "?"));
 	while (temp)
 	{
 		if (waitpid(temp->pid, &status, 0) > 0)
 			if (last_pid == temp->pid)
-				get_exit_status(status);
+				exit_code =  get_exit_status(status, env);
 		temp = temp->next;
 	}
 	env->put(env, ft_strdup("?"), ft_itoa(exit_code), true);// alterar para false dps que tiver a expansao
@@ -89,7 +89,13 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 		if (cmd->next)
 			if (pipe(exec->fds) != -1)
 				exec->out = change_fd(exec->out, exec->fds[1]);
-		check_redir(cmd->infile, cmd->outfile, &exec->in, &exec->out);
+		if (check_redir(cmd->infile, cmd->outfile, &exec->in, &exec->out) == -1)
+		{
+			env->put(env, ft_strdup("?"), ft_strdup("1"), true); //alterar dps da expanasao
+			exec->in = change_fd(exec->in, exec->fds[0]);
+			cmd = cmd->next;
+			continue ;
+		}
 		handle_command(env, cmd, exec);
 		exec->in = change_fd(exec->in, exec->fds[0]);
 		cmd = cmd->next;

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static t_command	*new_cmdnode(char **args, t_map *env)
+static t_command	*new_cmdnode(char **args)
 {
 	t_command	*node;
 
@@ -22,7 +22,7 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	node->cmd = args;
 	node->args = NULL;
 	node->pid = 0;
-	node->path = get_path(env, args);
+	node->path = NULL;
 	node->infile = NULL;
 	node->outfile = NULL;
 	node->next = NULL;
@@ -30,7 +30,7 @@ static t_command	*new_cmdnode(char **args, t_map *env)
 	return (node);
 }
 
-static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
+static t_command	*fill_cmdlist(t_command *head, char *args)
 {
 	char		**cmds;
 	t_command	*new_node;
@@ -39,7 +39,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	cmds = ft_split(args, '\2');
 	if (!cmds || !cmds || !cmds[0])
 		return (free_grid(cmds), NULL);
-	new_node = new_cmdnode(cmds, env);
+	new_node = new_cmdnode(cmds);
 	if (!new_node)
 		return (free_grid(cmds), NULL);
 	if (!head)
@@ -55,7 +55,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args, t_map *env)
 	return (head);
 }
 
-t_command	*parse_main(char *input, t_map *env, t_exec *exec)
+t_command	*parse_main(char *input,  t_exec *exec)
 {
 	size_t		i;
 	char		**args;
@@ -71,7 +71,7 @@ t_command	*parse_main(char *input, t_map *env, t_exec *exec)
 	i = 0;
 	while (args[i])
 	{
-		head = fill_cmdlist(head, args[i], env);
+		head = fill_cmdlist(head, args[i]);
 		if (!head)
 			return (free(input), free_grid(args), NULL);
 		i++;
