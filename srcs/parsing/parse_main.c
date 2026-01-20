@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/16 04:38:34 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 03:23:44 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args)
 	t_command	*current;
 
 	cmds = ft_split(args, '\2');
-	if (!cmds || !cmds || !cmds[0])
+	if (!cmds || !cmds[0])
 		return (free_grid(cmds), NULL);
 	new_node = new_cmdnode(cmds);
 	if (!new_node)
@@ -77,8 +77,8 @@ t_command	*parse_main(char *input,  t_exec *exec)
 		i++;
 	}
 	if (!in_redirection(head))
-		return (free_all(head, exec), free_grid(args), free(input), NULL);
-	// if (!expand_and_shi(head, env))
-	// 	return (free_grid(args), free(input), NULL);
+		return (free_all(&head, exec), free_grid(args), free(input), NULL);
+	if (!expand_and_shi(head, env))
+		return (free_grid(args), free(input), NULL);
 	return (free_grid(args), free(input), head);
 }

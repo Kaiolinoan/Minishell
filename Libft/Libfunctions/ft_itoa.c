@@ -42,6 +42,8 @@ char	*ft_itoa(int n)
 	nb = n;
 	count = count_nb(nb);
 	str = malloc(count + 1);
+	if (!str)
+		return (NULL);
 	str[count] = '\0';
 	if (nb < 0)
 	{

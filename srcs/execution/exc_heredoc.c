@@ -26,7 +26,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 		free(line);
 	}
 	ft_close(&fd);
-	ft_exit(env, cmd, exec, 0);
+	ft_exit(env, &cmd, exec, 0);
 }
 
 static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)

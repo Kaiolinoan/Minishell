@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:32:35 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/16 04:38:03 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 03:54:09 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,19 @@ static int	args_count(char **cmd)
 	return (count);
 }
 
-static int	fill_args(t_command *current)
+static int	fill_args(t_command *current, int i, int j)
 {
-	int	i;
-	int	j;
 	int	count;
 
 	count = args_count(current->cmd);
 	if (!count)
-		return (0);
+	{
+		current->args = calloc(1, sizeof(char *));
+		return (current->args != NULL);
+	}
 	current->args = calloc(count + 1, sizeof(char *));
 	if (!current->args)
 		return (0);
-	i = 0;
-	j = 0;
 	while (current->cmd[i])
 	{
 		if (current->cmd[i][0] != '\1')
@@ -62,10 +61,6 @@ static int	process_redirection(t_command *current, int *i, char redir_type)
 	if (!current->cmd[*i + 1])
 		return (0);
 	if (current->cmd[*i + 1][0] == '<' || current->cmd[*i + 1][0] == '>')
-		return (0);
-	if (redir_type == '<' && current->infile)
-		return (0);
-	if (redir_type == '>' && current->outfile)
 		return (0);
 	if (!handle_redirection(current, *i, redir_type))
 		return (0);
@@ -94,7 +89,7 @@ static int	search_redirections(t_command *current)
 		}
 		i++;
 	}
-	return (fill_args(current));
+	return (fill_args(current, 0, 0));
 }
 
 int	in_redirection(t_command *head)

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/17 14:53:37 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 09:57:54 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_code = 0;
+int	g_exit_code = 0;
 
 static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 {
@@ -53,5 +53,5 @@ int	main(int argc, char **argv, char **environment)
 		process_all(cmd, env, &exec);
 	}
 	printf("Saindo do minishell!\n");
-	ft_exit(env, cmd, &exec, 0);
+	ft_exit(env, &cmd, &exec, 0);
 }

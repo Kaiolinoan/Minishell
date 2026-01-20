@@ -5,6 +5,7 @@ echo "hello world"
 echo 'hello world'
 echo "hello 'world'"
 echo 'hello "world"'
+echo "hello 'world'"
 cat < no_file | aaa < ls | pwd (redirections nao estao sendo alocadas no comando do meio)
 cat < no_file | ls < aaa | pwd (redirections nao estao sendo alocadas no comando do meio)
 
