@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 18:24:46 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/20 03:23:49 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,6 @@ struct						s_envlist
 	t_envlist				*next;
 	t_envlist				*prev;
 };
-
-typedef struct s_variables
-{
-	char				*key;
-	char				*value;
-	bool				is_exported;
-	bool				commands;
-	struct s_variables	*next;
-}	t_var;
 
 typedef struct s_map		t_map;
 
@@ -134,7 +125,6 @@ t_map						*new_map(void);
 t_envlist					*new_node(char *k, char *v, bool exported);
 t_command					*new_command(char **args);
 t_redirect					*new_redirect(char *filename, char type);
-t_var						*new_var(char *k, char *v, bool exported, bool commands);
 t_exec						*new_exec(void);
 
 
@@ -142,12 +132,8 @@ t_exec						*new_exec(void);
 void						create_env(t_map *env, char **enviroment);
 char						**ft_split_env(char *env);
 
-
 //env path
 char						*get_path(t_map *env, char **commands);
-
-//variables
-// void					    create_variable(t_map *env, t_command *commands, t_var *var);
 
 //built-ins
 int							is_built_in(t_map *env, t_command *commands, t_exec *exec);
@@ -183,8 +169,9 @@ void						child_signal();
 int 						in_redirection(t_command *head);
 
 // parse expansion
+char						*remove_quotes(char *str);
 char						*expand(char *str, t_map *env);
-int						expand_and_shi(t_command *head, t_map *env);
+int							expand_and_shi(t_command *head, t_map *env);
 
 
 // parse input
@@ -200,6 +187,8 @@ int							handle_redirection(t_command *cmdnode, int i, char redir);
 bool						space_only(char *str);
 char						identify_quote(char flag, char c);
 void						print_nodes_after_input(t_command *head);
+bool						var_start(char c);
+bool						var_char(char c);
 
 //#################################    UTILS    #################################################
 bool						space_only(char *str);
@@ -213,8 +202,8 @@ size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
 void						list_clear_redir(t_redirect *head);
-void						ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb);
-void						free_all(t_command *commands, t_exec *exec);
+void						ft_exit(t_map *env, t_command **cmd, t_exec *exec, int nb);
+void						free_all(t_command **commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
 
 #endif

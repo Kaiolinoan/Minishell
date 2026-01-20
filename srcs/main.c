@@ -6,20 +6,20 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/17 14:53:37 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 03:55:06 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_exit_code = 0;
+int	g_exit_code = 0;
 
 static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 {
 	if (!cmd || !env)
 		return ;
 	if (!check_here_doc(cmd, env, exec))
-		return (ft_exit(env, cmd, exec, 999));// checar isso aqui
+		return (ft_exit(env, &cmd, exec, 999));// checar isso aqui
 	exec_all(cmd, env, exec);
 }
 
@@ -59,9 +59,9 @@ int	main(int argc, char **argv, char **environment)
 			continue ;
 		print_nodes_after_input(cmd);
 		process_all(cmd, env, &exec);
-		free_all(cmd, &exec);
+		free_all(&cmd, &exec);
 	}
 	printf("Saindo do minishell!\n");
-	ft_exit(env, cmd, &exec, 0);
+	ft_exit(env, &cmd, &exec, 0);
 }
 //VERIFICAR SE IREMOS MANTER AS VARIAVEIS!

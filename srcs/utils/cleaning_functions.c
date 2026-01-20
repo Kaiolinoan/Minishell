@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/16 04:45:32 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/16 04:47:23 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 03:22:21 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,25 +36,25 @@ void	clear_exec(t_exec *exec)
 	exec = NULL;
 }
 
-void	free_all(t_command *commands, t_exec *exec)
+void	free_all(t_command **commands, t_exec *exec)
 {
 	t_command			*next;
 
-	if (!commands)
+	if (!commands || !*commands)
 		return ;
-	while (commands->prev)
-		commands = commands->prev;
-	while (commands)
+	while ((*commands)->prev)
+		*commands = (*commands)->prev;
+	while (*commands)
 	{
-		next = commands->next;
-		list_clear_redir(commands->infile);
-		list_clear_redir(commands->outfile);
-		free(commands->path);
-		clear_matriz(commands->args);
-		clear_matriz(commands->cmd);
-		free(commands);
-		commands = next;
+		next = (*commands)->next;
+		list_clear_redir((*commands)->infile);
+		list_clear_redir((*commands)->outfile);
+		free((*commands)->path);
+		clear_matriz((*commands)->args);
+		clear_matriz((*commands)->cmd);
+		free(*commands);
+		*commands = next;
 	}
 	clear_exec(exec);
-	commands = NULL;
+	*commands = NULL;
 }
