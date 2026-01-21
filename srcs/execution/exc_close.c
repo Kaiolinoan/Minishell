@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:14:33 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/12 15:22:34 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/21 10:48:20 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_close(int *fd)
 {
+	if (!fd)
+		return ;
 	if (*fd != -1)
 		close(*fd);
 	*fd = -1;

@@ -19,6 +19,9 @@ static bool is_all_num(char *str)
 
 	i = 0;
 	sign = false;
+	str = ft_strtrim(str, " ");
+	if (!str || !*str)
+		return (free(str), false);
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
@@ -30,12 +33,13 @@ static bool is_all_num(char *str)
 				i++;
 				continue;
 			}
-			return (false);
+			return (free(str), false);
 		}
 		i++;
 	}
-	return (true);
+	return (free(str), true);
 }
+
 static int check_overflow(char *num)
 {
 	int	 	sign;
@@ -60,8 +64,8 @@ static int check_overflow(char *num)
 	else if (len < 19)
 		return (1);
 	if (sign == 1)
-        return (strncmp(str, "9223372036854775807", 19) <= 0);
-    return (strncmp(str, "9223372036854775808", 19) <= 0);
+        return (ft_strncmp(str, "9223372036854775807", 19) <= 0);
+    return (ft_strncmp(str, "9223372036854775808", 19) <= 0);
 }
 
 static bool check_exit_arg(char **args, t_map *env, t_command *cmd, t_exec *exec)
@@ -75,13 +79,13 @@ static bool check_exit_arg(char **args, t_map *env, t_command *cmd, t_exec *exec
 		ft_putstr_fd("bash: exit: ", 2);
 		ft_putstr_fd(args[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		ft_exit(env, &cmd, exec, 2);
+		ft_exit(env, cmd, exec, 2);
 	}
 	if (ft_array_len(args) > 2)
 		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
 	return (true);
 }
-void ft_exit(t_map *env, t_command **cmd, t_exec *exec, int nb)
+void ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb)
 {
 	free_all(cmd, exec);
 	env->destroy(env);
@@ -94,7 +98,7 @@ int	built_in_exit(t_command *commands, t_map *env, t_exec *exec)
 	nb = 0;
 	printf("exit\n");
 	if (!commands)
-		return (ft_exit(env, &commands, exec, 0), 0);
+		return (ft_exit(env, commands, exec, 0), 0);
 	if (!check_exit_arg(commands->args, env, commands, exec))
 		return (g_exit_code = 1);
 	if (commands->args[1])
@@ -108,3 +112,4 @@ int	built_in_exit(t_command *commands, t_map *env, t_exec *exec)
 	ft_exit(env, commands, exec, nb);
 	return (nb);
 }
+

@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 09:59:44 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/20 13:59:46 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,8 @@ void						exec_all (t_command*cmd, t_map *env, t_exec *exec);
 void						handle_command(t_map *env, t_command *cmd, t_exec *exec);
 int							check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
 void						init_exec(t_exec *exec, t_command *cmd);
+void						print_inside_redir(t_redirect *ptr); //apagar aqui
+
 
 //close
 void						close_fds(t_exec *exec, t_command *cmd, bool is_parent);
@@ -180,7 +182,7 @@ int							expand_and_shi(t_command *head, t_map *env);
 char						*parse_input(char *str);
 
 // parse main
-t_command					*parse_main(char *input, t_exec *exec);
+t_command					*parse_main(char *input, t_map *env, t_exec *exec);
 
 //parse redirection
 int							handle_redirection(t_command *cmdnode, int i, char redir);
@@ -204,8 +206,8 @@ size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
 void						list_clear_redir(t_redirect *head);
-void						ft_exit(t_map *env, t_command **cmd, t_exec *exec, int nb);
-void						free_all(t_command **commands, t_exec *exec);
+void						ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb);
+void						free_all(t_command *commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
 
 #endif

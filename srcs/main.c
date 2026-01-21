@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 09:57:54 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/01/21 11:07:46 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 		return ;
 	init_exec(exec, cmd);
 	if (!check_here_doc(cmd, env, exec))
-		return ;// checar isso aqui
+		return ;
 	exec_all(cmd, env, exec);
 }
 
@@ -46,12 +46,12 @@ int	main(int argc, char **argv, char **environment)
 		if (*str)
 			add_history(str);
 		free_all(cmd, &exec);
-		cmd = parse_main(str, &exec);
-		print_nodes_after_input(cmd);
+		cmd = parse_main(str, env, &exec);
+		// print_nodes_after_input(cmd);
 		if (!cmd)
 			continue ;
 		process_all(cmd, env, &exec);
 	}
-	printf("Saindo do minishell!\n");
-	ft_exit(env, &cmd, &exec, 0);
+	printf("Exiting minishell!\n");
+	ft_exit(env, cmd, &exec, 0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 03:23:44 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 10:30:32 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static t_command	*fill_cmdlist(t_command *head, char *args)
 	return (head);
 }
 
-t_command	*parse_main(char *input,  t_exec *exec)
+t_command	*parse_main(char *input, t_map *env, t_exec *exec)
 {
 	size_t		i;
 	char		**args;
@@ -77,7 +77,7 @@ t_command	*parse_main(char *input,  t_exec *exec)
 		i++;
 	}
 	if (!in_redirection(head))
-		return (free_all(&head, exec), free_grid(args), free(input), NULL);
+		return (free_all(head, exec), free_grid(args), free(input), NULL);
 	if (!expand_and_shi(head, env))
 		return (free_grid(args), free(input), NULL);
 	return (free_grid(args), free(input), head);

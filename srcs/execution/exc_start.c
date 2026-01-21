@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_start.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 02:02:53 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/20 12:29:09 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,8 @@ static int get_exit_status(int status, t_map *env)
 	exit_code = ft_atoi(env->get(env, "?"));
 	if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGQUIT)
-			write(2, "Quit (core dumped)\n", 20);
+		// if (WTERMSIG(status) == SIGQUIT)
+		// 	write(2, "Quit (core dumped)\n", 20);
 		if (WTERMSIG(status) == SIGINT)
 		   	write(2, "\n", 1);
 		exit_code = 128 + WTERMSIG(status);
@@ -96,7 +96,8 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 			cmd = cmd->next;
 			continue ;
 		}
-		handle_command(env, cmd, exec);
+		if(cmd->args[0])
+			handle_command(env, cmd, exec);
 		exec->in = change_fd(exec->in, exec->fds[0]);
 		cmd = cmd->next;
 	}

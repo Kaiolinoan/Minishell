@@ -34,7 +34,7 @@ static void	exec_failure(t_map *env, t_command *cmd, t_exec *exec)
 	ft_putstr_fd(*cmd->args, 2);
 	ft_putstr_fd(": command not found\n", 2);
 	close_fds(exec, cmd, false);
-	ft_exit(env, &cmd, exec, 127);
+	ft_exit(env, cmd, exec, 127);
 }
 
 static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
@@ -71,7 +71,7 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 	if (path_status > 0)
 	{
 		(clear_matriz(environment), close_fds(exec, cmd, false));
-		ft_exit(env, &cmd, exec, path_status);
+		ft_exit(env, cmd, exec, path_status);
 	}
 	else if (path_status == 0)
 	{
@@ -80,7 +80,7 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 		{
 			env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true);// alterar para false dps que tiver a expansao
 			(clear_matriz(environment), close_fds(exec, cmd, false));
-			ft_exit(env, &cmd, exec, built_in_status);
+			ft_exit(env, cmd, exec, built_in_status);
 		}
 		else
 			execve(cmd->path, cmd->args, environment);
@@ -95,7 +95,7 @@ void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 			return ;
 	cmd->pid = fork();
 	if (cmd->pid < 0)
-		printf("ERROR: fork()\n");
+		perror(NULL);
 	else if (cmd->pid == 0)
 	{
 		child_signal();

@@ -105,7 +105,7 @@ reclear:
 	@make re && clear
 
 r: reclear
-	@./$(NAME) 
+	@./$(NAME)
 
 v: reclear
 	valgrind --leak-check=full  --track-origins=yes --show-leak-kinds=all --track-fds=yes --suppressions=readline.supp ./$(NAME)

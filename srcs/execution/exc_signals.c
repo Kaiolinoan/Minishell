@@ -24,11 +24,11 @@ void heredoc_sigint(int sig)
 {
     (void)sig;
     write(1, "\n", 1);
-    exit(130);
+    // _exit(130);
 }
 
 void	child_signal(void)
 {
     signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_DFL);
+    signal(SIGQUIT, SIG_IGN);
 }

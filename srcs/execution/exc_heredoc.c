@@ -14,7 +14,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	{
 		line = readline("> ");
 		if (!line)
-			(ft_close(&fd), exit(0));
+			(ft_close(&fd), ft_exit(env, cmd, exec, 0));
 		if ((ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
 			&& (line[ft_strlen(limiter)] == '\0'))
 		{
@@ -26,7 +26,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 		free(line);
 	}
 	ft_close(&fd);
-	ft_exit(env, &cmd, exec, 0);
+	ft_exit(env, cmd, exec, 0);
 }
 
 static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
@@ -56,22 +56,22 @@ bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 	t_redirect	*temp;
 
 	head = cmd;
-	temp = head->infile;
 	while (cmd)
 	{
-		while (cmd->infile)
+		temp = cmd->infile;
+		while (temp)
 		{
-			if (cmd->infile->type == HEREDOC)
+			if (temp->type == HEREDOC)
 			{
-				cmd->infile->fd = exec_here_doc(cmd, env, exec);
-				if (cmd->infile->fd < 0)
+				temp->fd = exec_here_doc(cmd, env, exec);
+				if (temp->fd < 0)
 					return (false);
+				print_inside_redir(temp);
 			}
-			cmd->infile = cmd->infile->next;
+			temp = temp->next;
 		}
 		cmd = cmd->next;
 	}
 	cmd = head;
-	cmd->infile = temp;
 	return (true);
 }
