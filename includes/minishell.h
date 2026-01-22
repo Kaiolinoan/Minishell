@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 03:23:49 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/22 04:54:40 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,6 +170,7 @@ int 						in_redirection(t_command *head);
 
 // parse expansion
 char						*remove_quotes(char *str);
+char						*expand_word(char *result, t_map *env, char quote, int i);
 char						*expand(char *str, t_map *env);
 int							expand_and_shi(t_command *head, t_map *env);
 

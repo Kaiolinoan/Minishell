@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 03:01:39 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/20 03:49:36 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/22 04:24:59 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static char	*expand_variable(char *str, int i, t_map *env)
 	if (str[i + 1] == '?')
 		return (expanded_string(str, i, "?", env->get(env, "?")));
 	if (!var_start(str[i + 1]))
-		return (ft_strdup(str));
+		return (str);
 	var_name = variable_name(str, i + 1);
 	if (!var_name)
 		return (NULL);
@@ -81,14 +81,12 @@ static char	*expand_variable(char *str, int i, t_map *env)
 	return (new);
 }
 
-static char	*expand_word(char *result, t_map *env, char quote)
+char	*expand_word(char *result, t_map *env, char quote, int i)
 {
 	char	*new;
-	int		i;
 
 	if (!result)
 		return (NULL);
-	i = 0;
 	while (result[i])
 	{
 		quote = identify_quote(quote, result[i]);
@@ -97,11 +95,14 @@ static char	*expand_word(char *result, t_map *env, char quote)
 			new = expand_variable(result, i, env);
 			if (!new)
 				return (free(result), NULL);
-			free(result);
-			result = new;
-			quote = 0;
-			i = 0;
-			continue ;
+			if (new != result)
+			{
+				free(result);
+				result = new;
+				quote = 0;
+				i = 0;
+				continue ;
+			}
 		}
 		i++;
 	}
@@ -115,9 +116,9 @@ char	*expand(char *str, t_map *env)
 
 	if (!str)
 		return (NULL);
-	new = expand_word(ft_strdup(str), env, 0);
+	new = expand_word(ft_strdup(str), env, 0, 0);
 	if (!new)
-		return (NULL);
+		return (free(str), NULL);
 	free(str);
 	return (new);
 }
