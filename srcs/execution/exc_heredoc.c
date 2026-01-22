@@ -46,7 +46,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 		{
 			free(limiter);
 			ft_close(&fd);
-			ft_exit(0);
+			ft_exit(env, cmd, exec, 0);
 		}
 		if ((ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
 			&& (line[ft_strlen(limiter)] == '\0'))
