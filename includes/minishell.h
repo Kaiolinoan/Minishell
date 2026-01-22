@@ -174,6 +174,7 @@ int 						in_redirection(t_command *head);
 
 // parse expansion
 char						*remove_quotes(char *str);
+char						*expand_word(char *result, t_map *env, char quote, int i);
 char						*expand(char *str, t_map *env);
 int							expand_and_shi(t_command *head, t_map *env);
 
