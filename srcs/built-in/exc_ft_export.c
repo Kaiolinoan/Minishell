@@ -38,11 +38,14 @@ static int	only_export(t_map *env)
 	sort_str(matriz);
 	while (matriz[i])
 	{
-		printf("declare -x ");
-		if (ft_strchr(matriz[i], '='))
-			print_export(matriz, i);
-		else
-			printf("%s\n", matriz[i]);
+		if (ft_strncmp(matriz[i], "_=", 2) != 0)
+		{
+			printf("declare -x ");
+			if (ft_strchr(matriz[i], '='))
+				print_export(matriz, i);
+			else
+				printf("%s\n", matriz[i]);
+		}
 		i++;
 	}
 	clear_matriz(matriz);
@@ -100,11 +103,19 @@ int	built_in_export(t_command *commands, t_map *env)
 {
 	size_t	i;
 	int		exit_code;
+	bool	error;
 
 	i = 1;
+	error = false;
 	if (commands->args[0] && (!commands->args[1]))
 		return (only_export(env));
 	while (commands->args[i])
+	{
 		exit_code = process_export_args(commands, env, i++);
+		if (exit_code == 1)
+			error = true;
+	}
+	if (error)
+		return (1);
 	return (exit_code);
 }

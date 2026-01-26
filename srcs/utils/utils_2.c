@@ -12,14 +12,7 @@
 
 #include "minishell.h"
 
-void	print_error(char *str, char *filename)
-{
-	write(2, str, ft_strlen(str));
-	write(2, filename, ft_strlen(filename));
-	write(2, ": ", 2);
-	write(2, strerror(errno), ft_strlen(strerror(errno)));
-	write(2, "\n", 2);
-}
+
 
 size_t	ft_array_len(char **arr)
 {
@@ -71,5 +64,6 @@ void	init_exec(t_exec *exec, t_command *cmd)
 	exec->out = -1;
 	exec->temp_in = -1;
 	exec->temp_out = -1;
+	exec->fake_status = -1;
 	exec->len = list_len_command(cmd);
 }

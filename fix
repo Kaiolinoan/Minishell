@@ -1,31 +1,6 @@
 KELLE:
-cat < no_file | aaa < ls | pwd (leak de fd)
-cat < no_file | ls < aaa | pwd (redirections nao estao sendo alocadas no comando do meio) (esta dando leak)
-echo $123123 (loop infinito)
-echo $.USER
+echo $123123
 
 KAIO:
 leak heredoc ctrl+c
-declare -x _="/usr/bin/make"
-?=0                      nao esquecer
-cat < 123 321 234 | ls   retorna 0
-<< end | << end          (da command not found quando nao era suposto)
-o meu env nao precisa de lidar com argumentos e retornar tanto 0 como 1 e aceitavel se bem argumentado
-OLDPWD nao esta a atualizar em algum cd
-
--------------------------
-quando zz nao existe:
-/home/klino-an/My_git/Minishell/zz/zzz
-minishell> cd ..
-
-isto nao fez nada
--------------------------
-
-
-minishell> export aaa %ff bbb
-bash: export: `%ff': not a valid identifier
-minishell> echo $?
-0
-echo $?   is    1
-
 https://github.com/LucasKuhn/minishell_tester

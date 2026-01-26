@@ -12,6 +12,15 @@
 
 #include "minishell.h"
 
+static void	print_error(char *str, char *filename)
+{
+	write(2, str, ft_strlen(str));
+	write(2, filename, ft_strlen(filename));
+	write(2, ": ", 2);
+	write(2, strerror(errno), ft_strlen(strerror(errno)));
+	write(2, "\n", 2);
+}
+
 static int	cd_home(char *path, t_map *env)
 {
 	char	*home;
@@ -20,7 +29,7 @@ static int	cd_home(char *path, t_map *env)
 	if (home)
 	{
 		if (chdir(home) == -1)
-			return (print_error(CD_ERROR, path), 1);
+			return (print_error(BASH_CD, path), 1);
 	}
 	else
 		return (ft_putstr_fd("bash: cd: HOME not set\n", 2), 1);
@@ -36,23 +45,23 @@ static int	process_cd(char *path, t_map *env, char *old_pwd)
 		if (old_pwd)
 		{
 			if (chdir(old_pwd) == -1)
-				return (print_error(CD_ERROR, path), 1);
+				return (print_error(BASH_CD, path), 1);
 			else
 				return (ft_printf("%s\n", old_pwd), 0);
 		}
 		else
-			return (ft_putstr_fd("bash: cd: OLDPWD not set\n", 2), 1);
+			return (ft_dprintf(2, "bash: cd: OLDPWD not set\n"), 1);
 	}
 	if (path[0] == '~' && path[1] == '/')
 	{
 		if (cd_home(path, env) == 1)
 			return (1);
 		if (chdir(path + 2) == -1)
-			return (print_error(CD_ERROR, path), 1);
+			return (print_error(BASH_CD, path), 1);
 		return (0);
 	}
 	if (chdir(path) == -1)
-		return (print_error(CD_ERROR, path), 1);
+		return (print_error(BASH_CD, path), 1);
 	return (0);
 }
 
@@ -66,14 +75,19 @@ int	built_in_cd(char **args, t_map *env)
 	if (ft_array_len(args) > 2)
 		return (printf("bash: cd: too many arguments\n"), 1);
 	path = args[1];
-	pwd = getcwd(NULL, 0);// se for dar fix em diretoria fantasma seria aqui
 	old_pwd = env->get(env, "PWD");
 	exit_code = process_cd(path, env, env->get(env, "OLDPWD"));
+	pwd = getcwd(NULL, 0);
+	if (!pwd)
+		ft_dprintf(2, CD_ERROR);
 	if (pwd && old_pwd)
 	{
 		env->put(env, ft_strdup("OLDPWD"), ft_strdup(old_pwd), true);
 		env->put(env, ft_strdup("PWD"), ft_strdup(pwd), true);
-		free(pwd);
 	}
-	return (exit_code);
+	return (free(pwd), exit_code);
 }
+// mkdir aa
+// cd aa
+// mkdir aaa
+// cd ..

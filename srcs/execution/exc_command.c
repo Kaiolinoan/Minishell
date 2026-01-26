@@ -1,30 +1,35 @@
 #include "minishell.h"
 
-static int	path_look_up(t_command *cmd, char **env)
+static void execute_script(t_command *cmd, char **env)
+{
+	char *args[3];
+
+	args[0] = "sh";
+	args[1] = cmd->args[0];
+	args[2] = NULL;
+	execve("/bin/sh", args, env);
+}
+
+static int	path_look_up(t_command *cmd, t_map *env)
 {
 	struct stat	st;
+	char **environment;
 
+	environment = NULL;
 	if (ft_strchr(cmd->args[0], '/'))
 	{
 		if (stat(cmd->args[0], &st) != 0)
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			return (ft_putstr_fd(": No such file or directory\n", 2), 127);
-		}
+			return (ft_dprintf(2, "Bash: %s: No such file or directory\n"), 127);
 		if (S_ISDIR(st.st_mode))
-		{
-			ft_putstr_fd(cmd->args[0], 2);
-			return (ft_putstr_fd(": Is a directory\n", 2), 126);
-		}
+			return (ft_dprintf(2, "Bash: %s: Is a directory\n"), 126);
 		if (S_ISREG(st.st_mode))
-		{
 			if (access(cmd->path, X_OK) != 0)
-			{
-				ft_putstr_fd(cmd->args[0], 2);
-				return (ft_putstr_fd(": Permission denied\n", 2), 126);
-			}
-		}
-		execve(cmd->args[0], cmd->args, env);
+				return (ft_dprintf(2, "Bash: %s: Permission denied\n"), 126);
+		environment = env->to_string(env);
+		execve(cmd->args[0], cmd->args, environment);
+		if (errno == ENOEXEC)
+			execute_script(cmd, environment);
+		clear_matriz(environment);
 	}
 	return (0);
 }
@@ -46,10 +51,6 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 	dup2(exec->in, STDIN_FILENO);
 	dup2(exec->out, STDOUT_FILENO);
 	built_in_status = is_built_in(env, cmd, exec);
-	if (built_in_status != -1)
-		env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true);
-		// alterar para false dps que tiver a expansao
-	// printf("depois: %s\n", env->get(env, "?"));
 	dup2(exec->temp_in, STDIN_FILENO);
 	dup2(exec->temp_out, STDOUT_FILENO);
 	ft_close(&exec->temp_in);
@@ -59,33 +60,27 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 
 static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 {
-	char	**environment;
-	int		built_in_status;
+	int		btin_sts;
+	char 	**environment;
 	int		path_status;
 
-	built_in_status = 0;
-	environment = env->to_string(env);
+	btin_sts = 0;
 	cmd->path = get_path(env, cmd->args);
-	// ft_printf("%s\n", cmd->path);
-	path_status = path_look_up(cmd, environment);
+	path_status = path_look_up(cmd, env);
 	if (path_status > 0)
-	{
-		(clear_matriz(environment), close_fds(exec, cmd, false));
-		ft_exit(env, cmd, exec, path_status);
-	}
+		(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, path_status));
 	else if (path_status == 0)
 	{
-		built_in_status = is_built_in(env, cmd, exec);
-		if (built_in_status != -1)
-		{
-			env->put(env, ft_strdup("?"), ft_itoa(built_in_status), true);// alterar para false dps que tiver a expansao
-			(clear_matriz(environment), close_fds(exec, cmd, false));
-			ft_exit(env, cmd, exec, built_in_status);
-		}
+		btin_sts = is_built_in(env, cmd, exec);
+		if (btin_sts != -1)
+			(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, btin_sts));
 		else
+		{
+			environment = env->to_string(env);
 			execve(cmd->path, cmd->args, environment);
+			clear_matriz(environment);
+		}
 	}
-	clear_matriz(environment);
 }
 
 void	handle_command(t_map *env, t_command *cmd, t_exec *exec)

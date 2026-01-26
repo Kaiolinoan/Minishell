@@ -50,12 +50,14 @@ char	**ft_split_env(char *env)
 	return (free(temp), args);
 }
 
-void	create_env(t_map *env, char **environment)
+t_map	*create_env(char **environment)
 {
 	size_t	i;
+	t_map	*env;
 	char	**args;
 
 	i = 0;
+	env = new_map();
 	while (environment[i])
 	{
 		args = ft_split_env(environment[i]);
@@ -72,5 +74,5 @@ void	create_env(t_map *env, char **environment)
 		}
 		i++;
 	}
-	check_shell_lvl(env);
+	return (check_shell_lvl(env), env);
 }

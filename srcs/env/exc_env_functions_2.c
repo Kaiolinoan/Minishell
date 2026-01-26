@@ -30,10 +30,16 @@ void	__destroy(t_extra *t)
 	free(t);
 }
 
-int	__print(t_extra *t)
+int	__print(t_extra *t, t_command *cmd)
 {
 	t_envlist	*temp;
+	size_t i;
 
+	i = -1;
+	while (cmd->args[++i])
+		if (ft_strcmp(cmd->args[i], "env") != 0)
+			return (ft_dprintf(2, 
+				"env: '%s': No such file or directory\n", cmd->args[i]), 127);
 	temp = t->head;
 	while (temp)
 	{
@@ -41,7 +47,9 @@ int	__print(t_extra *t)
 		{
 			if (temp->exported && *temp->value)
 				printf("%s=%s\n", temp->key, temp->value);
-			}
+			if (!*temp->value && temp->exported)
+				printf("%s=\n", temp->key);
+		}
 		temp = temp->next;
 	}
 	return (0);

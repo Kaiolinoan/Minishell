@@ -34,10 +34,10 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	signal(SIGINT, heredoc_sigint);
 	limiter = clean_limiter(cmd->infile->filename, &expand_vars);
 	if (!limiter)
-		return (ft_exit(env, &cmd, exec, 1));
+		return (ft_exit(env, cmd, exec, 1));
 	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd < 0)
-		return (free(limiter), ft_exit(env, &cmd, exec, 1));
+		return (free(limiter), ft_exit(env, cmd, exec, 1));
 	line = NULL;
 	while (1)
 	{
@@ -60,7 +60,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 			if (!expanded)
 			{
 				free(limiter);
-				return (ft_close(&fd), free(line), ft_exit(env, &cmd, exec, 1));
+				return (ft_close(&fd), free(line), ft_exit(env, cmd, exec, 1));
 			}
 			free(line);
 			line = expanded;
@@ -111,7 +111,6 @@ bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 				temp->fd = exec_here_doc(cmd, env, exec);
 				if (temp->fd < 0)
 					return (false);
-				print_inside_redir(temp);
 			}
 			temp = temp->next;
 		}

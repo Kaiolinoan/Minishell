@@ -15,7 +15,8 @@
 
 # include "./GNL/get_next_line.h"
 # include "./GNL/get_next_line_bonus.h"
-# include "./Printf/ft_printf.h"
+# include "./Ft_dprintf/ft_dprintf.h"
+# include "./Ft_printf/ft_printf.h"
 # include <ctype.h>
 # include <fcntl.h>
 # include <stdio.h>

@@ -35,8 +35,7 @@ int	main(int argc, char **argv, char **environment)
 	if (argc > 1)
 		return (0);
 	cmd = NULL;
-	env = new_map();
-	create_env(env, environment);
+	env = create_env(environment);
 	while (1)
 	{
 		signals_init();

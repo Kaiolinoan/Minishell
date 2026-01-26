@@ -26,8 +26,8 @@
 
 # define PWD_ERROR "pwd: error retrieving current directory:\
  getcwd: cannot access parent directories: "
-# define CD_ERROR "bash: cd: "
-
+# define CD_ERROR "cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"
+# define BASH_CD "bash: cd: "
 extern int g_exit_code;
 
 // ENV STRUCTS
@@ -40,35 +40,6 @@ struct						s_envlist
 	bool					exported;
 	t_envlist				*next;
 	t_envlist				*prev;
-};
-
-typedef struct s_map		t_map;
-
-struct						s_map
-{
-	void					(*put)(t_map *t, char *k, char *v, bool exported);
-	char					*(*get)(t_map *t, char *k);
-	char					**(*to_string)(t_map *t);
-	void					(*remove)(t_map *t, char *k);
-	void					(*destroy)(t_map *t);
-	int						(*print)(t_map *t);
-	void					(*set_var_as_exported)(t_map *t, char *key);
-};
-
-typedef struct s_extra		t_extra;
-
-struct						s_extra
-{
-	void					(*put)(t_extra *t, char *k, char *v, bool exported);
-	char					*(*get)(t_extra *t, char *k);
-	char					**(*to_string)(t_extra *t);
-	void					(*remove)(t_extra *t, char *k);
-	void					(*destroy)(t_extra *t);
-	int						(*print)(t_extra *t);
-	void					(*set_var_as_exported)(t_extra *t, char *key);
-	t_envlist				*head;
-	t_envlist				*tail;
-	int						size;
 };
 
 typedef enum e_type
@@ -95,6 +66,7 @@ typedef struct s_exec
 	int			temp_out;
 	int			fds[2];
 	size_t		len;
+	int			fake_status;
 }	t_exec;
 
 typedef struct s_commands
@@ -109,6 +81,36 @@ typedef struct s_commands
 	struct s_commands 	*prev;
 }	t_command;
 
+typedef struct s_map		t_map;
+
+struct						s_map
+{
+	void					(*put)(t_map *t, char *k, char *v, bool exported);
+	char					*(*get)(t_map *t, char *k);
+	char					**(*to_string)(t_map *t);
+	void					(*remove)(t_map *t, char *k);
+	void					(*destroy)(t_map *t);
+	int						(*print)(t_map *t, t_command *cmd);
+	void					(*set_var_as_exported)(t_map *t, char *key);
+};
+
+typedef struct s_extra		t_extra;
+
+struct						s_extra
+{
+	void					(*put)(t_extra *t, char *k, char *v, bool exported);
+	char					*(*get)(t_extra *t, char *k);
+	char					**(*to_string)(t_extra *t);
+	void					(*remove)(t_extra *t, char *k);
+	void					(*destroy)(t_extra *t);
+	int						(*print)(t_extra *t, t_command *cmd);
+	void					(*set_var_as_exported)(t_extra *t, char *key);
+	t_envlist				*head;
+	t_envlist				*tail;
+	int						size;
+};
+
+
 //#################################    EXECUTION    #################################################
 
 // enviroment functions
@@ -118,7 +120,7 @@ void						__remove(t_extra *t, char *k);
 void						__put(t_extra *t, char *k, char *v, bool exported);
 void						__set_var_as_exported(t_extra *t, char *key);
 void						__destroy(t_extra *t);
-int							__print(t_extra *t);
+int							__print(t_extra *t, t_command *cmd);
 char 						**__to_string(t_extra *t);
 
 // env list
@@ -130,7 +132,7 @@ t_exec						*new_exec(void);
 
 
 // env create
-void						create_env(t_map *env, char **enviroment);
+t_map						*create_env(char **enviroment);
 char						**ft_split_env(char *env);
 
 //env path
@@ -202,7 +204,6 @@ size_t						list_len_extra(t_extra *env);
 size_t						list_len_command(t_command *commands);
 int							ft_strcmp(char *s1, char *s2);
 void						sort_str(char **matriz);
-void						print_error(char *str, char *filename);
 size_t						ft_array_len(char **arr);
 long long					ft_atoll(const char *str);
 void						free_grid(char **grid);
