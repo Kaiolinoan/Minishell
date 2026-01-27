@@ -59,6 +59,8 @@ size_t	ft_strlen2_d(const char *str)
 {
 	size_t	i;
 
+	if (!str)
+		return (-1);
 	i = 0;
 	while (str[i])
 		i++;

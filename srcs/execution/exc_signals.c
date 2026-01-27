@@ -23,7 +23,6 @@ void	signals_init(void)
 void heredoc_sigint(int sig)
 {
     g_sig = sig;
-    write(1, "\n", 1);
 }
 
 void	child_signal(void)

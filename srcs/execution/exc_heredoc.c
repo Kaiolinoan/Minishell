@@ -1,98 +1,62 @@
 #include "minishell.h"
-
-static bool	has_single_quotes(char *str)
+bool expand_here_doc(char *line, t_map *env)
 {
-	int	i;
+	char	*expanded;
 
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'')
-			return (true);
-		i++;
-	}
-	return (false);
-}
-
-static char	*clean_limiter(char *raw, bool *expand_vars)
-{
-	char	*limiter;
-
-	*expand_vars = !has_single_quotes(raw);
-	limiter = remove_quotes(raw);
-	return (limiter);
+	expanded = expand_word(ft_strdup(line), env, 0, 0);
+	if (!expanded)
+		return (false);
+	// free(line);
+	line = expanded;
+	return (true);
 }
 
 static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 {
 	char	*limiter;
 	char	*line;
-	char	*expanded;
-	int		fd;
 	bool	expand_vars;
-
+	int 	fd;
+	
+	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
+	if (fd < 0)
+		return (ft_exit(env, cmd, exec, 1));
 	limiter = clean_limiter(cmd->infile->filename, &expand_vars);
 	if (!limiter)
 		return (ft_exit(env, cmd, exec, 1));
-	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
-	if (fd < 0)
-		return (free(limiter), ft_exit(env, cmd, exec, 1));
-	line = NULL;
-	signal(SIGINT, heredoc_sigint);
+	handle_heredoc_signals();
 	while (1)
 	{
-		rl_catch_signals = 0; 
 		line = readline("> ");
-		if (g_sig == SIGINT)
-			ft_exit(env, cmd, exec, 130);
-		if (!line)
-		{
-			free(limiter);
-			ft_close(&fd);
-			ft_exit(env, cmd, exec, 0);
-		}
-		if ((ft_strncmp(line, limiter, ft_strlen(limiter)) == 0)
-			&& (line[ft_strlen(limiter)] == '\0'))
-		{
-			free(line);
+		if (!line || g_sig == SIGINT)
+			(free(line), free(limiter), ft_close(&fd), ft_exit(env, cmd, exec, 130));
+		if ((!ft_strcmp(line, limiter)) || (expand_vars && !expand_here_doc(line, env)))
 			break ;
-		}
-		if (expand_vars)
-		{
-			expanded = expand_word(ft_strdup(line), env, 0, 0);
-			if (!expanded)
-			{
-				free(limiter);
-				return (ft_close(&fd), free(line), ft_exit(env, cmd, exec, 1));
-			}
-			free(line);
-			line = expanded;
-		}
-		ft_putstr_fd(line, fd);
-		ft_putstr_fd("\n", fd);
-		free(line);
+		(ft_dprintf(fd, "%s\n", line), free(line));
+		line = NULL;
 	}
-	free(limiter);
-	ft_close(&fd);
-	ft_exit(env, cmd, exec, 0);
+	(free(line), free(limiter), ft_close(&fd), ft_exit(env, cmd, exec, 0));
 }
 
 static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 {
+	pid_t	pid;
 	int		fd;
-	struct sigaction sa;
+	int		status;
+	int 	exit_code;
 
-	sa.sa_handler = heredoc_sigint;
-	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sigaction(SIGINT, &sa, NULL);
-
-	// signal(SIGQUIT, SIG_IGN);
-	rl_catch_signals = 0;
-
-	here_child(cmd, env, exec);
-	// sigaction(SIGINT, &sa, NULL);
-
+	signal(SIGINT, SIG_IGN);
+	pid = fork();
+	if (pid < 0)
+		return (-1);
+	if (!pid)
+		here_child(cmd, env, exec);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
+		exit_code = 128 + WTERMSIG(status);
+	if (WIFEXITED(status))
+		exit_code = WEXITSTATUS(status);
+	env->put(env, ft_strdup("?"), ft_itoa(exit_code), false);
 	signal(SIGINT, sigint_handler);
 	fd = open("/tmp/here_temp", O_RDONLY);
 	unlink("/tmp/here_temp");

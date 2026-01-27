@@ -154,21 +154,21 @@ int							check_redir(t_redirect *input, t_redirect *output, int *in, int *out);
 void						init_exec(t_exec *exec, t_command *cmd);
 void						print_inside_redir(t_redirect *ptr); //apagar aqui
 
+//heredoc
+char						*clean_limiter(char *raw, bool *expand_vars);
+bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 
 //close
 void						close_fds(t_exec *exec, t_command *cmd, bool is_parent);
 void 						ft_close(int *fd);
 int 						change_fd(int old, int new);
 
-//helpers
-bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
-
 //signals
 void						signals_init();
 void						child_signal();
 void 						heredoc_sigint(int sig);
 void						sigint_handler(int signal);
-
+void						handle_heredoc_signals(void);
 
 //#################################    PARSING    #################################################
 // parse cmdlist

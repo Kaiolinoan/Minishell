@@ -1,7 +1,7 @@
 KELLE:
 echo $123123
+leak heredoc
 
 KAIO:
-leak heredoc ctrl+c
 << opa | ls  >  naosei
 https://github.com/LucasKuhn/minishell_tester
