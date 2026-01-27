@@ -76,13 +76,13 @@ static bool check_exit_arg(char **args, t_map *env, t_command *cmd, t_exec *exec
 		return (true);
 	if (!is_all_num(args[1]) || !check_overflow(args[1]))
 	{
-		ft_putstr_fd("bash: exit: ", 2);
-		ft_putstr_fd(args[1], 2);
-		ft_putstr_fd(": numeric argument required\n", 2);
+		ft_dprintf(STDERR_FILENO, 
+			"bash: exit: %s: numeric argument required\n", args[1]);
 		ft_exit(env, cmd, exec, 2);
 	}
 	if (ft_array_len(args) > 2)
-		return (ft_putstr_fd("bash: exit: too many arguments\n", 2), false);
+		return (ft_dprintf(STDERR_FILENO, 
+			"bash: exit: too many arguments\n"), false);
 	return (true);
 }
 void ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb)
@@ -100,14 +100,14 @@ int	built_in_exit(t_command *commands, t_map *env, t_exec *exec)
 	if (!commands)
 		return (ft_exit(env, commands, exec, 0), 0);
 	if (!check_exit_arg(commands->args, env, commands, exec))
-		return (g_exit_code = 1);
+		return (1);
 	if (commands->args[1])
 	{
 		nb = ft_atoll(commands->args[1]);
-		nb = (unsigned char)nb;
+		nb = (unsigned char)nb; 
 	}
 	else
-		nb = g_exit_code;
+		nb = ft_atoll(env->get(env, "?"));
 	close_fds(exec, commands, true);
 	ft_exit(env, commands, exec, nb);
 	return (nb);

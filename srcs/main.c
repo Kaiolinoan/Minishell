@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	g_exit_code = 0;
+int g_sig = 0;
 
 static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 {

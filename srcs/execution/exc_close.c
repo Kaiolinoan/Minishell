@@ -40,5 +40,4 @@ void	close_fds(t_exec *exec, t_command *cmd, bool is_parent)
 	}
 	else
 		ft_close(&exec->fds[0]);
-	// ft_close(&cmd->infile->fd);
 }

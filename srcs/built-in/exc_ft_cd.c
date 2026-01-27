@@ -32,7 +32,7 @@ static int	cd_home(char *path, t_map *env)
 			return (print_error(BASH_CD, path), 1);
 	}
 	else
-		return (ft_putstr_fd("bash: cd: HOME not set\n", 2), 1);
+		return (ft_dprintf(2, "bash: cd: HOME not set\n"), 1);
 	return (0);
 }
 
@@ -73,7 +73,7 @@ int	built_in_cd(char **args, t_map *env)
 	int 	exit_code;
 
 	if (ft_array_len(args) > 2)
-		return (printf("bash: cd: too many arguments\n"), 1);
+		return (ft_dprintf(2, "bash: cd: too many arguments\n"), 1);
 	path = args[1];
 	old_pwd = env->get(env, "PWD");
 	exit_code = process_cd(path, env, env->get(env, "OLDPWD"));
@@ -87,7 +87,3 @@ int	built_in_cd(char **args, t_map *env)
 	}
 	return (free(pwd), exit_code);
 }
-// mkdir aa
-// cd aa
-// mkdir aaa
-// cd ..

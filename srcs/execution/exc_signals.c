@@ -15,16 +15,15 @@ void	signals_init(void)
 
 	sa_int.sa_handler = sigint_handler;
 	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = SA_RESTART;
+	sa_int.sa_flags = 0;
 	sigaction(SIGINT, &sa_int, NULL);
 	signal(SIGQUIT, SIG_IGN);
 }
 
 void heredoc_sigint(int sig)
 {
-    (void)sig;
+    g_sig = sig;
     write(1, "\n", 1);
-    // _exit(130);
 }
 
 void	child_signal(void)

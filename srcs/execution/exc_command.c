@@ -36,8 +36,7 @@ static int	path_look_up(t_command *cmd, t_map *env)
 
 static void	exec_failure(t_map *env, t_command *cmd, t_exec *exec)
 {
-	ft_putstr_fd(*cmd->args, 2);
-	ft_putstr_fd(": command not found\n", 2);
+	ft_dprintf(2, "%s: command not found\n", *cmd->args);
 	close_fds(exec, cmd, false);
 	ft_exit(env, cmd, exec, 127);
 }

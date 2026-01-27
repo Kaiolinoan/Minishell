@@ -31,7 +31,6 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	int		fd;
 	bool	expand_vars;
 
-	signal(SIGINT, heredoc_sigint);
 	limiter = clean_limiter(cmd->infile->filename, &expand_vars);
 	if (!limiter)
 		return (ft_exit(env, cmd, exec, 1));
@@ -39,9 +38,13 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	if (fd < 0)
 		return (free(limiter), ft_exit(env, cmd, exec, 1));
 	line = NULL;
+	signal(SIGINT, heredoc_sigint);
 	while (1)
 	{
+		rl_catch_signals = 0; 
 		line = readline("> ");
+		if (g_sig == SIGINT)
+			ft_exit(env, cmd, exec, 130);
 		if (!line)
 		{
 			free(limiter);
@@ -76,19 +79,20 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 
 static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 {
-	pid_t	pid;
 	int		fd;
-	int status;
+	struct sigaction sa;
 
-	signal(SIGINT, SIG_IGN);
-	pid = fork();
-	if (pid < 0)
-		return (-1);
-	if (!pid)
-		here_child(cmd, env, exec);
-	waitpid(pid, &status, 0);
-	if (WIFEXITED(status) && WEXITSTATUS(status) == 130)
-		return (unlink("/tmp/here_temp"), -2);
+	sa.sa_handler = heredoc_sigint;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	sigaction(SIGINT, &sa, NULL);
+
+	// signal(SIGQUIT, SIG_IGN);
+	rl_catch_signals = 0;
+
+	here_child(cmd, env, exec);
+	// sigaction(SIGINT, &sa, NULL);
+
 	signal(SIGINT, sigint_handler);
 	fd = open("/tmp/here_temp", O_RDONLY);
 	unlink("/tmp/here_temp");

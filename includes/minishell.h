@@ -28,7 +28,7 @@
  getcwd: cannot access parent directories: "
 # define CD_ERROR "cd: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n"
 # define BASH_CD "bash: cd: "
-extern int g_exit_code;
+extern int g_sig;
 
 // ENV STRUCTS
 typedef struct s_envlist	t_envlist;

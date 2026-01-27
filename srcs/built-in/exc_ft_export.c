@@ -70,7 +70,7 @@ static bool	ft_check_var_name(char *str)
 	return (true);
 }
 
-static int	process_export_args(t_command *commands, t_map *env, int i)
+static int	process_export_args(t_command *cmd, t_map *env, int i)
 {
 	char *name;
 	char **args;
@@ -78,24 +78,24 @@ static int	process_export_args(t_command *commands, t_map *env, int i)
 
 	flag = false;
 	name = NULL;
-	if (ft_strchr(commands->args[i], '='))
+	if (ft_strchr(cmd->args[i], '='))
 	{
-		args = ft_split_env(commands->args[i]);
+		args = ft_split_env(cmd->args[i]);
 		if (!*args[0])
-			return (printf("bash: export: `%s': not a valid identifier\n",
-				commands->args[i]), 1);
+			return (ft_dprintf(2, "bash: export: `%s':", cmd->args[i]),
+			ft_dprintf(2, "not a valid identifier\n", cmd->args[i]), 1);
 		name = args[0];
 		flag = true;
 	}
 	else
-		name = commands->args[i];
+		name = cmd->args[i];
 	if (!ft_check_var_name(name))
-		return (printf("bash: export: `%s': not a valid identifier\n",
-				commands->args[i]), 1);
+		return (ft_dprintf(2, "bash: export: `%s':", cmd->args[i]),
+		ft_dprintf(2, "not a valid identifier\n", cmd->args[i]), 1);
 	if (flag)
 		env->put(env, name, args[1], true);
 	else
-		env->set_var_as_exported(env, commands->args[i]);
+		env->set_var_as_exported(env, cmd->args[i]);
 	return (0);
 }
 
