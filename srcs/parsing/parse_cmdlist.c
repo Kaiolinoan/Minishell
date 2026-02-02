@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:32:35 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/20 03:54:09 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/02 06:46:45 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,10 +58,19 @@ static int	fill_args(t_command *current, int i, int j)
 
 static int	process_redirection(t_command *current, int *i, char redir_type)
 {
+	if (!check_redir_error(current, *i, redir_type))
+		return (0);
 	if (!current->cmd[*i + 1])
-		return (0);
+	{
+		ft_dprintf(2, "minishell: syntax error near unexpected token");
+		return (ft_dprintf(2, " `newline'\n"), 0);
+	}
 	if (current->cmd[*i + 1][0] == '<' || current->cmd[*i + 1][0] == '>')
-		return (0);
+	{
+		ft_dprintf(2, "minishell: syntax error near unexpected token");
+		return (ft_dprintf(2, " `%c'\n",
+				current->cmd[*i + 1][0]), 0);
+	}
 	if (!handle_redirection(current, *i, redir_type))
 		return (0);
 	*i += 2;

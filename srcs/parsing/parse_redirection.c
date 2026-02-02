@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:50:33 by kelle             #+#    #+#             */
-/*   Updated: 2025/12/25 05:40:22 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/02 06:02:41 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ static int	redir_count(char *str)
 
 	i = 0;
 	redirection = str[0];
-	while (str[i])
+	while (str[i] && str[i] == redirection)
+		i++;
+	if (i == 3 && redirection == '<')
 	{
-		if (str[i] == redirection)
-			i++;
-		else
-			return (0);
+		ft_dprintf(2, "minishell: here-strings (<<<) are not supported\n");
+		return (0);
 	}
 	return (i > 0 && i <= 2);
 }

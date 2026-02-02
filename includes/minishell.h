@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 13:59:46 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/02 06:32:26 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,9 @@ char						*parse_input(char *str);
 
 // parse main
 t_command					*parse_main(char *input, t_map *env, t_exec *exec);
+
+// parse redir syntax error
+int							check_redir_error(t_command *current, int i, char redir_type);
 
 //parse redirection
 int							handle_redirection(t_command *cmdnode, int i, char redir);

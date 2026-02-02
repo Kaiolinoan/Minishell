@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 03:01:39 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/22 04:24:59 by kelle            ###   ########.fr       */
+/*   Updated: 2026/01/29 21:11:01 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,16 @@ static char	*expand_variable(char *str, int i, t_map *env)
 {
 	char	*var_name;
 	char	*new;
+	char	digit[2];
 
 	if (str[i + 1] == '?')
 		return (expanded_string(str, i, "?", env->get(env, "?")));
+	if (ft_isdigit(str[i + 1]))
+	{
+		digit[0] = str[i + 1];
+		digit[1] = '\0';
+		return (expanded_string(str, i, digit, NULL));
+	}
 	if (!var_start(str[i + 1]))
 		return (str);
 	var_name = variable_name(str, i + 1);
