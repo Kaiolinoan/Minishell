@@ -78,12 +78,13 @@ static int	process_export_args(t_command *cmd, t_map *env, int i)
 
 	flag = false;
 	name = NULL;
+	args = NULL;
 	if (ft_strchr(cmd->args[i], '='))
 	{
 		args = ft_split_env(cmd->args[i]);
 		if (!*args[0])
 			return (ft_dprintf(2, "bash: export: `%s':", cmd->args[i]),
-			ft_dprintf(2, "not a valid identifier\n", cmd->args[i]), 1);
+			ft_dprintf(2, " not a valid identifier\n"), clear_matriz2(args), 1);
 		name = args[0];
 		flag = true;
 	}
@@ -91,7 +92,7 @@ static int	process_export_args(t_command *cmd, t_map *env, int i)
 		name = cmd->args[i];
 	if (!ft_check_var_name(name))
 		return (ft_dprintf(2, "bash: export: `%s':", cmd->args[i]),
-		ft_dprintf(2, "not a valid identifier\n", cmd->args[i]), 1);
+		ft_dprintf(2, " not a valid identifier\n"), clear_matriz2(args), 1);
 	if (flag)
 		env->put(env, name, args[1], true);
 	else

@@ -16,15 +16,15 @@ static int	path_look_up(t_command *cmd, t_map *env)
 	char **environment;
 
 	environment = NULL;
-	if (ft_strchr(cmd->args[0], '/'))
+	if (ft_strchr(cmd->args[0], '/') || !env->get(env, "PATH"))
 	{
 		if (stat(cmd->args[0], &st) != 0)
-			return (ft_dprintf(2, "Bash: %s: No such file or directory\n"), 127);
+			return (ft_dprintf(2, "Bash: %s: No such file or directory\n", cmd->args[0]), 127);
 		if (S_ISDIR(st.st_mode))
-			return (ft_dprintf(2, "Bash: %s: Is a directory\n"), 126);
+			return (ft_dprintf(2, "Bash: %s: Is a directory\n", cmd->args[0]), 126);
 		if (S_ISREG(st.st_mode))
 			if (access(cmd->path, X_OK) != 0)
-				return (ft_dprintf(2, "Bash: %s: Permission denied\n"), 126);
+				return (ft_dprintf(2, "Bash: %s: Permission denied\n", cmd->args[0]), 126);
 		environment = env->to_string(env);
 		execve(cmd->args[0], cmd->args, environment);
 		if (errno == ENOEXEC)
@@ -75,6 +75,11 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 			(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, btin_sts));
 		else
 		{
+			// if (!*cmd->path)
+			// {
+			// 	printf("entreiaki\n");
+			// 	exec_failure(env, cmd, exec);
+			// }
 			environment = env->to_string(env);
 			execve(cmd->path, cmd->args, environment);
 			clear_matriz(environment);

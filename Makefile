@@ -44,7 +44,7 @@ LIBFT		= $(LIBFTDIR)libft.a
 # =============================== COMPILER ================================== #
 
 CC				= cc
-CFLAGS			= -Wall -Wextra -Werror -g -DREADLINE_NO_SIGNALS 
+CFLAGS			= -Wall -Wextra -Werror -g
 INCLUDES		= -I$(INCDIR)
 RM				= rm -f
 MAKE			= make

@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **environment)
 		return (0);
 	cmd = NULL;
 	env = create_env(environment);
+	init_exec(&exec, NULL);
 	while (1)
 	{
 		signals_init();
@@ -47,8 +48,6 @@ int	main(int argc, char **argv, char **environment)
 		free_all(cmd, &exec);
 		cmd = parse_main(str, env, &exec);
 		// print_nodes_after_input(cmd);
-		if (!cmd)
-			continue ;
 		process_all(cmd, env, &exec);
 	}
 	printf("Exiting minishell!\n");

@@ -12,7 +12,17 @@
 
 #include "minishell.h"
 
+void clear_matriz2(char **matriz)
+{
+	size_t	i;
 
+	if (!matriz || !*matriz)
+		return ;
+	i = 0;
+	while (matriz[i])
+		free(matriz[i++]);
+	matriz = NULL;
+}
 
 size_t	ft_array_len(char **arr)
 {
@@ -65,5 +75,8 @@ void	init_exec(t_exec *exec, t_command *cmd)
 	exec->temp_in = -1;
 	exec->temp_out = -1;
 	exec->fake_status = -1;
-	exec->len = list_len_command(cmd);
+	if (cmd)
+		exec->len = list_len_command(cmd);
+	else 
+		exec->len = 0;
 }

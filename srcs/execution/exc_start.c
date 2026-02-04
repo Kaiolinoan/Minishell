@@ -69,10 +69,8 @@ static void	wait_all(t_command *cmd, t_map *env, t_exec *exec)
 	while (temp)
 	{
 		if (temp->pid == -1)
-		{
 			if (cmd == temp)
 				exit_code = exec->fake_status;
-		}
 		if (waitpid(temp->pid, &status, 0) > 0)
 			if (last_pid == temp->pid)
 				exit_code =  get_exit_status(status, env);
@@ -109,7 +107,7 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 			redir_failure(&cmd, &exec);
 			continue ;
 		}
-		if(cmd->args[0])
+		if (cmd->args[0] && cmd->args[0][0])
 			handle_command(env, cmd, exec);
 		exec->in = change_fd(exec->in, exec->fds[0]);
 		cmd = cmd->next;

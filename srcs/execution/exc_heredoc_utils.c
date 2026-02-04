@@ -29,10 +29,12 @@ static bool	has_single_quotes(char *str)
 	return (false);
 }
 
-char	*clean_limiter(char *raw, bool *expand_vars)
+char	*clean_limiter(t_redirect *redir, bool *expand_vars)
 {
 	char	*limiter;
+	char 	*raw;
 
+	raw = redir->filename;
 	*expand_vars = !has_single_quotes(raw);
 	limiter = remove_quotes(raw);
 	return (limiter);

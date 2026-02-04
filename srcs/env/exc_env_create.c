@@ -74,5 +74,6 @@ t_map	*create_env(char **environment)
 		}
 		i++;
 	}
+	env->put(env, ft_strdup("?"), ft_strdup("0"), false);
 	return (check_shell_lvl(env), env);
 }

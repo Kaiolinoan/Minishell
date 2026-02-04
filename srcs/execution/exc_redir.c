@@ -28,7 +28,7 @@ static int	helper_input(t_redirect *input)
 				return (ft_dprintf(2, "bash: "), perror(input->filename), -1);
 		}
 		else if (input->type == HEREDOC && input->fd != -1)
-			return (input->fd);
+			fd =  input->fd;
 		if (input->next)
 			ft_close(&fd);
 		input = input->next;

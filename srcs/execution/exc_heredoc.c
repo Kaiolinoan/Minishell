@@ -11,7 +11,7 @@ bool expand_here_doc(char *line, t_map *env)
 	return (true);
 }
 
-static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
+static void	here_child(t_command *cmd, t_map *env, t_exec *exec, t_redirect *redir)
 {
 	char	*limiter;
 	char	*line;
@@ -21,10 +21,11 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd < 0)
 		return (ft_exit(env, cmd, exec, 1));
-	limiter = clean_limiter(cmd->infile->filename, &expand_vars);
+	limiter = clean_limiter(redir, &expand_vars);
 	if (!limiter)
 		return (ft_exit(env, cmd, exec, 1));
 	handle_heredoc_signals();
+	// printf("limiter: %s\n", limiter);
 	while (1)
 	{
 		line = readline("> ");
@@ -38,7 +39,7 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec)
 	(free(line), free(limiter), ft_close(&fd), ft_exit(env, cmd, exec, 0));
 }
 
-static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
+static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec, t_redirect *redir)
 {
 	pid_t	pid;
 	int		fd;
@@ -50,7 +51,7 @@ static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 	if (pid < 0)
 		return (-1);
 	if (!pid)
-		here_child(cmd, env, exec);
+		here_child(cmd, env, exec, redir);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(status) && WTERMSIG(status) == SIGINT)
 		exit_code = 128 + WTERMSIG(status);
@@ -76,7 +77,8 @@ bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
 		{
 			if (temp->type == HEREDOC)
 			{
-				temp->fd = exec_here_doc(cmd, env, exec);
+				temp->fd = exec_here_doc(cmd, env, exec, temp);
+				// print_inside_redir(temp);
 				if (temp->fd < 0)
 					return (false);
 			}

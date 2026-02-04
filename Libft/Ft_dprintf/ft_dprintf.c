@@ -14,28 +14,28 @@
 
 int	check_type_d(int fd, char i, va_list args)
 {
-	int	count;
+	int	c;
 
-	count = 0;
+	c = 0;
 	if (i == 'c')
-		count += print_char_d(va_arg(args, int), fd);
+		c += print_char_d(va_arg(args, int), fd);
 	else if (i == 's')
-		count += print_str_d(va_arg(args, const char *), fd);
+		c += print_str_d(va_arg(args, const char *), fd);
 	else if (i == 'p')
-		count += print_pointer_d(va_arg(args, void *), fd);
+		c += print_pointer_d(va_arg(args, void *), fd);
 	else if (i == 'd')
-		count += print_numbers_d(va_arg(args, int), fd);
+		c += print_numbers_d(va_arg(args, int), fd);
 	else if (i == 'i')
-		count += print_numbers_d(va_arg(args, int), fd);
+		c += print_numbers_d(va_arg(args, int), fd);
 	else if (i == 'u')
-		count += print_unsigned_d(va_arg(args, unsigned int), fd);
+		c += print_unsigned_d(va_arg(args, unsigned int), fd);
 	else if (i == 'x')
-		count += print_hex_d(va_arg(args, unsigned int), "0123456789abcdef", fd);
+		c += print_hex_d(va_arg(args, unsigned int), "0123456789abcdef", fd);
 	else if (i == 'X')
-		count += print_hex_d(va_arg(args, unsigned int), "0123456789ABCDEF", fd);
+		c += print_hex_d(va_arg(args, unsigned int), "0123456789ABCDEF", fd);
 	else if (i == '%')
-		count += print_char_d('%', fd);
-	return (count);
+		c += print_char_d('%', fd);
+	return (c);
 }
 
 int	ft_dprintf(int fd, const char *str, ...)

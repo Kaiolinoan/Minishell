@@ -155,7 +155,7 @@ void						init_exec(t_exec *exec, t_command *cmd);
 void						print_inside_redir(t_redirect *ptr); //apagar aqui
 
 //heredoc
-char						*clean_limiter(char *raw, bool *expand_vars);
+char						*clean_limiter(t_redirect *redir, bool *expand_vars);
 bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 
 //close
@@ -214,5 +214,6 @@ void						list_clear_redir(t_redirect *head);
 void						ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb);
 void						free_all(t_command *commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
+void						clear_matriz2(char **matriz);
 
 #endif
