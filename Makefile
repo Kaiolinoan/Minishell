@@ -20,7 +20,7 @@ SRC_UTILS	= utils_1.c utils_2.c  print_cmd.c  free.c alloc_nodes.c
 SRC_PARSE	= parse_input.c parse_main.c parse_utils.c parse_cmdlist.c \
 			  parse_redirection.c parse_expansion.c parse_expansion2.c parse_redir_syntax_error.c
 SRC_FILES	= main.c 
-SRC_BUILTIN = exc_ft_cd.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
+SRC_BUILTIN = exc_ft_cd.c exc_ft_cd2.c exc_ft_export.c exc_ft_echo.c exc_ft_pwd.c \
 			  exc_ft_unset.c exc_ft_exit.c 
 SRC_ENV		= exc_env_functions.c  exc_env_functions_2.c   \
 			  exc_env_create.c exc_env_path.c

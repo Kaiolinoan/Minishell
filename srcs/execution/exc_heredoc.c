@@ -25,7 +25,6 @@ static void	here_child(t_command *cmd, t_map *env, t_exec *exec, t_redirect *red
 	if (!limiter)
 		return (ft_exit(env, cmd, exec, 1));
 	handle_heredoc_signals();
-	// printf("limiter: %s\n", limiter);
 	while (1)
 	{
 		line = readline("> ");

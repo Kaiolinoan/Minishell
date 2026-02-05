@@ -75,11 +75,6 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 			(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, btin_sts));
 		else
 		{
-			// if (!*cmd->path)
-			// {
-			// 	printf("entreiaki\n");
-			// 	exec_failure(env, cmd, exec);
-			// }
 			environment = env->to_string(env);
 			execve(cmd->path, cmd->args, environment);
 			clear_matriz(environment);

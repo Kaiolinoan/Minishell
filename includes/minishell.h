@@ -215,5 +215,6 @@ void						ft_exit(t_map *env, t_command *cmd, t_exec *exec, int nb);
 void						free_all(t_command *commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
 void						clear_matriz2(char **matriz);
+char						*process_cd_path (char *arg, t_map *env);
 
 #endif
