@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/02 06:32:26 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/15 06:59:22 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,11 @@ void						print_inside_redir(t_redirect *ptr); //apagar aqui
 
 //heredoc
 char						*clean_limiter(t_redirect *redir, bool *expand_vars);
+char						*expand_here_doc(char *line, t_map *env);
+void						heredoc_write_line(int fd, char *line,
+								bool expand_vars, t_map *env);
+bool						heredoc_loop(int fd, char *limiter,
+								bool expand_vars, t_map *env);
 bool						check_here_doc(t_command *cmd, t_map *env, t_exec *exec);
 
 //close
@@ -172,13 +177,19 @@ void						handle_heredoc_signals(void);
 
 //#################################    PARSING    #################################################
 // parse cmdlist
-int 						in_redirection(t_command *head);
+int 					parse_redirection(t_command *head);
 
 // parse expansion
 char						*remove_quotes(char *str);
 char						*expand_word(char *result, t_map *env, char quote, int i);
+char						*expand_variable(char *str, int i, t_map *env, char *quote_state);
 char						*expand(char *str, t_map *env);
 int							expand_and_shi(t_command *head, t_map *env);
+char						**split_on_marker(char *str);
+int							count_expanded_args(char **args, t_map *env, int i, int j);
+char						**fill_expanded_args(char **args, char **new_args,
+							t_map *env, int i);
+char						**expand_with_splitting(char **args, t_map *env);
 
 
 // parse input
@@ -189,6 +200,9 @@ t_command					*parse_main(char *input, t_map *env, t_exec *exec);
 
 // parse redir syntax error
 int							check_redir_error(t_command *current, int i, char redir_type);
+
+// parse pipe syntax error
+int							check_pipe_syntax(char *input);
 
 //parse redirection
 int							handle_redirection(t_command *cmdnode, int i, char redir);
@@ -216,5 +230,6 @@ void						free_all(t_command *commands, t_exec *exec);
 void						clear_exec(t_exec *exec);
 void						clear_matriz2(char **matriz);
 char						*process_cd_path (char *arg, t_map *env);
+void						put_exit_code_in_env(t_map *env, int status);
 
 #endif

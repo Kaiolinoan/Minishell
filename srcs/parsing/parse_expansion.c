@@ -6,38 +6,11 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:30:53 by kelle             #+#    #+#             */
-/*   Updated: 2026/01/22 04:24:15 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/15 06:56:39 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*remove_quotes(char *str)
-{
-	char	*result;
-	char	quote;
-	int		i;
-	int		j;
-
-	result = ft_calloc(ft_strlen(str) + 1, 1);
-	if (!result)
-		return (NULL);
-	quote = 0;
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (!quote && (str[i] == '"' || str[i] == '\''))
-			quote = str[i];
-		else if (quote && quote == str[i])
-			quote = 0;
-		else
-			result[j++] = str[i];
-		i++;
-	}
-	result[j] = '\0';
-	return (result);
-}
 
 static int	expand_redirects(t_redirect *redir, t_map *env)
 {
@@ -57,37 +30,22 @@ static int	expand_redirects(t_redirect *redir, t_map *env)
 	return (1);
 }
 
-static int	expand_args(char **args, t_map *env)
-{
-	int		i;
-	char	*new;
-
-	i = 0;
-	while (args[i])
-	{
-		new = expand(args[i], env);
-		if (!new)
-			return (0);
-		args[i] = new;
-		i++;
-	}
-	return (1);
-}
-
 int	expand_and_shi(t_command *head, t_map *env)
 {
-	t_command	*current;
+	char	**new_args;
 
-	current = head;
-	while (current)
+	while (head)
 	{
-		if (!expand_args(current->args, env))
+		new_args = expand_with_splitting(head->args, env);
+		if (!new_args)
 			return (0);
-		if (!expand_redirects(current->infile, env))
+		free(head->args);
+		head->args = new_args;
+		if (!expand_redirects(head->infile, env))
 			return (0);
-		if (!expand_redirects(current->outfile, env))
+		if (!expand_redirects(head->outfile, env))
 			return (0);
-		current = current->next;
+		head = head->next;
 	}
 	return (1);
 }

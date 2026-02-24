@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_env_functions_2.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/22 17:12:28 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/21 12:26:47 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/24 03:34:28 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,12 @@ void	__destroy(t_extra *t)
 int	__print(t_extra *t, t_command *cmd)
 {
 	t_envlist	*temp;
-	size_t i;
+	size_t		i;
 
 	i = -1;
 	while (cmd->args[++i])
 		if (ft_strcmp(cmd->args[i], "env") != 0)
-			return (ft_dprintf(2, 
+			return (ft_dprintf(2,
 				"env: '%s': No such file or directory\n", cmd->args[i]), 127);
 	temp = t->head;
 	while (temp)
@@ -62,7 +62,7 @@ void	__set_var_as_exported(t_extra *t, char *key)
 	f = find(t, key);
 	if (f)
 		f->exported = true;
-	else 
+	else
 		t->put(t, ft_strdup(key), NULL, true);
 	return ;
 }
@@ -76,7 +76,7 @@ static char	*get_full_str(t_envlist *tmp)
 	if (!str)
 		return (NULL);
 	if (tmp->value)
-	{	
+	{
 		str = gnl_strjoin(str, "=");
 		if (!str)
 			return (free(str), NULL);

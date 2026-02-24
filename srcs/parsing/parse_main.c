@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_main.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 10:30:32 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/15 06:24:26 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,30 +55,63 @@ static t_command	*fill_cmdlist(t_command *head, char *args)
 	return (head);
 }
 
-t_command	*parse_main(char *input, t_map *env, t_exec *exec)
+static t_command	*build_cmdlist(char **args, t_map *env)
 {
 	size_t		i;
-	char		**args;
 	t_command	*head;
 
 	head = NULL;
-	input = parse_input(input);
-	if (!input)
-		return (NULL);
-	args = ft_split(input, '\3');
-	if (!args)
-		return (free(input), NULL);
 	i = 0;
 	while (args[i])
 	{
 		head = fill_cmdlist(head, args[i]);
 		if (!head)
-			return (free(input), free_grid(args), NULL);
+		{
+			put_exit_code_in_env(env, 2);
+			free_grid(args);
+			return (NULL);
+		}
 		i++;
 	}
-	if (!in_redirection(head))
-		return (free_all(head, exec), free_grid(args), free(input), NULL);
+	return (head);
+}
+
+static t_command	*finalize_parsing(t_command *head, char **args,
+		t_map *env, t_exec *exec)
+{
+	if (!parse_redirection(head))
+	{
+		put_exit_code_in_env(env, 2);
+		free_all(head, exec);
+		free_grid(args);
+		return (NULL);
+	}
 	if (!expand_and_shi(head, env))
-		return (free_grid(args), free(input), NULL);
-	return (free_grid(args), free(input), head);
+	{
+		free_grid(args);
+		return (NULL);
+	}
+	free_grid(args);
+	return (head);
+}
+
+t_command	*parse_main(char *input, t_map *env, t_exec *exec)
+{
+	char		**args;
+	t_command	*head;
+
+	input = parse_input(input);
+	if (!input)
+		return (put_exit_code_in_env(env, 2), NULL);
+	if (!check_pipe_syntax(input))
+		return (put_exit_code_in_env(env, 2), free(input), NULL);
+	args = ft_split(input, '\3');
+	if (!args)
+		return (free(input), NULL);
+	free(input);
+	input = NULL;
+	head = build_cmdlist(args, env);
+	if (!head)
+		return (NULL);
+	return (finalize_parsing(head, args, env, exec));
 }

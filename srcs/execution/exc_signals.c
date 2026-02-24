@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exc_signals.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 05:45:08 by kelle             #+#    #+#             */
+/*   Updated: 2026/02/15 05:45:45 by kelle            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	sigint_handler(int signal)
@@ -20,13 +32,13 @@ void	signals_init(void)
 	signal(SIGQUIT, SIG_IGN);
 }
 
-void heredoc_sigint(int sig)
+void	heredoc_sigint(int sig)
 {
-    g_sig = sig;
+	g_sig = sig;
 }
 
 void	child_signal(void)
 {
-    signal(SIGINT, SIG_DFL);
-    signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_IGN);
 }

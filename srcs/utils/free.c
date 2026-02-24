@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 05:31:55 by kelle             #+#    #+#             */
+/*   Updated: 2026/02/15 05:32:40 by kelle            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 void	clear_matriz(char **matriz)
@@ -23,7 +35,7 @@ void	free_grid(char **grid)
 	free(grid);
 }
 
-void clear_exec(t_exec *exec)
+void	clear_exec(t_exec *exec)
 {
 	if (!exec)
 		return ;
@@ -36,13 +48,13 @@ void clear_exec(t_exec *exec)
 	exec = NULL;
 }
 
-void list_clear_redir(t_redirect *head)
+void	list_clear_redir(t_redirect *head)
 {
-	t_redirect *next;
+	t_redirect	*next;
 
 	if (!head)
 		return ;
-	while(head)
+	while (head)
 	{
 		next = head->next;
 		ft_close(&head->fd);
@@ -54,9 +66,9 @@ void list_clear_redir(t_redirect *head)
 	head = NULL;
 }
 
-void free_all(t_command *commands, t_exec *exec)
+void	free_all(t_command *commands, t_exec *exec)
 {
-	t_command			*next;
+	t_command	*next;
 
 	if (!commands)
 		return ;
@@ -76,4 +88,3 @@ void free_all(t_command *commands, t_exec *exec)
 	clear_exec(exec);
 	commands = NULL;
 }
-

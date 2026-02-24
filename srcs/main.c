@@ -6,13 +6,13 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/09 17:06:20 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/02 05:27:57 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/24 03:33:39 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int g_sig = 0;
+int	g_sig = 0;
 
 static void	process_all(t_command *cmd, t_map *env, t_exec *exec)
 {
@@ -51,5 +51,5 @@ int	main(int argc, char **argv, char **environment)
 		process_all(cmd, env, &exec);
 	}
 	printf("Exiting minishell!\n");
-	ft_exit(env, cmd, &exec, 0);
+	ft_exit(env, cmd, &exec, ft_atoi(env->get(env, "?")));
 }

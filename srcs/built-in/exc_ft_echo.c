@@ -51,5 +51,5 @@ int	built_in_echo(t_command *commands)
 	}
 	if (!valid_flag)
 		printf("\n");
-	return (0);	
+	return (0);
 }

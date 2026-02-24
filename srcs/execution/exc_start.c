@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_start.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/20 12:29:09 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/15 05:47:00 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,24 @@ int	is_built_in(t_map *env, t_command *commands, t_exec *exec)
 	if (!ft_strcmp(str, "exit"))
 		exit_code = built_in_exit(commands, env, exec);
 	if (exit_code != -1)
-		env->put(env, ft_strdup("?"), ft_itoa(exit_code), false);
+		put_exit_code_in_env(env, exit_code);
 	return (exit_code);
 }
-static int get_exit_status(int status, t_map *env)
+
+static int	get_exit_status(int status, t_map *env)
 {
-	int			exit_code;
+	int	exit_code;
 
 	exit_code = ft_atoi(env->get(env, "?"));
 	if (WIFSIGNALED(status))
 	{
 		if (WTERMSIG(status) == SIGINT)
-		   	write(2, "\n", 1);
+			write(2, "\n", 1);
 		exit_code = 128 + WTERMSIG(status);
 	}
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
-	return (exit_code); 
+	return (exit_code);
 }
 
 static void	wait_all(t_command *cmd, t_map *env, t_exec *exec)
@@ -73,10 +74,10 @@ static void	wait_all(t_command *cmd, t_map *env, t_exec *exec)
 				exit_code = exec->fake_status;
 		if (waitpid(temp->pid, &status, 0) > 0)
 			if (last_pid == temp->pid)
-				exit_code =  get_exit_status(status, env);
+				exit_code = get_exit_status(status, env);
 		temp = temp->next;
 	}
-	env->put(env, ft_strdup("?"), ft_itoa(exit_code), false);
+	put_exit_code_in_env(env, exit_code);
 }
 
 static void	redir_failure(t_command **cmd, t_exec **exec)

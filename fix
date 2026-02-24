@@ -1,32 +1,3 @@
-KELLE:
-minishell> |
-minishell> <|
-minishell: syntax error near unexpected token `newline'
-minishell> |>
-minishell: syntax error near unexpected token `newline'
-minishell> <<
-minishell: syntax error near unexpected token `newline'
-cat << a (leak heredoc)
-minishell> export var="echo hello" (precisa dar split na expansao)
-minishell> $var
-
-|               (exit code)
-| echo oi       (exit code)
-| |             (exit code)
-| $             (exit code)
-| >             (exit code)
->               (exit code)
->>              (exit code)
->>>             (exit code)
-<               (exit code)
-<<              (exit code)
-echo hi <       (exit code)
-cat    <| ls    (exit code)
-echo hi | >     (exit code)
-echo hi | > >>  (exit code)
-echo hi | < |   (exit code)
-echo hi |   |   (exit code)
-
 $EMPTY (se a varivel nao exister deve atualizar o exit code para 0)
 
 expansao no heredoc nao esta funcionando.

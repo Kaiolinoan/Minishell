@@ -1,49 +1,46 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exc_heredoc.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 05:09:11 by kelle             #+#    #+#             */
+/*   Updated: 2026/02/15 05:51:13 by kelle            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-bool expand_here_doc(char *line, t_map *env)
-{
-	char	*expanded;
 
-	expanded = expand_word(ft_strdup(line), env, 0, 0);
-	if (!expanded)
-		return (false);
-	// free(line);
-	line = expanded;
-	return (true);
-}
-
-static void	here_child(t_command *cmd, t_map *env, t_exec *exec, t_redirect *redir)
+static void	here_child(t_command *cmd, t_map *env,
+	t_exec *exec, t_redirect *redir)
 {
 	char	*limiter;
-	char	*line;
 	bool	expand_vars;
-	int 	fd;
-	
+	int		fd;
+
 	fd = open("/tmp/here_temp", O_WRONLY | O_CREAT | O_TRUNC, 0600);
 	if (fd < 0)
 		return (ft_exit(env, cmd, exec, 1));
 	limiter = clean_limiter(redir, &expand_vars);
 	if (!limiter)
-		return (ft_exit(env, cmd, exec, 1));
+		return (ft_close(&fd), ft_exit(env, cmd, exec, 1));
 	handle_heredoc_signals();
-	while (1)
-	{
-		line = readline("> ");
-		if (!line || g_sig == SIGINT)
-			(free(line), free(limiter), ft_close(&fd), ft_exit(env, cmd, exec, 130));
-		if ((!ft_strcmp(line, limiter)) || (expand_vars && !expand_here_doc(line, env)))
-			break ;
-		(ft_dprintf(fd, "%s\n", line), free(line));
-		line = NULL;
-	}
-	(free(line), free(limiter), ft_close(&fd), ft_exit(env, cmd, exec, 0));
+	if (!heredoc_loop(fd, limiter, expand_vars, env))
+		return (free(limiter), ft_close(&fd),
+			ft_exit(env, cmd, exec, 130));
+	free(limiter);
+	ft_close(&fd);
+	ft_exit(env, cmd, exec, 0);
 }
 
-static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec, t_redirect *redir)
+static int	exec_here_doc(t_command *cmd, t_map *env,
+	t_exec *exec, t_redirect *redir)
 {
 	pid_t	pid;
 	int		fd;
 	int		status;
-	int 	exit_code;
+	int		exit_code;
 
 	signal(SIGINT, SIG_IGN);
 	pid = fork();
@@ -56,35 +53,39 @@ static int	exec_here_doc(t_command *cmd, t_map *env, t_exec *exec, t_redirect *r
 		exit_code = 128 + WTERMSIG(status);
 	if (WIFEXITED(status))
 		exit_code = WEXITSTATUS(status);
-	env->put(env, ft_strdup("?"), ft_itoa(exit_code), false);
+	put_exit_code_in_env(env, exit_code);
 	signal(SIGINT, sigint_handler);
 	fd = open("/tmp/here_temp", O_RDONLY);
 	unlink("/tmp/here_temp");
 	return (fd);
 }
 
-bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
+static bool	heredoc_process_redirects(t_command *cmd,
+	t_map *env, t_exec *exec)
 {
-	t_command	*head;
 	t_redirect	*temp;
 
-	head = cmd;
+	temp = cmd->infile;
+	while (temp)
+	{
+		if (temp->type == HEREDOC)
+		{
+			temp->fd = exec_here_doc(cmd, env, exec, temp);
+			if (temp->fd < 0)
+				return (false);
+		}
+		temp = temp->next;
+	}
+	return (true);
+}
+
+bool	check_here_doc(t_command *cmd, t_map *env, t_exec *exec)
+{
 	while (cmd)
 	{
-		temp = cmd->infile;
-		while (temp)
-		{
-			if (temp->type == HEREDOC)
-			{
-				temp->fd = exec_here_doc(cmd, env, exec, temp);
-				// print_inside_redir(temp);
-				if (temp->fd < 0)
-					return (false);
-			}
-			temp = temp->next;
-		}
+		if (!heredoc_process_redirects(cmd, env, exec))
+			return (false);
 		cmd = cmd->next;
 	}
-	cmd = head;
 	return (true);
 }
