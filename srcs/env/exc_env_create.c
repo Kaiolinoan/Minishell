@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exc_env_create.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:07:35 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/13 14:52:50 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/15 05:40:39 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void check_shell_lvl(t_map *env)
+static void	check_shell_lvl(t_map *env)
 {
 	char	*old_lvl;
 	int		new_lvl;
@@ -20,7 +20,7 @@ static void check_shell_lvl(t_map *env)
 	old_lvl = env->get(env, "SHLVL");
 	if (!old_lvl)
 		return (env->put(env, ft_strdup("SHLVL"), ft_strdup("1"), true));
-	new_lvl = ft_atoi(old_lvl);	
+	new_lvl = ft_atoi(old_lvl);
 	new_lvl++;
 	env->put(env, ft_strdup("SHLVL"), ft_itoa(new_lvl), true);
 }
@@ -74,6 +74,6 @@ t_map	*create_env(char **environment)
 		}
 		i++;
 	}
-	env->put(env, ft_strdup("?"), ft_strdup("0"), false);
+	put_exit_code_in_env(env, 0);
 	return (check_shell_lvl(env), env);
 }

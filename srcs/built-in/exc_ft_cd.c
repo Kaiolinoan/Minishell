@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 11:47:21 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/02 06:40:58 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/15 05:33:44 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int	built_in_cd(char **args, t_map *env)
 	char	*pwd;
 	char	*old_pwd;
 	char	*path;
-	int 	exit_code;
+	int		exit_code;
 
 	if (ft_array_len(args) > 2)
 		return (ft_dprintf(2, "bash: cd: too many arguments\n"), 1);

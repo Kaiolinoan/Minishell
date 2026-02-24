@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exc_redir.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 18:42:23 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/21 11:14:04 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/02/15 05:44:57 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	helper_input(t_redirect *input)
 				return (ft_dprintf(2, "bash: "), perror(input->filename), -1);
 		}
 		else if (input->type == HEREDOC && input->fd != -1)
-			fd =  input->fd;
+			fd = input->fd;
 		if (input->next)
 			ft_close(&fd);
 		input = input->next;
@@ -58,9 +58,9 @@ static int	helper_output(t_redirect *output)
 	return (fd);
 }
 
-void print_inside_redir(t_redirect *ptr)
+void	print_inside_redir(t_redirect *ptr)
 {
-	t_redirect *temp;
+	t_redirect	*temp;
 
 	temp = ptr;
 	while (temp)

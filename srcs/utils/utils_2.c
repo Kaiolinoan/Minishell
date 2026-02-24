@@ -6,13 +6,13 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:47:46 by klino-an          #+#    #+#             */
-/*   Updated: 2026/01/16 04:40:11 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/15 06:14:20 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void clear_matriz2(char **matriz)
+void	clear_matriz2(char **matriz)
 {
 	size_t	i;
 
@@ -77,6 +77,16 @@ void	init_exec(t_exec *exec, t_command *cmd)
 	exec->fake_status = -1;
 	if (cmd)
 		exec->len = list_len_command(cmd);
-	else 
+	else
 		exec->len = 0;
+}
+
+void	put_exit_code_in_env(t_map *env, int status)
+{
+	char	*status_str;
+
+	status_str = ft_itoa(status);
+	if (!status_str)
+		return ;
+	env->put(env, ft_strdup("?"), status_str, false);
 }

@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/22 15:32:35 by kelle             #+#    #+#             */
-/*   Updated: 2026/02/02 06:46:45 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/15 06:24:26 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static int	search_redirections(t_command *current)
 	return (fill_args(current, 0, 0));
 }
 
-int	in_redirection(t_command *head)
+int	parse_redirection(t_command *head)
 {
 	t_command	*current;
 

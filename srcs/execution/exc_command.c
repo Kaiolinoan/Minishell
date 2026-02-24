@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exc_command.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 05:42:38 by kelle             #+#    #+#             */
+/*   Updated: 2026/02/15 05:42:38 by kelle            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-static void execute_script(t_command *cmd, char **env)
+static void	execute_script(t_command *cmd, char **env)
 {
-	char *args[3];
+	char	*args[3];
 
 	args[0] = "sh";
 	args[1] = cmd->args[0];
@@ -13,7 +25,7 @@ static void execute_script(t_command *cmd, char **env)
 static int	path_look_up(t_command *cmd, t_map *env)
 {
 	struct stat	st;
-	char **environment;
+	char		**environment;
 
 	environment = NULL;
 	if (ft_strchr(cmd->args[0], '/') || !env->get(env, "PATH"))
@@ -60,7 +72,7 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 {
 	int		btin_sts;
-	char 	**environment;
+	char	**environment;
 	int		path_status;
 
 	btin_sts = 0;
@@ -106,4 +118,3 @@ void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 	}
 	close_fds(exec, cmd, true);
 }
- 
