@@ -102,7 +102,7 @@ t_command	*parse_main(char *input, t_map *env, t_exec *exec)
 
 	input = parse_input(input);
 	if (!input)
-		return (put_exit_code_in_env(env, 2), NULL);
+		return (put_exit_code_in_env(env, 0), NULL);
 	if (!check_pipe_syntax(input))
 		return (put_exit_code_in_env(env, 2), free(input), NULL);
 	args = ft_split(input, '\3');

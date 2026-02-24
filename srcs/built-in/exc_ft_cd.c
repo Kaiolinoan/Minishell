@@ -14,14 +14,14 @@
 
 static int	print_error(char *path, char *raw_path)
 {
-	char *buffer;
+	char	*buffer;
 
 	buffer = NULL;
 	if (raw_path[0] == '/')
 	{
 		ft_dprintf(2, "bash: cd: %s: ", path);
 		perror(NULL);
-		return (1);	
+		return (1);
 	}
 	else
 	{
@@ -78,7 +78,6 @@ static int	process_cd(char *path, t_map *env, char *old_pwd, char *raw_path)
 		return (print_error(path, raw_path));
 	return (0);
 }
-
 
 int	built_in_cd(char **args, t_map *env)
 {

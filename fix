@@ -1,6 +1,0 @@
-$EMPTY (se a varivel nao exister deve atualizar o exit code para 0)
-
-expansao no heredoc nao esta funcionando.
-$EMPTY echo hi
-
-KAIO:

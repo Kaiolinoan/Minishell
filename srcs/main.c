@@ -47,7 +47,6 @@ int	main(int argc, char **argv, char **environment)
 			add_history(str);
 		free_all(cmd, &exec);
 		cmd = parse_main(str, env, &exec);
-		// print_nodes_after_input(cmd);
 		process_all(cmd, env, &exec);
 	}
 	printf("Exiting minishell!\n");

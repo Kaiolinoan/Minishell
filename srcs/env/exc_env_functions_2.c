@@ -38,8 +38,8 @@ int	__print(t_extra *t, t_command *cmd)
 	i = -1;
 	while (cmd->args[++i])
 		if (ft_strcmp(cmd->args[i], "env") != 0)
-			return (ft_dprintf(2,
-				"env: '%s': No such file or directory\n", cmd->args[i]), 127);
+			return (ft_dprintf(2, "env: '%s': No such file or directory\n",
+					cmd->args[i]), 127);
 	temp = t->head;
 	while (temp)
 	{
@@ -82,8 +82,6 @@ static char	*get_full_str(t_envlist *tmp)
 			return (free(str), NULL);
 		str = gnl_strjoin(str, tmp->value);
 	}
-	// if (!str)
-		// return (free(str), NULL);
 	return (str);
 }
 

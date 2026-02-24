@@ -31,12 +31,15 @@ static int	path_look_up(t_command *cmd, t_map *env)
 	if (ft_strchr(cmd->args[0], '/') || !env->get(env, "PATH"))
 	{
 		if (stat(cmd->args[0], &st) != 0)
-			return (ft_dprintf(2, "Bash: %s: No such file or directory\n", cmd->args[0]), 127);
+			return (ft_dprintf(2, "Bash: %s: No such file or directory\n",
+					cmd->args[0]), 127);
 		if (S_ISDIR(st.st_mode))
-			return (ft_dprintf(2, "Bash: %s: Is a directory\n", cmd->args[0]), 126);
+			return (ft_dprintf(2,
+					"Bash: %s: Is a directory\n", cmd->args[0]), 126);
 		if (S_ISREG(st.st_mode))
 			if (access(cmd->path, X_OK) != 0)
-				return (ft_dprintf(2, "Bash: %s: Permission denied\n", cmd->args[0]), 126);
+				return (ft_dprintf(2,
+						"Bash: %s: Permission denied\n", cmd->args[0]), 126);
 		environment = env->to_string(env);
 		execve(cmd->args[0], cmd->args, environment);
 		if (errno == ENOEXEC)
@@ -44,13 +47,6 @@ static int	path_look_up(t_command *cmd, t_map *env)
 		clear_matriz(environment);
 	}
 	return (0);
-}
-
-static void	exec_failure(t_map *env, t_command *cmd, t_exec *exec)
-{
-	ft_dprintf(2, "%s: command not found\n", *cmd->args);
-	close_fds(exec, cmd, false);
-	ft_exit(env, cmd, exec, 127);
 }
 
 static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
@@ -109,7 +105,9 @@ void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 		dup2(exec->out, STDOUT_FILENO);
 		close_fds(exec, cmd, false);
 		execute_command(cmd, env, exec);
-		exec_failure(env, cmd, exec);
+		ft_dprintf(2, "%s: command not found\n", *cmd->args);
+		close_fds(exec, cmd, false);
+		ft_exit(env, cmd, exec, 127);
 	}
 	close_fds(exec, cmd, true);
 }
