@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/15 06:59:22 by kelle            ###   ########.fr       */
+/*   Updated: 2026/02/24 23:20:43 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
  cannot access parent directories: No such file or directory\n"
 # define BASH_CD "bash: cd: "
 
-extern int	g_sig;
+extern int					g_sig;
 // ENV STRUCTS
 typedef struct s_extra		t_extra;
 typedef struct s_map		t_map;
