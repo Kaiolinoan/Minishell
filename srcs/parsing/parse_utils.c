@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:25:35 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/24 02:58:48 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/04 01:23:22 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,17 +42,15 @@ bool	var_char(char c)
 	return (ft_isalnum(c) || c == '_');
 }
 
-char	*remove_quotes(char *str)
+char	*remove_quotes(char *str, char quote)
 {
 	char	*result;
-	char	quote;
 	int		i;
 	int		j;
 
 	result = ft_calloc(ft_strlen(str) + 1, 1);
 	if (!result)
 		return (NULL);
-	quote = 0;
 	i = 0;
 	j = 0;
 	while (str[i])
@@ -61,6 +59,10 @@ char	*remove_quotes(char *str)
 			quote = str[i];
 		else if (quote && quote == str[i])
 			quote = 0;
+		else if (str[i] == '\5')
+			result[j++] = '\'';
+		else if (str[i] == '\6')
+			result[j++] = '"';
 		else
 			result[j++] = str[i];
 		i++;

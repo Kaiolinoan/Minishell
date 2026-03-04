@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 05:10:19 by kelle             #+#    #+#             */
-/*   Updated: 2026/02/15 05:10:49 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/04 01:24:56 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	handle_heredoc_signals(void)
 	rl_catch_signals = 0;
 }
 
-static bool	has_single_quotes(char *str)
+static bool	has_quotes(char *str)
 {
 	int	i;
 
 	i = 0;
 	while (str[i])
 	{
-		if (str[i] == '\'')
+		if (str[i] == '\'' || str[i] == '"')
 			return (true);
 		i++;
 	}
@@ -47,7 +47,7 @@ char	*clean_limiter(t_redirect *redir, bool *expand_vars)
 	char	*raw;
 
 	raw = redir->filename;
-	*expand_vars = !has_single_quotes(raw);
-	limiter = remove_quotes(raw);
+	*expand_vars = !has_quotes(raw);
+	limiter = remove_quotes(raw, 0);
 	return (limiter);
 }

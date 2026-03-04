@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/24 23:20:43 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/04 01:24:31 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ void			handle_heredoc_signals(void);
 int				parse_redirection(t_command *head);
 
 // parse expansion
-char			*remove_quotes(char *str);
+char			*remove_quotes(char *str, char quote);
 char			*expand_word(char *result, t_map *env, char quote, int i);
 char			*expand_variable(char *str, int i, t_map *env,\
 				char *quote_state);

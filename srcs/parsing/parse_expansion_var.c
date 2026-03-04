@@ -1,46 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_expand_var.c                                 :+:      :+:    :+:   */
+/*   parse_expansion_var.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 07:10:00 by kelle             #+#    #+#             */
-/*   Updated: 2026/02/15 06:59:22 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/04 01:43:59 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-static char	*expanded_string(char *str, int var_pos,
-						char *var_name, char *value)
-{
-	char	*result;
-	int		length;
-	int		i;
-	int		j;
-
-	length = ft_strlen(str) - ft_strlen(var_name) - 1;
-	if (value)
-		length += ft_strlen(value);
-	result = ft_calloc(length + 1, 1);
-	if (!result)
-		return (NULL);
-	i = 0;
-	while (i < var_pos)
-	{
-		result[i] = str[i];
-		i++;
-	}
-	j = 0;
-	while (value && value[j])
-		result[i++] = value[j++];
-	j = var_pos + ft_strlen(var_name) + 1;
-	while (str[j])
-		result[i++] = str[j++];
-	result[i] = '\0';
-	return (result);
-}
 
 static char	*variable_name(char	*str, int i)
 {
@@ -64,20 +34,53 @@ static char	*variable_name(char	*str, int i)
 	return (var_name);
 }
 
-static int	copy_value(char *result, int i, char *value)
+static int	copy_value(char *result, int i, char *value, bool split)
 {
 	int	j;
 
 	j = 0;
 	while (value && value[j])
 	{
-		if (value[j] == ' ' || value[j] == '\t')
-			result[i++] = '\4';
+		if (split)
+			if (value[j] == ' ' || value[j] == '\t')
+				result[i++] = '\4';
+		if (value[j] == '\'')
+			result[i++] = '\5';
+		else if (value[j] == '"')
+			result[i++] = '\6';
 		else
 			result[i++] = value[j];
 		j++;
 	}
 	return (i);
+}
+
+static char	*expanded_string(char *str, int var_pos,
+						char *var_name, char *value)
+{
+	char	*result;
+	int		length;
+	int		i;
+	int		j;
+
+	length = ft_strlen(str) - ft_strlen(var_name) - 1;
+	if (value)
+		length += ft_strlen(value);
+	result = ft_calloc(length + 1, 1);
+	if (!result)
+		return (NULL);
+	i = 0;
+	while (i < var_pos)
+	{
+		result[i] = str[i];
+		i++;
+	}
+	i = copy_value(result, i, value, false);
+	j = var_pos + ft_strlen(var_name) + 1;
+	while (str[j])
+		result[i++] = str[j++];
+	result[i] = '\0';
+	return (result);
 }
 
 static char	*expanded_string_with_splitting(char *str, int var_pos,
@@ -100,7 +103,7 @@ static char	*expanded_string_with_splitting(char *str, int var_pos,
 		result[i] = str[i];
 		i++;
 	}
-	i = copy_value(result, i, value);
+	i = copy_value(result, i, value, true);
 	j = var_pos + ft_strlen(var_name) + 1;
 	while (str[j])
 		result[i++] = str[j++];

@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/19 03:01:39 by kelle             #+#    #+#             */
-/*   Updated: 2026/02/15 07:00:03 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/04 01:25:13 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*expand_word(char *result, t_map *env, char quote, int i)
 		}
 		i++;
 	}
-	new = remove_quotes(result);
+	new = remove_quotes(result, 0);
 	return (free(result), new);
 }
 
