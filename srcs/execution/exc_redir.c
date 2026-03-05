@@ -58,20 +58,6 @@ static int	helper_output(t_redirect *output)
 	return (fd);
 }
 
-void	print_inside_redir(t_redirect *ptr)
-{
-	t_redirect	*temp;
-
-	temp = ptr;
-	while (temp)
-	{
-		printf("filename: %s\n", temp->filename);
-		printf("fd: %d\n", temp->fd);
-		printf("type: %d\n", temp->type);
-		temp = temp->next;
-	}
-}
-
 int	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
 {
 	if (!input && !output)

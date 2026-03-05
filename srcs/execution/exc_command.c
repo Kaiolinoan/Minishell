@@ -67,26 +67,21 @@ static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
 
 static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 {
-	int		btin_sts;
+	int		status;
 	char	**environment;
-	int		path_status;
 
-	btin_sts = 0;
-	cmd->path = get_path(env, cmd->args);
-	path_status = path_look_up(cmd, env);
-	if (path_status > 0)
-		(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, path_status));
-	else if (path_status == 0)
+	status = path_look_up(cmd, env);
+	if (status != 0)
+		(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, status));
+	status = is_built_in(env, cmd, exec);
+	if (status != -1)
+		(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, status));
+	else
 	{
-		btin_sts = is_built_in(env, cmd, exec);
-		if (btin_sts != -1)
-			(close_fds(exec, cmd, false), ft_exit(env, cmd, exec, btin_sts));
-		else
-		{
-			environment = env->to_string(env);
-			execve(cmd->path, cmd->args, environment);
-			clear_matriz(environment);
-		}
+		environment = env->to_string(env);
+		cmd->path = get_path(env, cmd->args);
+		execve(cmd->path, cmd->args, environment);
+		clear_matriz(environment);
 	}
 }
 

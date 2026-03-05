@@ -57,6 +57,7 @@ bool	heredoc_loop(int fd, char *limiter,
 		if (!line || g_sig == SIGINT)
 		{
 			free(line);
+			open("/tmp/here_temp", O_TRUNC);
 			return (false);
 		}
 		if (!ft_strcmp(line, limiter))

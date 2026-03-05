@@ -144,13 +144,13 @@ int				built_in_pwd(t_map *env);
 int				built_in_unset(t_command *commands, t_map *env);
 int				built_in_exit(t_command *commands, t_map *env, t_exec *exec);
 
-//start, redir and pipes 
+//commands
 void			exec_all(t_command*cmd, t_map *env, t_exec *exec);
 void			handle_command(t_map *env, t_command *cmd, t_exec *exec);
+
+// redirections
 int				check_redir(t_redirect *input, t_redirect *output,\
 				int *in, int *out);
-void			init_exec(t_exec *exec, t_command *cmd);
-void			print_inside_redir(t_redirect *ptr); //apagar aqui
 
 //heredoc
 char			*clean_limiter(t_redirect *redir, bool *expand_vars);
@@ -174,6 +174,7 @@ void			sigint_handler(int signal);
 void			handle_heredoc_signals(void);
 
 // ##############################    PARSING    ##############################
+
 // parse cmdlist
 int				parse_redirection(t_command *head);
 
@@ -208,11 +209,11 @@ int				handle_redirection(t_command *cmdnode, int i, char redir);
 // parse utils
 bool			space_only(char *str);
 char			identify_quote(char flag, char c);
-void			print_nodes_after_input(t_command *head);
 bool			var_start(char c);
 bool			var_char(char c);
 
 // ################################    UTILS    ################################
+
 bool			space_only(char *str);
 void			clear_matriz(char **matriz);
 size_t			list_len_extra(t_extra *env);
@@ -229,5 +230,6 @@ void			clear_exec(t_exec *exec);
 void			clear_matriz2(char **matriz);
 char			*process_cd_path(char *arg, t_map *env);
 void			put_exit_code_in_env(t_map *env, int status);
+void			init_exec(t_exec *exec, t_command *cmd);
 
 #endif

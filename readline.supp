@@ -10,9 +10,3 @@
     ...
     fun:add_history
 }
-{
-   external_usrbin leak
-   Memcheck:Leak
-   ...
-   obj:/usr/bin/*
-}
