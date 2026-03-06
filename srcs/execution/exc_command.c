@@ -28,6 +28,7 @@ static int	path_look_up(t_command *cmd, t_map *env)
 	char		**environment;
 
 	environment = NULL;
+	cmd->path = get_path(env, cmd->args);
 	if (ft_strchr(cmd->args[0], '/') || !env->get(env, "PATH"))
 	{
 		if (stat(cmd->args[0], &st) != 0)
