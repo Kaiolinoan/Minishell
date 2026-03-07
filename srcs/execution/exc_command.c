@@ -47,7 +47,7 @@ static int	path_look_up(t_command *cmd, t_map *env)
 			execute_script(cmd, environment);
 		clear_matriz(environment);
 	}
-	return (0);
+	return (free(cmd->path), 0);
 }
 
 static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)

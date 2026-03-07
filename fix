@@ -23,5 +23,4 @@ minishell> export a=" <"
 minishell> $a lol
  <: command not found
 
-free no exc_command c:31
 

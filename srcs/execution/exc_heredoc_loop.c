@@ -50,6 +50,7 @@ bool	heredoc_loop(int fd, char *limiter,
 	bool expand_vars, t_map *env)
 {
 	char	*line;
+	int		temp_fd;
 
 	while (1)
 	{
@@ -57,7 +58,8 @@ bool	heredoc_loop(int fd, char *limiter,
 		if (!line || g_sig == SIGINT)
 		{
 			free(line);
-			open("/tmp/here_temp", O_TRUNC);
+			temp_fd = open("/tmp/here_temp", O_TRUNC);
+			close(temp_fd);
 			return (false);
 		}
 		if (!ft_strcmp(line, limiter))
