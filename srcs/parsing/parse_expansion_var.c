@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 07:10:00 by kelle             #+#    #+#             */
-/*   Updated: 2026/03/04 01:43:59 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/08 04:36:00 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,14 @@ static int	copy_value(char *result, int i, char *value, bool split)
 	while (value && value[j])
 	{
 		if (split)
+		{
 			if (value[j] == ' ' || value[j] == '\t')
+			{
 				result[i++] = '\4';
+				j++;
+				continue ;
+			}
+		}
 		if (value[j] == '\'')
 			result[i++] = '\5';
 		else if (value[j] == '"')
