@@ -47,7 +47,7 @@ static int	path_look_up(t_command *cmd, t_map *env)
 			execute_script(cmd, environment);
 		clear_matriz(environment);
 	}
-	return (free(cmd->path), 0);
+	return (0);
 }
 
 static int	single_built_in(t_command *cmd, t_map *env, t_exec *exec)
@@ -80,10 +80,10 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 	else
 	{
 		environment = env->to_string(env);
-		cmd->path = get_path(env, cmd->args);
 		execve(cmd->path, cmd->args, environment);
 		clear_matriz(environment);
 	}
+	// free(cmd->path);
 }
 
 void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
