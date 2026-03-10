@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2026/03/09 17:39:17 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/03/10 16:58:28 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 		if (cmd->next)
 			if (pipe(exec->fds) != -1)
 				exec->out = change_fd(exec->out, exec->fds[1]);
-		printf("fd[0]: %d, fd[1]: %d\n", exec->fds[0], exec->fds[1]);
+		printf("pipe: fd[0]: %d, fd[1]: %d\n", exec->fds[0], exec->fds[1]);
 		if (check_redir(cmd->infile, cmd->outfile, &exec->in, &exec->out) == -1)
 		{
 			redir_failure(&cmd, &exec);
@@ -111,6 +111,8 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 		}
 		if (cmd->args[0] && cmd->args[0][0])
 			handle_command(env, cmd, exec);
+		else
+			close_fds(exec, cmd, true);
 		exec->in = change_fd(exec->in, exec->fds[0]);
 		cmd = cmd->next;
 	}

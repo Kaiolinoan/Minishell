@@ -1,2 +1,1 @@
-<< l | cat | ls
-
+ echo hello | cat << EOF
