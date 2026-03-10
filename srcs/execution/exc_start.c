@@ -6,7 +6,7 @@
 /*   By: klino-an <klino-an@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/07 12:26:27 by klino-an          #+#    #+#             */
-/*   Updated: 2026/03/10 16:58:28 by klino-an         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:45:37 by klino-an         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,15 +95,13 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 
 	cmd = head;
 	exec->in = dup(STDIN_FILENO);
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
+	(signal(SIGINT, SIG_IGN), signal(SIGQUIT, SIG_IGN));
 	while (cmd)
 	{
 		exec->out = dup(STDOUT_FILENO);
 		if (cmd->next)
 			if (pipe(exec->fds) != -1)
 				exec->out = change_fd(exec->out, exec->fds[1]);
-		printf("pipe: fd[0]: %d, fd[1]: %d\n", exec->fds[0], exec->fds[1]);
 		if (check_redir(cmd->infile, cmd->outfile, &exec->in, &exec->out) == -1)
 		{
 			redir_failure(&cmd, &exec);

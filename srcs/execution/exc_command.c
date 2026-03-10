@@ -83,12 +83,10 @@ static void	execute_command(t_command *cmd, t_map *env, t_exec *exec)
 		execve(cmd->path, cmd->args, environment);
 		clear_matriz(environment);
 	}
-	// free(cmd->path);
 }
 
 void	handle_command(t_map *env, t_command *cmd, t_exec *exec)
 {
-	ft_printf("in: %i, out: %i\n", exec->in, exec->out);
 	if (!cmd->next && exec->len == 1)
 		if (single_built_in(cmd, env, exec) != -1)
 			return ;
