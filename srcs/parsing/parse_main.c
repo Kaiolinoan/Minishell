@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:01 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/15 06:24:26 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/11 22:18:58 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,9 @@ t_command	*parse_main(char *input, t_map *env, t_exec *exec)
 	char		**args;
 	t_command	*head;
 
-	input = parse_input(input);
+	input = parse_input(input, env);
 	if (!input)
-		return (put_exit_code_in_env(env, 0), NULL);
+		return (NULL);
 	if (!check_pipe_syntax(input))
 		return (put_exit_code_in_env(env, 2), free(input), NULL);
 	args = ft_split(input, '\3');

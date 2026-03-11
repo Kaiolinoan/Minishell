@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 16:24:45 by klino-an          #+#    #+#             */
-/*   Updated: 2026/02/24 02:58:48 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/11 22:18:58 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static void	fill_dup(char *dup, char *str, size_t i, size_t j)
 	}
 }
 
-char	*parse_input(char *str)
+char	*parse_input(char *str, t_map *env)
 {
 	char	*dup;
 
@@ -102,6 +102,7 @@ char	*parse_input(char *str)
 		return (NULL);
 	if (open_quotes(str))
 	{
+		put_exit_code_in_env(env, 2);
 		ft_dprintf(2, "minishell: syntax error unclosed quotes\n");
 		return (NULL);
 	}

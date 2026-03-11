@@ -6,7 +6,7 @@
 /*   By: kelle <kelle@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 17:05:44 by klino-an          #+#    #+#             */
-/*   Updated: 2026/03/04 01:24:31 by kelle            ###   ########.fr       */
+/*   Updated: 2026/03/11 22:18:58 by kelle            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ char			**fill_expanded_args(char **args, char **new_args,\
 char			**expand_with_splitting(char **args, t_map *env);
 
 // parse input
-char			*parse_input(char *str);
+char			*parse_input(char *str, t_map *env);
 
 // parse main
 t_command		*parse_main(char *input, t_map *env, t_exec *exec);
