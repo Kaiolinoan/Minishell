@@ -150,7 +150,7 @@ void			handle_command(t_map *env, t_command *cmd, t_exec *exec);
 
 // redirections
 int				check_redir(t_redirect *input, t_redirect *output,\
-				int *in, int *out);
+				t_exec *exec, t_command head);
 
 //heredoc
 char			*clean_limiter(t_redirect *redir, bool *expand_vars);

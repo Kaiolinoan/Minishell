@@ -102,7 +102,7 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 		if (cmd->next)
 			if (pipe(exec->fds) != -1)
 				exec->out = change_fd(exec->out, exec->fds[1]);
-		if (check_redir(cmd->infile, cmd->outfile, &exec->in, &exec->out) == -1)
+		if (check_redir(cmd->infile, cmd->outfile, exec, *head) == -1)
 		{
 			redir_failure(&cmd, &exec);
 			continue ;
@@ -117,5 +117,3 @@ void	exec_all(t_command *head, t_map *env, t_exec *exec)
 	cmd = head;
 	wait_all(cmd, env, exec);
 }
-
-// set follow-fork-mode child

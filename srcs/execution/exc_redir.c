@@ -58,15 +58,29 @@ static int	helper_output(t_redirect *output)
 	return (fd);
 }
 
-int	check_redir(t_redirect *input, t_redirect *output, int *in, int *out)
+static void	read_from_fd(int in)
+{
+	char	buffer[1024];
+
+	while (1)
+		if (read(in, buffer, sizeof(buffer)) > 0)
+			break ;
+}
+
+int	check_redir(t_redirect *input, t_redirect *output,
+				t_exec *exec, t_command head)
 {
 	if (!input && !output)
 		return (-2);
 	if (input)
-		*in = change_fd(*in, helper_input(input));
+	{
+		if (input->type == HEREDOC && head.infile != input && exec->len > 1)
+			read_from_fd(exec->in);
+		exec->in = change_fd(exec->in, helper_input(input));
+	}
 	if (output)
-		*out = change_fd(*out, helper_output(output));
-	if (*in < 0 || *out < 0)
+		exec->out = change_fd(exec->out, helper_output(output));
+	if (exec->in < 0 || exec->out < 0)
 		return (-1);
 	return (true);
 }
